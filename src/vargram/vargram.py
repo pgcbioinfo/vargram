@@ -195,7 +195,8 @@ class vargram:
         
     def struct(self, struct):
 
-        self._struct = struct
+        row_groups = struct.split('/')
+        self._struct = [''.join(col.split()).split(',') for col in row_groups]
     
     def stats(self, *args):
 
