@@ -86,7 +86,9 @@ def nextread(**kwargs):
         if os.path.exists(secure_ref_dir):
             shutil.rmtree(secure_ref_dir)
 
-    # remove nextread_errors hereeee
+    # Removing sequences with warnings or errors
+    nextread_output.drop(nextread_output.dropna(subset=['warnings']).index)
+    nextread_output.drop(nextread_output.dropna(subset=['errors']).index)
 
     if nextread_output.empty:
         raise ValueError("Analysis DataFrame is empty.")
