@@ -58,6 +58,11 @@ class vargram:
         # Creating matplotlib Figure object
         self._fig = plt.figure(figsize=[8, 4.8])
 
+        # Defining summary counts
+        if len(self._key_paths) == 0:
+            self._keyful_counts = self._summary_counts.copy()
+            self._keyful_for_saving = self._summary_for_saving.copy()
+
         # Creating bar plot
         if self._bar_called:
             self.bar(**self._bar_kwargs)
@@ -93,12 +98,7 @@ class vargram:
         self._bar_kwargs = kwargs
         
         if self._show_called == False: 
-            return None
-        
-        # Getting structure of the mutation profile grid
-        gene_counts = stats_module.count_per_gene(self._keyful_counts)
-        if len(self._struct) == 0:
-            self._struct = bar_module.build_struct(gene_counts)            
+            return None      
             
         #  Making the barplot
             # Getting bar arguments
@@ -141,8 +141,12 @@ class vargram:
         else:
             legend_title = 'Batch'
 
-        # Creating bar grids
+        # Getting structure of the mutation profile grid
         grid_width_counts = stats_module.count_per_gene(self._keyful_counts)
+        if len(self._struct) == 0:
+            self._struct = bar_module.build_struct(grid_width_counts)      
+
+        # Creating bar grids
         label_grid, legend_grid, self._gene_title_axes, self._gene_mutation_axes, self._gene_key_axes  = bar_wrap.build_bar_grid(self._struct, grid_width_counts, self._key_called)
         
         # Building mutation profile
