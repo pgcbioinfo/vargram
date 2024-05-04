@@ -80,6 +80,22 @@ def compute_gridsize(struct, nkey):
 
     return nrow, ncol
 
+def check_xticks_overlap(xticks):
+    """Checks whether there is an overlap between the x-axis tick labels.
+
+    Args:
+        xticks (matplotlib.axes.Axes.get_xticklabels): X-axis tick labels.
+
+    Returns: 
+        bool: True if there is an overlap, False otherwise.
+    """
+
+    bb1 = xticks[0].get_window_extent()
+    bb2 = xticks[1].get_window_extent()
+
+    return not (bb1.x1 < bb2.x0 or bb2.x1 < bb1.x0 or bb1.y1 < bb2.y0 or bb2.y1 < bb1.y0)
+
+
 def build_gene_barplot(ax_bar, categories, heights, floor, batch_color, suppress_spline, key_called, max_height):
     """Generates the individual barplot of a gene.
 
@@ -128,6 +144,20 @@ def build_gene_barplot(ax_bar, categories, heights, floor, batch_color, suppress
         ax_bar.xaxis.set_visible(False)
     else:
         ax_bar.tick_params(axis='x', rotation=90, labelsize=6)
+        
+        # Checking for x-axis overlap
+        xticks = ax_bar.get_xticklabels()
+        if len(xticks) > 1:
+            margin = 0.1
+            while check_xticks_overlap(xticks):
+
+                # Get the current figsize
+                fig_width, fig_height = ax_bar.figure.get_size_inches()
+
+                # Update the figsize to accommodate the required margin
+                new_fig_width = fig_width + margin
+                ax_bar.figure.set_size_inches((new_fig_width,(3/4)*new_fig_width), forward=False)
+            
 
     # Leaving y-axis and left spine depending on whether this corresponds to first gene on the bar row
     if suppress_spline or max_height == 0:
@@ -193,6 +223,19 @@ def build_gene_heatmap(ax_heat, gene_mutations, key_labels, cmaps, suppress_labe
     ax_heat.set_xticklabels(mutation_names)
     ax_heat.vlines(x=np.arange(0, len(mutation_names)-1)+0.5, ymin = -0.5, ymax = len(key_labels)-0.5, color = heatmap_partition_color, linewidth = heatmap_partition_linewidth)
 
+    # Checking for x-axis overlap
+    xticks = ax_heat.get_xticklabels()
+    if len(xticks) > 1:
+        margin = 0.1
+        while check_xticks_overlap(xticks):
+
+            # Get the current figsize
+            fig_width, fig_height = ax_heat.figure.get_size_inches()
+
+            # Update the figsize to accommodate the required margin
+            new_fig_width = fig_width + margin
+            ax_heat.figure.set_size_inches((new_fig_width,(3/4)*new_fig_width), forward=False)
+
     # Adding key lineage label
     if suppress_label:
         ax_heat.set_yticks([])
@@ -239,7 +282,7 @@ def build_gene_text(ax_text, gene_name, fig_text, gene_labels):
     ax_text.spines["bottom"].set_linewidth(1.5)
 
     # Determining if text exceeds its subplot
-    b = t.get_window_extent(renderer=fig_text.canvas.get_renderer()).transformed(ax_text.transData.inverted())
+    b = t.get_window_extent(renderer=ax_text.figure.canvas.get_renderer()).transformed(ax_text.transData.inverted())
 
     if b.height > 0.8:
         margin = 0.5
@@ -249,7 +292,7 @@ def build_gene_text(ax_text, gene_name, fig_text, gene_labels):
 
         # Update the figsize to accommodate the required margin
         new_fig_height = fig_height + margin
-        ax_text.figure.set_size_inches((4/3)*new_fig_height, new_fig_height, forward=True)
+        ax_text.figure.set_size_inches(((4/3)*new_fig_height, new_fig_height), forward=False)
 
     if b.width > 1.2:
         margin = 0.75
@@ -260,7 +303,7 @@ def build_gene_text(ax_text, gene_name, fig_text, gene_labels):
 
         # Update the figsize to accommodate the required margin
         new_fig_width = fig_width + width_margin
-        ax_text.figure.set_size_inches(new_fig_width, (3/4)*new_fig_width, forward=True)
+        ax_text.figure.set_size_inches((new_fig_width, (3/4)*new_fig_width), forward=False)
     
     # Rechecking
     b = t.get_window_extent(renderer=fig_text.canvas.get_renderer()).transformed(ax_text.transData.inverted())
