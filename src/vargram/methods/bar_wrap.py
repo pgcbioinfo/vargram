@@ -61,7 +61,7 @@ def build_bar_grid(gene_rows, grid_width_counts, key_called):
                                                        wspace=0.1,
                                                        hspace=0.1)
         else:
-            height_ratios=[1,3]
+            height_ratios=[1,8.5]
             gene_row_grid = mg.GridSpecFromSubplotSpec(2, row_length, bar_grid[i, 1], 
                                                        width_ratios=all_width_ratios[i],
                                                        height_ratios=height_ratios, 
