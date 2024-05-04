@@ -62,17 +62,17 @@ class vargram:
         if self._bar_called:
             self.bar(**self._bar_kwargs)
 
-        # Saving the plot
-        if self._savefig_called:
-            self.savefig(*self._savefig_args, **self._savefig_kwargs)
-
         # Saving statistics
         if self._stats_called:
             self.stats(*self._stats_args)
 
         if not suppress:
             plt.tight_layout()
-            plt.show()
+            plt.show(block=False)
+            
+        # Saving the plot
+        if self._savefig_called:
+            self.savefig(*self._savefig_args, **self._savefig_kwargs)
 
     def bar(self, **kwargs):
         """Method that generates the VARGRAM bar plot.
