@@ -2,6 +2,7 @@
 
 from .methods import stats_module, stats_wrap, bar_module, bar_wrap, methods_utils
 from .nextread.nextread import nextread
+from .plots.bar import Bar
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -90,26 +91,27 @@ class vargram:
 
         # Determining whether to generate plots or not
         if '_show' in latest_method_calls and '_savefig' in latest_method_calls:
-            self._generate_plot = False
             getattr(self, self._methods_called[-1])(**self._methods_kwargs[-1])
             return
-        else:
-            self._generate_plot = True
 
         # Generating figure based on most recent plot called
         for i in range(self._recent_plot_index, len(self._methods_called)):
             # Running each method since the most recent plot called
             getattr(self, self._methods_called[i])(**self._methods_kwargs[i])
+
         
-        self._do_plot = False
     
     def _show(self, empty_string=''): # The unused empty string argument is so as to be able to maintain length of methods and methods_kwargs the same
 
-        plt.show()
+        print("Showed figure.")#plt.show()
     
     def _savefig(self, **_savefig_kwargs):
 
-        plt.savefig(**_savefig_kwargs, bbox_inches='tight_layout')
+        print("Saved figure.")#plt.savefig(**_savefig_kwargs, bbox_inches='tight_layout')
+    
+    def _bar(self, **_bar_kwargs):
+
+        Bar(self._data, **_bar_kwargs)
 
     def show(self): 
         self._shown = True
@@ -126,12 +128,6 @@ class vargram:
         self._generate()
 
     def bar(self, **bar_kwargs):
-        self._bar_called = True
-        self._methods_called.append('bar')
-        self._recent_plot_index = len(self._methods_called) - 1
-
+        self._methods_called.append('_bar')
         self._methods_kwargs.append(bar_kwargs)
-
-        if self._generate_plot:
-            # Bar.bar()
-            pass
+        self._recent_plot_index = len(self._methods_called) - 1
