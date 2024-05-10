@@ -88,18 +88,26 @@ class vargram:
         
         # Getting group of methods called since last called plot
         latest_method_calls = self._methods_called[self._recent_plot_index:]
+        latest_method_kwargs = self._methods_kwargs[self._recent_plot_index:]
 
         # Determining whether to generate plots or not
         if '_show' in latest_method_calls and '_savefig' in latest_method_calls:
-            getattr(self, self._methods_called[-1])(**self._methods_kwargs[-1])
+            getattr(self, latest_method_calls[-1])(**self._methods_kwargs[-1])
             return
+        
+        # Creating plot object instance
+        plot_class = latest_method_calls[0][1:].title() # This removes the initial underscore and capitalizes the first letter
+        plot_object = globals()[plot_class]
+        self._plot_instance = plot_object()
+        
+        # Rearranging so that auxiliary methods are run before plot and save/show methods
+        latest_method_calls[0], latest_method_calls[-2] = latest_method_calls[-2], latest_method_calls[0]
+        latest_method_kwargs[0], latest_method_kwargs[-2] = latest_method_kwargs[-2], latest_method_kwargs[0]
 
         # Generating figure based on most recent plot called
-        for i in range(self._recent_plot_index, len(self._methods_called)):
+        for i, method in enumerate(latest_method_calls):
             # Running each method since the most recent plot called
-            getattr(self, self._methods_called[i])(**self._methods_kwargs[i])
-
-        
+            getattr(self, method)(**latest_method_kwargs[i])
     
     def _show(self, empty_string=''): # The unused empty string argument is so as to be able to maintain length of methods and methods_kwargs the same
 
@@ -111,7 +119,12 @@ class vargram:
     
     def _bar(self, **_bar_kwargs):
 
-        Bar(self._data, **_bar_kwargs)
+        _bar_kwargs['data'] = self._data
+        getattr(self._plot_instance, 'process')(**_bar_kwargs)
+    
+    def _aes(self, **_aes_kwargs):
+        
+        getattr(self._plot_instance, 'aes')(**_aes_kwargs)
 
     def show(self): 
         self._shown = True
@@ -131,3 +144,8 @@ class vargram:
         self._methods_called.append('_bar')
         self._methods_kwargs.append(bar_kwargs)
         self._recent_plot_index = len(self._methods_called) - 1
+
+    def aes(self, **aes_kwargs):
+        self._methods_called.append('_aes')
+        self._methods_kwargs.append(aes_kwargs)
+        
