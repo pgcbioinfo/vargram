@@ -109,13 +109,13 @@ class vargram:
             # Running each method since the most recent plot called
             getattr(self, method)(**latest_method_kwargs[i])
     
-    def _show(self, empty_string=''): # The unused empty string argument is so as to be able to maintain length of methods and methods_kwargs the same
+    def _show(self, empty_string=''): 
 
-        print("Showed figure.")#plt.show()
+        getattr(self._plot_instance, 'show')()
     
     def _savefig(self, **_savefig_kwargs):
 
-        print("Saved figure.")#plt.savefig(**_savefig_kwargs, bbox_inches='tight_layout')
+        getattr(self._plot_instance, 'savefig')(**_savefig_kwargs)
     
     def _bar(self, **_bar_kwargs):
 
@@ -129,7 +129,7 @@ class vargram:
     def show(self): 
         self._shown = True
         self._methods_called.append('_show')
-        self._methods_kwargs.append({'empty_string':''})
+        self._methods_kwargs.append({'empty_string':''}) # The unused empty string argument is so as to be able to maintain length of methods and methods_kwargs the same
 
         self._generate()
 
