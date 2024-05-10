@@ -26,7 +26,7 @@ class vargram:
         """
 
         # Defining initial values
-        self.__initialize_variables__()
+        self._initialize_variables()
 
         # Getting data
         if 'seq' in vargram_kwargs.keys(): # Get Nextclade output
@@ -71,7 +71,7 @@ class vargram:
         if self._data.empty:
             raise ValueError("Data is empty.")
     
-    def __initialize_variables__(self):
+    def _initialize_variables(self):
         self._methods_called = []
         self._methods_kwargs = []
         self._plots = ['bar'] # These are methods that build the plot
@@ -98,7 +98,7 @@ class vargram:
         # Creating plot object instance
         plot_class = latest_method_calls[0][1:].title() # This removes the initial underscore and capitalizes the first letter
         plot_object = globals()[plot_class]
-        self._plot_instance = plot_object()
+        self._plot_instance = plot_object(self._data)
         
         # Rearranging so that auxiliary methods are run before plot and save/show methods
         latest_method_calls[0], latest_method_calls[-2] = latest_method_calls[-2], latest_method_calls[0]
@@ -119,7 +119,6 @@ class vargram:
     
     def _bar(self, **_bar_kwargs):
 
-        _bar_kwargs['data'] = self._data
         getattr(self._plot_instance, 'process')(**_bar_kwargs)
     
     def _aes(self, **_aes_kwargs):

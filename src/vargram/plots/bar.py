@@ -2,7 +2,10 @@ import matplotlib.pyplot as plt
 
 class Bar():
 
-    def __init__(self):
+    def __init__(self, data):
+
+        # Data
+        self.data = data
 
         # Plot attributes
         self.fig = plt.figure()
@@ -29,7 +32,7 @@ class Bar():
         self.stack.font 
         self.stack.fontsize
         self.stack.color
-        self.stack.label
+        self.stack.label 
 
     def process(self, **process_kwargs):
         print('Processed data for barplot.')
@@ -43,7 +46,7 @@ class Bar():
         print('Showed figure.')
         #plt.tight_layout()
         #plt.show()
-        
+
     def savefig(self, **savefig_kwargs):
 
         print('Saved figure.')
