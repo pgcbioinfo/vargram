@@ -6,6 +6,7 @@ from .plots.bar import Bar
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import os
 
 class vargram:
 
@@ -72,11 +73,20 @@ class vargram:
             raise ValueError("Data is empty.")
     
     def _initialize_variables(self):
+        """Sets initial values of attributes.
+        """
         self._methods_called = []
         self._methods_kwargs = []
         self._plots = ['bar'] # These are methods that build the plot
         self._terminals = ['show', 'savefig']
         self._generate_plot = False
+        
+        # key()
+        self._master_key_data = pd.DataFrame()
+        self._nkeys = 0
+        self._col = 'mutation'
+        self._key_labels = []
+        self._key_colors = []
 
         # show()
         self._shown = False
@@ -101,13 +111,23 @@ class vargram:
         self._plot_instance = plot_object(self._data)
         
         # Rearranging so that auxiliary methods are run before plot and save/show methods
-        latest_method_calls[0], latest_method_calls[-2] = latest_method_calls[-2], latest_method_calls[0]
-        latest_method_kwargs[0], latest_method_kwargs[-2] = latest_method_kwargs[-2], latest_method_kwargs[0]
+        latest_method_calls.append(latest_method_calls[-1])
+        latest_method_calls[-2] = latest_method_calls[0]
+        latest_method_calls.pop(0)
+        latest_method_kwargs.append(latest_method_kwargs[-1])
+        latest_method_kwargs[-2] = latest_method_kwargs[0]
+        latest_method_kwargs.pop(0)
 
         # Generating figure based on most recent plot called
+        run_key = True
         for i, method in enumerate(latest_method_calls):
             # Running each method since the most recent plot called
-            getattr(self, method)(**latest_method_kwargs[i])
+            if run_key or method != '_key': # Ensuring that the internal key method is only called once
+                if method == '_key':
+                    run_key = False
+                getattr(self, method)(**latest_method_kwargs[i])
+            else:
+                continue
     
     def _show(self, empty_string=''): 
 
@@ -120,6 +140,12 @@ class vargram:
     def _bar(self, **_bar_kwargs):
 
         getattr(self._plot_instance, 'process')(**_bar_kwargs)
+
+    def _key(self, **_key_kwargs):
+
+        getattr(self._plot_instance, 'key')(key_data = self._master_key_data, 
+                                            key_labels = self._key_labels, 
+                                            key_colors = self._key_colors)
     
     def _aes(self, **_aes_kwargs):
         
@@ -144,6 +170,45 @@ class vargram:
         self._methods_kwargs.append(bar_kwargs)
         self._recent_plot_index = len(self._methods_called) - 1
 
+    def key(self, key_data, **key_kwargs):
+        self._methods_called.append('_key')
+        self._methods_kwargs.append({'empty_string':''}) # The unused empty string argument is so as to be able to maintain length of methods and methods_kwargs the same
+        self._nkeys += 1
+
+        # Reading data
+        if isinstance(key_data, str):
+            print(f'Reading {key_data}.')
+            key_df = methods_utils.read_comma_or_tab(key_data)
+
+        # Getting column to read
+        if 'col' in key_kwargs:
+            col = key_kwargs['col']
+        else:
+            col = self._col
+        
+        # Getting name of lineage
+        if 'label' in key_kwargs:
+            label = key_kwargs['label']
+        elif isinstance(key_data, str):
+            label = os.path.basename(key_data)
+            label = os.path.splitext(label)[0]
+        else:
+            label = f'key_{self._nkeys}'
+        self._key_labels.append(label)
+
+        # Getting color of lineage
+        if 'color' in key_kwargs:
+            color = key_kwargs['color']
+        else:
+            color = '#5E5E5E'
+        self._key_colors.append(color)
+        
+        # Gathering in one master dataframe
+        try:
+            self._master_key_data[label] = key_df[col]
+        except KeyError:
+            raise ValueError('Provide a valid column name.')
+        
     def aes(self, **aes_kwargs):
         self._methods_called.append('_aes')
         self._methods_kwargs.append(aes_kwargs)
