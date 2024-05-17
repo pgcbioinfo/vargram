@@ -1,10 +1,9 @@
 # """Main module for generating VARGRAM figures and summary statistics."""
 
-from .methods import stats_module, stats_wrap, bar_module, bar_wrap, methods_utils
+from .methods import methods_utils, stats_module
 from .nextread.nextread import nextread
 from .plots.bar import Bar
 
-import matplotlib.pyplot as plt
 import pandas as pd
 import os
 
@@ -31,15 +30,18 @@ class vargram:
 
         # Getting data
         if 'seq' in vargram_kwargs.keys(): # Get Nextclade output
-            nextread_kwargs = {key: vargram_kwargs[key] for key in ['seq', 'ref', 'gene'] if key in vargram_kwargs.keys()}
-            self._data = nextread(**nextread_kwargs)
-
             # Defining relevant Nextclade analysis column names
             self._nextclade_seqname = 'seqName'
             self._aasub = 'aaSubstitutions'
             self._aadel = 'aaDeletions'
             self._aains = 'aaInsertions'
             self._nextclade_seqname = 'seqName'
+
+            nextread_kwargs = {key: vargram_kwargs[key] for key in ['seq', 'ref', 'gene'] if key in vargram_kwargs.keys()}
+            self._data = nextread(**nextread_kwargs)
+            self._data = stats_module.process_nextread(self._data)
+            self._nextread_called = True
+            
         elif 'data' not in vargram_kwargs.keys():
             raise ValueError("Missing data. Either provide the FASTA files with the 'seq' and 'ref' arguments or provide a dataframe/path with 'data'.")
         else:
@@ -84,7 +86,6 @@ class vargram:
         # key()
         self._master_key_data = pd.DataFrame()
         self._nkeys = 0
-        self._col = 'mutation'
         self._key_labels = []
         self._key_colors = []
 
@@ -95,6 +96,7 @@ class vargram:
         self._saved = False
     
     def _generate(self):
+        """Runs all called methods in correct order"""
         
         # Getting group of methods called since last called plot
         latest_method_calls = self._methods_called[self._recent_plot_index:]
@@ -130,71 +132,93 @@ class vargram:
                 continue
     
     def _show(self, empty_string=''): 
+        """Show generated figure"""
 
         getattr(self._plot_instance, 'show')()
     
     def _savefig(self, **_savefig_kwargs):
+        """Save generated figure"""
 
         getattr(self._plot_instance, 'savefig')(**_savefig_kwargs)
     
     def _bar(self, **_bar_kwargs):
+        """Process data for plotting"""
 
         getattr(self._plot_instance, 'process')(**_bar_kwargs)
 
     def _key(self, **_key_kwargs):
+        """Process key data for plotting"""
 
         getattr(self._plot_instance, 'key')(key_data = self._master_key_data, 
                                             key_labels = self._key_labels, 
                                             key_colors = self._key_colors)
     
     def _aes(self, **_aes_kwargs):
+        """Modify aesthetic attributes"""
         
         getattr(self._plot_instance, 'aes')(**_aes_kwargs)
 
     def show(self): 
+        """Wrapper for show method"""
+
         self._shown = True
         self._methods_called.append('_show')
         self._methods_kwargs.append({'empty_string':''}) # The unused empty string argument is so as to be able to maintain length of methods and methods_kwargs the same
 
         self._generate()
 
-    def savefig(self, **savefig_kwargs):
+    def savefig(self, fname, **savefig_kwargs):
+        """Wrapper for savefig method"""
+
         self._saved = True
+        savefig_kwargs['fname'] = fname
         self._methods_called.append('_savefig')
         self._methods_kwargs.append(savefig_kwargs)
 
         self._generate()
 
     def bar(self, **bar_kwargs):
+        """Captures bar method arguments"""
+        
         self._methods_called.append('_bar')
         self._methods_kwargs.append(bar_kwargs)
         self._recent_plot_index = len(self._methods_called) - 1
 
     def key(self, key_data, **key_kwargs):
+        """Joins all key data"""
+
         self._methods_called.append('_key')
         self._methods_kwargs.append({'empty_string':''}) # The unused empty string argument is so as to be able to maintain length of methods and methods_kwargs the same
         self._nkeys += 1
 
         # Reading data
         if isinstance(key_data, str):
-            print(f'Reading {key_data}.')
-            key_df = methods_utils.read_comma_or_tab(key_data)
+            key_read = methods_utils.read_comma_or_tab(key_data)
 
-        # Getting column to read
-        if 'col' in key_kwargs:
-            col = key_kwargs['col']
+        # Getting x to read
+        if 'x' in key_kwargs.keys():
+            key_x = key_kwargs['x']
         else:
-            col = self._col
+            key_x = 'mutation'
         
+        # Getting group to read
+        if 'group' in key_kwargs.keys():
+            key_group = key_kwargs['group']
+        else:
+            key_group = 'gene'
+        
+        # Just keeping the 'x' and 'group' columns
+        key_df = key_read[[key_group, key_x]]
+
         # Getting name of lineage
         if 'label' in key_kwargs:
-            label = key_kwargs['label']
+            key_label = key_kwargs['label']
         elif isinstance(key_data, str):
-            label = os.path.basename(key_data)
-            label = os.path.splitext(label)[0]
+            key_label = os.path.basename(key_data)
+            key_label = os.path.splitext(key_label)[0]
         else:
-            label = f'key_{self._nkeys}'
-        self._key_labels.append(label)
+            key_label = f'key_{self._nkeys}'
+        self._key_labels.append(key_label)
 
         # Getting color of lineage
         if 'color' in key_kwargs:
@@ -202,14 +226,22 @@ class vargram:
         else:
             color = '#5E5E5E'
         self._key_colors.append(color)
-        
+
         # Gathering in one master dataframe
-        try:
-            self._master_key_data[label] = key_df[col]
-        except KeyError:
-            raise ValueError('Provide a valid column name.')
-        
+        if self._nkeys > 1:
+            key_df[key_label] = 1
+            self._master_key_data = pd.merge(self._master_key_data, key_df, on=[key_group, key_x], how='outer')
+            self._master_key_data.fillna(0, inplace=True)
+            self._master_key_data.reset_index(drop=True, inplace=True)
+        else:
+            self._master_key_data = pd.DataFrame()
+            self._master_key_data[key_group] = key_df[key_group]
+            self._master_key_data[key_x] = key_df[key_x]
+            self._master_key_data[key_label] = 1
+
     def aes(self, **aes_kwargs):
+        """Captures modification of aesthetic attributes"""
+        
         self._methods_called.append('_aes')
         self._methods_kwargs.append(aes_kwargs)
         

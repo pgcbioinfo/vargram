@@ -5,80 +5,60 @@ import matplotlib.colors as mc
 import pandas as pd
 import numpy as np
 
-def build_struct(gene_counts, max_per_row = 40):
-    """Determines the optimum structure of the genes in the bar plot.
+def build_struct(group_counts, group_attr, max_per_row = 40):
+    """Determines the optimum structure of the groups in the bar plot.
 
     Args:
-        gene_counts (pandas.DataFrame): The DataFrame containing genes and their unique no. of mutations. 
-                                        Possibly includes key mutations.
-        max_per_row (int): Initial maximum number of mutations per row.
+        group_counts (pandas.DataFrame): The DataFrame containing groups and their unique no. of x data.
+        group_attr (str): The group data attribute.
+        max_per_row (int): Initial maximum number of x data per row.
     
     Returns:
-        struct (list): The structure of the plot where each row gives the list of genes for that row.
+        struct (list): The structure of the plot where each row gives the list of groups for that row.
     """
 
-    gg = gene_counts['gene'].tolist()
-    cc = gene_counts['count'].tolist()
+    gg = group_counts[group_attr].tolist()
+    cc = group_counts['count'].tolist()
 
 
-    struct = [] # list of genes per row
+    struct = [] # list of groups per row
     struct_len = [] # list of total mutation counts per row
     while len(gg) > 0:
-        # Each iteration determines the genes for a row
+        # Each iteration determines the groups for a row
 
-        # Setting length of largest gene as max_per_row
+        # Setting length of largest group as max_per_row
         # Since it is larger, it takes its own row
         largest_count = max(cc)
         if largest_count >= max_per_row: 
             max_per_row = largest_count
 
             largest_index = cc.index(largest_count)
-            largest_gene = gg[largest_index]
-            struct.append([largest_gene])
+            largest_group = gg[largest_index]
+            struct.append([largest_group])
 
             cc.remove(largest_count)
-            gg.remove(largest_gene)
+            gg.remove(largest_group)
 
             continue
 
-        # Of the remaining genes, find all that sum to less than or equal to max_per_row
-        gene_row = [gg[0]]
+        # Of the remaining groups, find all that sum to less than or equal to max_per_row
+        group_row = [gg[0]]
         current_sum = cc[0]
-        for (i, gene) in enumerate(gg):
+        for (i, group) in enumerate(gg):
             if i == 0:
                 continue
             if current_sum + cc[i] <= max_per_row:
-                gene_row += [gene]
+                group_row += [group]
                 current_sum += cc[i]
-        struct.append(gene_row)
+        struct.append(group_row)
 
-        # Remove these genes
-        indices_to_remove = [i for i, gene in enumerate(gg) if gene in gene_row]
-        gg = [gene for i, gene in enumerate(gg) if i not in indices_to_remove]
+        # Remove these groups
+        indices_to_remove = [i for i, group in enumerate(gg) if group in group_row]
+        gg = [group for i, group in enumerate(gg) if i not in indices_to_remove]
         cc = [count for i, count in enumerate(cc) if i not in indices_to_remove]
 
     
     return struct
-
-def compute_gridsize(struct, nkey):
-    """Determines the rows and columns of the GridSpec for the bar plot.
-
-    Args:
-        struct (pandas.DataFrame): The DataFrame containing genes and their no. of mutations.
-        nkey (integer): The number of reference lineages.
-    
-    Returns:
-        nrow (integer): The number of rows. 
-        ncol (integer): The number of columns.
-    """
-    # Counting columns
-    ncol = 3 # one for y-axis label, one for the main plot, one for the legend
-
-    # Setting initial number of rows 
-    # gs_row = (2 + No. of Ref. Lineages)*(No. of Gene Rows)
-    nrow = (2 + nkey)*len(struct)
-
-    return nrow, ncol
 
 def check_xticks_overlap(xticks):
     """Checks whether there is an overlap between the x-axis tick labels.
@@ -96,7 +76,7 @@ def check_xticks_overlap(xticks):
     return not (bb1.x1 < bb2.x0 or bb2.x1 < bb1.x0 or bb1.y1 < bb2.y0 or bb2.y1 < bb1.y0)
 
 
-def build_gene_barplot(ax_bar, categories, heights, floor, batch_color, suppress_spline, key_called, max_height):
+def build_group_barplot(ax_bar, categories, heights, floor, batch_color, suppress_spline, key_called, max_height, x_aes, y_aes):
     """Generates the individual barplot of a gene.
 
     Args:
@@ -116,6 +96,8 @@ def build_gene_barplot(ax_bar, categories, heights, floor, batch_color, suppress
     width = 0.75
     edgecolor = 'black'
     linewidth = 1
+    x_fontsize = x_aes[0]
+    y_fontsize = y_aes[0]
 
     # Creating barplot
     ax_bar.bar(x = categories,
@@ -143,7 +125,7 @@ def build_gene_barplot(ax_bar, categories, heights, floor, batch_color, suppress
     if key_called:
         ax_bar.xaxis.set_visible(False)
     else:
-        ax_bar.tick_params(axis='x', rotation=90, labelsize=6)
+        ax_bar.tick_params(axis='x', rotation=90, labelsize=x_fontsize)
         
         # Checking for x-axis overlap
         xticks = ax_bar.get_xticklabels()
@@ -166,7 +148,7 @@ def build_gene_barplot(ax_bar, categories, heights, floor, batch_color, suppress
     else:
         ax_bar.spines['left'].set_linewidth(1.5)
         ax_bar.spines['left'].set_position(('outward', 5)) 
-        ax_bar.yaxis.set_tick_params(width=1.5, labelsize=7)
+        ax_bar.yaxis.set_tick_params(width=1.5, labelsize=y_fontsize)
         yticks = np.linspace(0, max_height, 5)
         yticks = np.round(yticks).astype(int)
         ax_bar.set_yticks(yticks[yticks != 0])    
@@ -251,7 +233,7 @@ def build_gene_heatmap(ax_heat, gene_mutations, key_labels, cmaps, suppress_labe
 
     return None
 
-def build_gene_text(ax_text, gene_name, fig_text, gene_labels):
+def build_group_text(ax_text, gene_name, fig_text, gene_labels):
     """Generates the gene label above the barplot.
 
     Args:

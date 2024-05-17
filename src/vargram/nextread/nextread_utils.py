@@ -98,21 +98,4 @@ def input_checker(kwargs):
         file_extension, validity = check_file_extension(kwargs[key], valid_extensions[key])
         if not validity:
             raise ValueError(f"Unsupported {file_type[key]} file format: {file_extension}")
-            
-def remove_errors(analysis, warnings = True):
-    """Counts the number of sequences with errors and warnings, print and remove them by default.
-
-    Args:
-        analysis (pandas.DataFrame): A DataFrame of the Nextclade analysis TSV output.
-
-    Returns:
-        pandas.DataFrame: A DataFrame of the Nextclade analysis TSV output without sequences with errors and warnings (by default).
-    """
-
-    #NOT YET DONE
-    
-    if warnings:
-        analysis = analysis[(analysis['errors'].notna()) | (analysis['warnings'].notna())]
-    
-    return analysis
         
