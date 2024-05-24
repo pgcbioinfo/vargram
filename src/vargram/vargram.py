@@ -153,6 +153,11 @@ class vargram:
                                             key_labels = self._key_labels, 
                                             key_colors = self._key_colors)
     
+    def _struct(self, **_struct_kwargs):
+        """Modify aesthetic attributes"""
+        
+        getattr(self._plot_instance, 'struct_method')(**_struct_kwargs)
+
     def _aes(self, **_aes_kwargs):
         """Modify aesthetic attributes"""
         
@@ -238,6 +243,10 @@ class vargram:
             self._master_key_data[key_group] = key_df[key_group]
             self._master_key_data[key_x] = key_df[key_x]
             self._master_key_data[key_label] = 1
+
+    def struct(self, struct_arg):
+        self._methods_called.append('_struct')
+        self._methods_kwargs.append({'struct_key':struct_arg})
 
     def aes(self, **aes_kwargs):
         """Captures modification of aesthetic attributes"""

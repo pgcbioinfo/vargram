@@ -144,6 +144,12 @@ class Bar():
 
         for aes_key in aes_kwargs.keys():
             setattr(self, aes_key, aes_kwargs[aes_key])
+    
+    def struct_method(self, **struct_kwargs):
+        print('** Processed struct. **')
+
+        row_groups = struct_kwargs['struct_key'].split('/')
+        self.struct = [''.join(col.split()).split(',') for col in row_groups]
 
     def plot(self):
         print('** Plotting **')
