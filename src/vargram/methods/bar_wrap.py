@@ -238,15 +238,20 @@ def build_legend(legend_grid, stack_aes, group_aes, group_labels):
     group_title = group_aes[1]
     frameon=False
     alignment='left'
-    batch_loc='lower left'
-    gene_loc='upper left'
+    if len(group_labels) == 0:
+        stack_loc='center'
+        bbox_anchor = (0.5, 0.5)
+    else:
+        stack_loc='lower left'
+        bbox_anchor = (-0.5, 0)
+    group_loc='upper left'
     
 
     # Setting batch legend handles
     batch_legend_handles = [mp.Patch(color=color, label=label) for color, label in zip(stack_color, stack_label)]
 
     # Creating batch legend
-    bl = ax_batch_legend.legend(handles=batch_legend_handles, title=stack_title, fontsize=stack_fontsize, frameon=frameon, alignment=alignment, loc=batch_loc, bbox_to_anchor=(-0.5, 0), borderaxespad=0)
+    ax_batch_legend.legend(handles=batch_legend_handles, title=stack_title, fontsize=stack_fontsize, frameon=frameon, alignment=alignment, loc=stack_loc, bbox_to_anchor=bbox_anchor, borderaxespad=0)
 
     # Removing batch ax spines and ticks
     bar_module.spine_remover(ax_batch_legend)
@@ -257,7 +262,7 @@ def build_legend(legend_grid, stack_aes, group_aes, group_labels):
         legend_handles = [Text(str(i+1)) for i in range(len(group_labels))]
 
         # Creating group legend
-        gl = ax_group_legend.legend(legend_handles, group_labels, title=group_title, fontsize=group_fontsize, frameon=frameon, alignment=alignment, loc=gene_loc, bbox_to_anchor=(-0.5, 1), borderaxespad=0,
+        ax_group_legend.legend(legend_handles, group_labels, title=group_title, fontsize=group_fontsize, frameon=frameon, alignment=alignment, loc=group_loc, bbox_to_anchor=(-0.5, 1), borderaxespad=0,
            handler_map={handle: TextHandler() for handle in legend_handles},
            handletextpad=0.5,
            labelspacing=1.3)
