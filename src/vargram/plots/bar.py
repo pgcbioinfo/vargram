@@ -192,12 +192,13 @@ class Bar():
         # Creating figure legend
         bar_wrap.build_legend(legend_grid, stack_aes, group_aes, group_labels)
 
+        plt.tight_layout()
+
     def show(self):
         """Displays the generated figure.
         """
         
         print('** Showed figure. **')
-        plt.tight_layout()
         plt.show()
 
     def savefig(self, **savefig_kwargs):
