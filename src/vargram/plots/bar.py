@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.colors as mc
 import numpy as np
-from ..methods import bar_wrap, bar_module, stats_module
+from ..utils import bar_wrap, bar_module, stats_module
 import pandas as pd
 
 def create_default_colors(num_color, color = '#5E5E5E', single = False):
@@ -57,6 +57,8 @@ class Bar():
     def process(self, **process_kwargs):
         """Creates data for plotting and structure."""
 
+        print('** Processed data for plotting. **')
+
         # Checking if the default columns are present or if not, required arguments are provided
         required_data_attributes = ['x', 'group', 'stack']
         default_data_attributes = [self.x, self.group, self.stack]
@@ -91,12 +93,13 @@ class Bar():
 
         # Determining whether to normalize or not
         if self.ytype == '':
-            if len(self.stack_label) > 1:
+            if len(self.stack_names) > 1:
                 self.ytype = 'weights'
-                self.ylabel = 'Weights'
             else:
                 self.ytype = 'counts'
-                self.ylabel = 'Counts'
+        
+        if self.ylabel == '':
+            self.ylabel = self.ytype.title()
         
         if self.ytype == 'weights':
             for stack in self.stack_names:
@@ -180,6 +183,7 @@ class Bar():
                                 self.group, self.x,
                                 self.fig, 
                                 self.key_called, key_aes, 
+                                self.stack_names,
                                 stack_aes,
                                 group_labels,
                                 x_aes, y_aes)
@@ -201,6 +205,7 @@ class Bar():
         if 'print' in stat_kwargs.keys() and stat_kwargs['print'] == True:
             print(self.data_for_plotting.to_markdown())
         else:
+            self.data_for_plotting.reset_index(drop=True, inplace=True)
             self.data_for_plotting.to_csv(**stat_kwargs)
 
     def show(self):

@@ -104,7 +104,7 @@ def build_bar_grid(struct, grid_width_counts, group_attr, key_called):
     
     return label_grid, legend_grid, group_title_axes, group_x_axes, group_key_axes
 
-def build_profile(group_title_axes, group_bar_axes, group_key_axes, barplot_data, struct, group_attr, x_attr, fig, key_called, key_aes, stack_aes, group_labels, x_aes, y_aes):
+def build_profile(group_title_axes, group_bar_axes, group_key_axes, barplot_data, struct, group_attr, x_attr, fig, key_called, key_aes, stack_names, stack_aes, group_labels, x_aes, y_aes):
     """Generates the full profile including labels on the defined grids.
 
     Args:
@@ -126,7 +126,7 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes, barplot_data
     """
 
     # Defining aesthetic attributes
-    stacks = stack_aes[1]
+    stacks = stack_names
     stack_colors = stack_aes[2]
 
     key_fontsize = key_aes[0]
@@ -287,10 +287,3 @@ class TextHandler(object):
         handlebox.add_artist(patch)
 
         return patch
-    
-
-
-
-
-
-    

@@ -1,6 +1,6 @@
 # """Main module for generating VARGRAM figures and summary statistics."""
 
-from .methods import methods_utils, stats_module
+from .utils import methods_utils, stats_module
 from .nextread.nextread import nextread
 from .plots.bar import Bar
 
@@ -171,11 +171,11 @@ class vargram:
         
         getattr(self._plot_instance, 'aes')(**_aes_kwargs)
     
-    def stat(self, path_or_buf='', **stat_kwargs):
+    def stat(self, stat_path='', **stat_kwargs):
         """Wrapper for stat method"""
 
         self._methods_called.append('_stat')
-        stat_kwargs['path_or_buf'] = path_or_buf
+        stat_kwargs['path_or_buf'] = stat_path
         self._methods_kwargs.append(stat_kwargs)
 
         self._generate()
@@ -230,7 +230,7 @@ class vargram:
             key_group = 'gene'
         
         # Just keeping the 'x' and 'group' columns
-        key_df = key_read[[key_group, key_x]]
+        key_df = key_read[[key_group, key_x]].copy()
 
         # Getting name of lineage
         if 'label' in key_kwargs:
@@ -269,5 +269,4 @@ class vargram:
         """Captures modification of aesthetic attributes"""
         
         self._methods_called.append('_aes')
-        self._methods_kwargs.append(aes_kwargs)
-        
+        self._methods_kwargs.append(aes_kwargs)        

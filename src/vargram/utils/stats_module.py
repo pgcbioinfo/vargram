@@ -73,9 +73,9 @@ def process_nextread(nextread_output):
     # Compiling all amino acid mutations (substitution, deletion, insertion) into a single column
     single_column = nextread_output.copy()
 
-    single_column[aa_sub].fillna('', inplace=True)
-    single_column[aa_del].fillna('', inplace=True)
-    single_column[aa_ins].fillna('', inplace=True)
+    single_column[aa_sub] = single_column[aa_sub].fillna('')
+    single_column[aa_del] = single_column[aa_del].fillna('')
+    single_column[aa_ins] = single_column[aa_ins].fillna('')
 
     single_column['mutation'] = single_column.apply(lambda row: ','.join(filter(None, [row[aa_sub], row[aa_del], row[aa_ins]])), axis=1)
     single_column['mutation'] = single_column['mutation'].apply(lambda x: x.split(',')).copy()
@@ -103,30 +103,3 @@ def process_nextread(nextread_output):
     processed_nextread = exploded[['batch', 'gene', 'position', 'mutation', 'type']]
 
     return processed_nextread
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-    
-
-
-
-
