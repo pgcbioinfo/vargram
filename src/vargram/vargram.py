@@ -82,6 +82,7 @@ class vargram:
         self._plots = ['bar'] # These are methods that build the plot
         self._terminals = ['show', 'savefig']
         self._generate_plot = False
+        self._already_processed_data = False
         
         # key()
         self._master_key_data = pd.DataFrame()
@@ -103,7 +104,7 @@ class vargram:
         latest_method_kwargs = self._methods_kwargs[self._recent_plot_index:]
 
         # Determining whether to generate plots or not
-        if '_show' in latest_method_calls and '_savefig' in latest_method_calls:
+        if self._already_processed_data:
             getattr(self, latest_method_calls[-1])(**self._methods_kwargs[-1])
             return
         
@@ -130,6 +131,8 @@ class vargram:
                 getattr(self, method)(**latest_method_kwargs[i])
             else:
                 continue
+        
+        self._already_processed_data = True
     
     def _show(self, empty_string=''): 
         """Show generated figure"""
@@ -140,6 +143,11 @@ class vargram:
         """Save generated figure"""
 
         getattr(self._plot_instance, 'savefig')(**_savefig_kwargs)
+    
+    def _stat(self, **_stat_kwargs):
+        """Save generated dataframe"""
+
+        getattr(self._plot_instance, 'stat')(**_stat_kwargs)
     
     def _bar(self, **_bar_kwargs):
         """Process data for plotting"""
@@ -162,7 +170,16 @@ class vargram:
         """Modify aesthetic attributes"""
         
         getattr(self._plot_instance, 'aes')(**_aes_kwargs)
+    
+    def stat(self, path_or_buf='', **stat_kwargs):
+        """Wrapper for stat method"""
 
+        self._methods_called.append('_stat')
+        stat_kwargs['path_or_buf'] = path_or_buf
+        self._methods_kwargs.append(stat_kwargs)
+
+        self._generate()
+        
     def show(self): 
         """Wrapper for show method"""
 

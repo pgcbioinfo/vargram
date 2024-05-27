@@ -18,8 +18,9 @@ class Bar():
 
     def __init__(self, data):
 
-        # Data
+        # Class attributes
         self.data = data
+        self.plotted_already = False
 
         # Plot attributes
         self.fig = plt.figure(figsize=[8, 4.8])
@@ -60,8 +61,8 @@ class Bar():
         required_data_attributes = ['x', 'group', 'stack']
         default_data_attributes = [self.x, self.group, self.stack]
 
-        default_columns_detected = all(col in default_data_attributes for col in self.data.columns)
-        required_attributes_detected = all(arg in required_data_attributes for arg in process_kwargs.keys() if arg != 'threshold')
+        default_columns_detected = all(col in self.data.columns.tolist() for col in default_data_attributes)
+        required_attributes_detected = all(arg in process_kwargs.keys() for arg in required_data_attributes) #if arg != 'threshold' and arg != 'ytype')
 
         if not default_columns_detected and not required_attributes_detected:
             raise ValueError(f"Expected columns or arguments not detected.")
@@ -122,14 +123,12 @@ class Bar():
         # Adding keys if provided
         if not self.key_called:
             self.data_for_plotting = data_filtered
-            self.plot()
             return None
         
         data_with_keys = pd.merge(data_filtered, self.key_data, on=[self.group, self.x], how='outer')
         data_with_keys.fillna(0, inplace=True)
         data_with_keys.reset_index(drop=True, inplace=True)
         self.data_for_plotting = data_with_keys
-        self.plot()
         
     def key(self, **key_kwargs):
         self.key_called = True        
@@ -153,7 +152,6 @@ class Bar():
 
     def plot(self):
         print('** Plotting **')
-        print(self.data_for_plotting)
 
         # Getting structure of the mutation profile grid
         if len(self.struct) == 0:
@@ -194,11 +192,27 @@ class Bar():
 
         plt.tight_layout()
 
+    def stat(self, **stat_kwargs):
+        """Saves or displays the generated dataframe
+        """
+
+        print('** Saved or displayed stat **')
+
+        if 'print' in stat_kwargs.keys() and stat_kwargs['print'] == True:
+            print(self.data_for_plotting.to_markdown())
+        else:
+            self.data_for_plotting.to_csv(**stat_kwargs)
+
     def show(self):
         """Displays the generated figure.
         """
         
         print('** Showed figure. **')
+
+        if not self.plotted_already:
+            self.plot()
+            self.plotted_already = True
+        
         plt.show()
 
     def savefig(self, **savefig_kwargs):
@@ -206,4 +220,9 @@ class Bar():
         """
 
         print('** Saved figure. **')
+
+        if not self.plotted_already:
+            self.plot()
+            self.plotted_already = True
+
         plt.savefig(**savefig_kwargs, bbox_inches='tight')
