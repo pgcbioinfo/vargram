@@ -126,12 +126,14 @@ class Bar():
         # Adding keys if provided
         if not self.key_called:
             self.data_for_plotting = data_filtered
-            return None
+            return self.data_for_plotting
         
         data_with_keys = pd.merge(data_filtered, self.key_data, on=[self.group, self.x], how='outer')
         data_with_keys.fillna(0, inplace=True)
         data_with_keys.reset_index(drop=True, inplace=True)
         self.data_for_plotting = data_with_keys
+
+        return self.data_for_plotting
         
     def key(self, **key_kwargs):
         self.key_called = True        
@@ -196,18 +198,6 @@ class Bar():
 
         plt.tight_layout()
 
-    def stat(self, **stat_kwargs):
-        """Saves or displays the generated dataframe
-        """
-
-        print('** Saved or displayed stat **')
-
-        if 'print' in stat_kwargs.keys() and stat_kwargs['print'] == True:
-            print(self.data_for_plotting.to_markdown())
-        else:
-            self.data_for_plotting.reset_index(drop=True, inplace=True)
-            self.data_for_plotting.to_csv(**stat_kwargs)
-
     def show(self):
         """Displays the generated figure.
         """
@@ -220,14 +210,23 @@ class Bar():
         
         plt.show()
 
-    def savefig(self, **savefig_kwargs):
-        """Saves the generated figure.
+    def save(self, **save_kwargs):
+        """Saves the generated figure or data.
         """
-
-        print('** Saved figure. **')
 
         if not self.plotted_already:
             self.plot()
             self.plotted_already = True
 
-        plt.savefig(**savefig_kwargs, bbox_inches='tight')
+        file_extension = save_kwargs['fname'].lower().split('.')[-1]
+
+        if file_extension == 'csv':
+            print('** Saved stat **')
+            if 'fname' in save_kwargs:
+                save_kwargs['path_or_buf'] = save_kwargs.pop('fname')
+            self.data_for_plotting.sort_values(by=['gene', 'position'], inplace=True)
+            self.data_for_plotting.reset_index(drop=True, inplace=True)
+            self.data_for_plotting.to_csv(**save_kwargs)
+        else:
+            print('** Saved figure **')
+            plt.savefig(**save_kwargs, bbox_inches='tight')

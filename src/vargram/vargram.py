@@ -80,7 +80,7 @@ class vargram:
         self._methods_called = []
         self._methods_kwargs = []
         self._plots = ['bar'] # These are methods that build the plot
-        self._terminals = ['show', 'savefig']
+        self._terminals = ['show', 'save']
         self._generate_plot = False
         self._already_processed_data = False
         
@@ -93,7 +93,7 @@ class vargram:
         # show()
         self._shown = False
 
-        # savefig()
+        # save()
         self._saved = False
     
     def _generate(self):
@@ -128,7 +128,11 @@ class vargram:
             if run_key or method != '_key': # Ensuring that the internal key method is only called once
                 if method == '_key':
                     run_key = False
-                getattr(self, method)(**latest_method_kwargs[i])
+                
+                if method == '_bar':
+                    self._plot_data = getattr(self, method)(**latest_method_kwargs[i])
+                else:
+                    getattr(self, method)(**latest_method_kwargs[i])
             else:
                 continue
         
@@ -139,20 +143,15 @@ class vargram:
 
         getattr(self._plot_instance, 'show')()
     
-    def _savefig(self, **_savefig_kwargs):
-        """Save generated figure"""
+    def _save(self, **_save_kwargs):
+        """Save generated figure or data"""
 
-        getattr(self._plot_instance, 'savefig')(**_savefig_kwargs)
-    
-    def _stat(self, **_stat_kwargs):
-        """Save generated dataframe"""
-
-        getattr(self._plot_instance, 'stat')(**_stat_kwargs)
+        getattr(self._plot_instance, 'save')(**_save_kwargs)
     
     def _bar(self, **_bar_kwargs):
         """Process data for plotting"""
 
-        getattr(self._plot_instance, 'process')(**_bar_kwargs)
+        return getattr(self._plot_instance, 'process')(**_bar_kwargs)
 
     def _key(self, **_key_kwargs):
         """Process key data for plotting"""
@@ -171,14 +170,15 @@ class vargram:
         
         getattr(self._plot_instance, 'aes')(**_aes_kwargs)
     
-    def stat(self, stat_path='', **stat_kwargs):
+    def stat(self, **stat_kwargs):
         """Wrapper for stat method"""
 
-        self._methods_called.append('_stat')
-        stat_kwargs['path_or_buf'] = stat_path
-        self._methods_kwargs.append(stat_kwargs)
-
         self._generate()
+
+        self._plot_data.sort_values(by=['gene', 'mutation'], inplace=True)
+        self._plot_data.reset_index(drop=True, inplace=True)
+
+        return self._plot_data
         
     def show(self): 
         """Wrapper for show method"""
@@ -189,13 +189,13 @@ class vargram:
 
         self._generate()
 
-    def savefig(self, fname, **savefig_kwargs):
-        """Wrapper for savefig method"""
+    def save(self, fname, **save_kwargs):
+        """Wrapper for save method"""
 
         self._saved = True
-        savefig_kwargs['fname'] = fname
-        self._methods_called.append('_savefig')
-        self._methods_kwargs.append(savefig_kwargs)
+        save_kwargs['fname'] = fname
+        self._methods_called.append('_save')
+        self._methods_kwargs.append(save_kwargs)
 
         self._generate()
 
