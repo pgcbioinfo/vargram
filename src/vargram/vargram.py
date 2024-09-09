@@ -48,7 +48,7 @@ class vargram:
             if isinstance(vargram_kwargs['data'], str): # data is a path
                 self._data = pd.read_csv(vargram_kwargs['data'])
             else:
-                self._datdata = vargram_kwargs['data'] # data is a dataframe
+                self._data = vargram_kwargs['data'] # data is a dataframe
         
         # Getting metadata and joining it with data
         if 'meta' in vargram_kwargs.keys():

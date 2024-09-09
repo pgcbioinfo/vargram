@@ -224,7 +224,7 @@ class Bar():
             print('** Saved stat **')
             if 'fname' in save_kwargs:
                 save_kwargs['path_or_buf'] = save_kwargs.pop('fname')
-            self.data_for_plotting.sort_values(by=['gene', 'position'], inplace=True)
+            self.data_for_plotting.sort_values(by=['gene', 'mutation'], inplace=True)
             self.data_for_plotting.reset_index(drop=True, inplace=True)
             self.data_for_plotting.to_csv(**save_kwargs)
         else:
