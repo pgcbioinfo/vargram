@@ -1,7 +1,8 @@
 # """Main module for generating VARGRAM figures and summary statistics."""
 
-from .utils import methods_utils, stats_module
+from .utils import methods_utils
 from .nextread.nextread import nextread
+from .nextread import nextread_utils
 from .plots.bar import Bar
 
 import pandas as pd
@@ -39,7 +40,7 @@ class vargram:
 
             nextread_kwargs = {key: vargram_kwargs[key] for key in ['seq', 'ref', 'gene'] if key in vargram_kwargs.keys()}
             self._data = nextread(**nextread_kwargs)
-            self._data = stats_module.process_nextread(self._data)
+            self._data = nextread_utils.process_nextread(self._data)
             self._nextread_called = True
             
         elif 'data' not in vargram_kwargs.keys():

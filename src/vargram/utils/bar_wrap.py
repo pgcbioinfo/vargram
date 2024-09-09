@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as mg
 import matplotlib.patches as mp
 import matplotlib.text as mt
-from . import stats_module 
 from . import bar_module 
 import copy
 

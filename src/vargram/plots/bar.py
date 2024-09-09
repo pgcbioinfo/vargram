@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.colors as mc
 import numpy as np
-from ..utils import bar_wrap, bar_module, stats_module
+from ..utils import bar_wrap, bar_module
 import pandas as pd
 
 def create_default_colors(num_color, color = '#5E5E5E', single = False):
