@@ -1,7 +1,12 @@
+"""Tests whether processed data for plotting is correct."""
+
 from vargram import vargram
 import random
 import pandas as pd
 import re
+import tempfile
+import os
+import shutil
 
 def generate_mutations(num_mutations, amino_acids='ACDEFGHIKLMNPQRSTVWY', max_position=1000):
     unique_positions = random.sample(range(1, max_position + 1), num_mutations)
@@ -82,7 +87,6 @@ class TestPlotData:
         self.num = random.randint(30,100)
         self.output = create_output(self.num)
         self.input = create_input(self.output)
-        self.input.to_csv('input.csv')
 
         self.vg = vargram(data=self.input)
         self.vg.bar(threshold=20,ytype='counts')
@@ -90,10 +94,15 @@ class TestPlotData:
 
     def test_returned_plot_data(self):
         
-        self.vg.save('saved_plot_data.csv', index=False)
-        saved_plot_data = pd.read_csv('saved_plot_data.csv')
+        vargram_test_dir = tempfile.mkdtemp(prefix="vargram_test_dir")
+        try:
+            saved_file_path = os.path.join(vargram_test_dir, 'saved_plot_data.csv')
+            self.vg.save(saved_file_path, index=False)
+            saved_plot_data = pd.read_csv(saved_file_path)
         
-        assert self.returned_plot_data.equals(saved_plot_data)
+            assert self.returned_plot_data.equals(saved_plot_data)
+        finally:
+            shutil.rmtree(vargram_test_dir)
 
     def test_plot_data(self):
 
