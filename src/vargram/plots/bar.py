@@ -230,3 +230,4 @@ class Bar():
         else:
             print('** Saved figure **')
             plt.savefig(**save_kwargs, bbox_inches='tight')
+            plt.close()
