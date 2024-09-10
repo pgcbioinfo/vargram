@@ -81,15 +81,12 @@ class vargram:
         self._methods_called = []
         self._methods_kwargs = []
         self._plots = ['bar'] # These are methods that build the plot
-        self._terminals = ['show', 'save']
+        self._terminals = ['show', 'save', 'stat']
         self._generate_plot = False
-        self._already_processed_data = False
-        
+        self._plots_indices = []
+
         # key()
-        self._master_key_data = pd.DataFrame()
-        self._nkeys = 0
-        self._key_labels = []
-        self._key_colors = []
+        self._clean_keys()
 
         # show()
         self._shown = False
@@ -97,15 +94,24 @@ class vargram:
         # save()
         self._saved = False
     
+    def _clean_keys(self):
+
+        self._master_key_data = pd.DataFrame()
+        self._nkeys = 0
+        self._key_labels = []
+        self._key_colors = []
+
+
+    
     def _generate(self):
         """Runs all called methods in correct order"""
         
         # Getting group of methods called since last called plot
-        latest_method_calls = self._methods_called[self._recent_plot_index:]
-        latest_method_kwargs = self._methods_kwargs[self._recent_plot_index:]
+        latest_method_calls = self._methods_called[self._latest_plot_index:]
+        latest_method_kwargs = self._methods_kwargs[self._latest_plot_index:]
 
         # Determining whether to generate plots or not
-        if self._already_processed_data:
+        if not self._generate_plot:
             getattr(self, latest_method_calls[-1])(**self._methods_kwargs[-1])
             return
         
@@ -137,7 +143,7 @@ class vargram:
             else:
                 continue
         
-        self._already_processed_data = True
+        self._generate_plot = False
     
     def _show(self, empty_string=''): 
         """Show generated figure"""
@@ -151,7 +157,7 @@ class vargram:
     
     def _bar(self, **_bar_kwargs):
         """Process data for plotting"""
-
+        
         return getattr(self._plot_instance, 'process')(**_bar_kwargs)
 
     def _key(self, **_key_kwargs):
@@ -205,7 +211,9 @@ class vargram:
         
         self._methods_called.append('_bar')
         self._methods_kwargs.append(bar_kwargs)
-        self._recent_plot_index = len(self._methods_called) - 1
+        self._latest_plot_index = len(self._methods_called) - 1
+        self._generate_plot = True
+        self._clean_keys()
 
     def key(self, key_data, **key_kwargs):
         """Joins all key data"""
