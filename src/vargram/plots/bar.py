@@ -57,8 +57,6 @@ class Bar():
     def process(self, **process_kwargs):
         """Creates data for plotting and structure."""
 
-        print('** Processed data for plotting. **')
-
         # Checking if the default columns are present or if not, required arguments are provided
         required_data_attributes = ['x', 'group', 'stack']
         default_data_attributes = [self.x, self.group, self.stack]
@@ -126,6 +124,7 @@ class Bar():
         # Adding keys if provided
         if not self.key_called:
             self.data_for_plotting = data_filtered
+            print('** Processed data for plotting. **')
             return self.data_for_plotting
         
         data_with_keys = pd.merge(data_filtered, self.key_data, on=[self.group, self.x], how='outer')
@@ -133,34 +132,37 @@ class Bar():
         data_with_keys.reset_index(drop=True, inplace=True)
         self.data_for_plotting = data_with_keys
 
+        print('** Processed data for plotting. **')
+
         return self.data_for_plotting
         
     def key(self, **key_kwargs):
         self.key_called = True        
-        print('** Processed key for barplot. **')
 
         self.key_data = key_kwargs['key_data']
         self.key_label = key_kwargs['key_labels']
         self.key_color = key_kwargs['key_colors']
 
+        print('** Processed key for barplot. **')
+
     def aes(self, **aes_kwargs):
-        print('** Processed aesthetics for barplot. **')
 
         for aes_key in aes_kwargs.keys():
             setattr(self, aes_key, aes_kwargs[aes_key])
+        print('** Processed aesthetics for barplot. **')
     
     def struct_method(self, **struct_kwargs):
-        print('** Processed struct. **')
 
         row_groups = struct_kwargs['struct_key'].split('/')
         self.struct = [''.join(col.split()).split(',') for col in row_groups]
+        print('** Processed struct. **')
 
     def plot(self):
         print('** Plotting **')
 
         # Getting structure of the mutation profile grid
         if len(self.struct) == 0:
-            self.struct = bar_module.build_struct(self.data_for_struct, self.group)      
+            self.struct = bar_module.build_struct(self.data_for_struct, self.group)  
 
         # Creating bar grids
         label_grid, legend_grid, group_title_axes, barplot_axes, heatmap_axes  = bar_wrap.build_bar_grid(self.struct, self.data_for_struct, self.group, self.key_called)
@@ -202,13 +204,12 @@ class Bar():
         """Displays the generated figure.
         """
         
-        print('** Showed figure. **')
-
         if not self.plotted_already:
             self.plot()
             self.plotted_already = True
         
         plt.show()
+        print('** Showed figure. **')
 
     def save(self, **save_kwargs):
         """Saves the generated figure or data.
@@ -221,13 +222,13 @@ class Bar():
         file_extension = save_kwargs['fname'].lower().split('.')[-1]
 
         if file_extension == 'csv':
-            print('** Saved stat **')
             if 'fname' in save_kwargs:
                 save_kwargs['path_or_buf'] = save_kwargs.pop('fname')
             self.data_for_plotting.sort_values(by=['gene', 'mutation'], inplace=True)
             self.data_for_plotting.reset_index(drop=True, inplace=True)
             self.data_for_plotting.to_csv(**save_kwargs)
+            print('** Saved data **')
         else:
-            print('** Saved figure **')
             plt.savefig(**save_kwargs, bbox_inches='tight')
             plt.close()
+            print('** Saved figure **')

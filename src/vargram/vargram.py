@@ -112,8 +112,11 @@ class vargram:
 
         # Determining whether to generate plots or not
         if not self._generate_plot:
-            getattr(self, latest_method_calls[-1])(**self._methods_kwargs[-1])
-            return
+            if latest_method_calls[-1] == '_stat':
+                return
+            else:
+                getattr(self, latest_method_calls[-1])(**self._methods_kwargs[-1])
+                return
         
         # Creating plot object instance
         plot_class = latest_method_calls[0][1:].title() # This removes the initial underscore and capitalizes the first letter
@@ -155,6 +158,10 @@ class vargram:
 
         getattr(self._plot_instance, 'save')(**_save_kwargs)
     
+    def _stat(self, **_stat_kwargs):
+        
+        pass
+    
     def _bar(self, **_bar_kwargs):
         """Process data for plotting"""
         
@@ -179,6 +186,9 @@ class vargram:
     
     def stat(self, **stat_kwargs):
         """Wrapper for stat method"""
+
+        self._methods_called.append('_stat')
+        self._methods_kwargs.append({'empty_string':''}) # The unused empty string argument is so as to be able to maintain length of methods and methods_kwargs the same
 
         self._generate()
 
