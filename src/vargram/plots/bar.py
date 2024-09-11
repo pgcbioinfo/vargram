@@ -21,9 +21,11 @@ class Bar():
         # Class attributes
         self.data = data
         self.plotted_already = False
+        self.verbose = False
 
         # Plot attributes
         self.fig = plt.figure(figsize=[8, 4.8])
+        self.closed = False
 
         # Data attributes
         self.x = 'mutation'
@@ -124,7 +126,8 @@ class Bar():
         # Adding keys if provided
         if not self.key_called:
             self.data_for_plotting = data_filtered
-            print('** Processed data for plotting. **')
+            if self.verbose:
+                print('** Processed data for plotting. **')
             return self.data_for_plotting
         
         data_with_keys = pd.merge(data_filtered, self.key_data, on=[self.group, self.x], how='outer')
@@ -132,7 +135,8 @@ class Bar():
         data_with_keys.reset_index(drop=True, inplace=True)
         self.data_for_plotting = data_with_keys
 
-        print('** Processed data for plotting. **')
+        if self.verbose:
+            print('** Processed data for plotting. **')
 
         return self.data_for_plotting
         
@@ -143,22 +147,26 @@ class Bar():
         self.key_label = key_kwargs['key_labels']
         self.key_color = key_kwargs['key_colors']
 
-        print('** Processed key for barplot. **')
+        if self.verbose:
+            print('** Processed key for barplot. **')
 
     def aes(self, **aes_kwargs):
 
         for aes_key in aes_kwargs.keys():
             setattr(self, aes_key, aes_kwargs[aes_key])
-        print('** Processed aesthetics for barplot. **')
+        if self.verbose:
+            print('** Processed aesthetics for barplot. **')
     
     def struct_method(self, **struct_kwargs):
 
         row_groups = struct_kwargs['struct_key'].split('/')
         self.struct = [''.join(col.split()).split(',') for col in row_groups]
-        print('** Processed struct. **')
+        if self.verbose:
+            print('** Processed struct. **')
 
     def plot(self):
-        print('** Plotting **')
+        if self.verbose:
+            print('** Plotting **')
 
         # Getting structure of the mutation profile grid
         if len(self.struct) == 0:
@@ -208,12 +216,15 @@ class Bar():
             self.plot()
             self.plotted_already = True
         
-        new_fig = plt.figure()
-        new_manager = new_fig.canvas.manager
-        new_manager.canvas.figure = self.fig
-        self.fig.set_canvas(new_manager.canvas)
+        if self.closed:
+            new_fig = plt.figure()
+            new_manager = new_fig.canvas.manager
+            new_manager.canvas.figure = self.fig
+            self.fig.set_canvas(new_manager.canvas)
+            
         plt.show()
-        print('** Showed figure. **')
+        if self.verbose:
+            print('** Showed figure. **')
 
     def save(self, **save_kwargs):
         """Saves the generated figure or data.
@@ -231,8 +242,11 @@ class Bar():
             self.data_for_plotting.sort_values(by=['gene', 'mutation'], inplace=True)
             self.data_for_plotting.reset_index(drop=True, inplace=True)
             self.data_for_plotting.to_csv(**save_kwargs)
-            print('** Saved data **')
+            if self.verbose:
+                print('** Saved data **')
         else:
             plt.savefig(**save_kwargs, bbox_inches='tight')
             plt.close()
-            print('** Saved figure **')
+            self.closed = True
+            if self.verbose:
+                print('** Saved figure **')
