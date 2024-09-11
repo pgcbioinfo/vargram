@@ -208,6 +208,10 @@ class Bar():
             self.plot()
             self.plotted_already = True
         
+        new_fig = plt.figure()
+        new_manager = new_fig.canvas.manager
+        new_manager.canvas.figure = self.fig
+        self.fig.set_canvas(new_manager.canvas)
         plt.show()
         print('** Showed figure. **')
 
