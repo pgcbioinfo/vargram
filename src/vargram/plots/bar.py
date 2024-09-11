@@ -113,7 +113,6 @@ class Bar():
 
         # Adding keys if provided
         if self.key_called:
-
             data_with_keys = pd.merge(data_filtered, self.key_data, on=[self.group, self.x], how='outer')
             data_with_keys.fillna(0, inplace=True)
             data_with_keys.reset_index(drop=True, inplace=True)
@@ -138,7 +137,12 @@ class Bar():
         self.data_for_struct.sort_values(by='count', ascending=False, inplace=True)
         self.data_for_struct.reset_index(drop=True, inplace=True)
 
+        if self.data_for_plotting.columns.size > 0 and self.data_for_plotting.shape[0] == 0:
+            raise ValueError("Plot DataFrame has no rows. Lowering threshold might help.")
+
         # Returning for vg.stat()
+        self.data_for_plotting.sort_values(by=[self.group, self.x], inplace=True)
+        self.data_for_plotting.reset_index(drop=True, inplace=True)
         return self.data_for_plotting
         
     def key(self, **key_kwargs):
@@ -241,8 +245,6 @@ class Bar():
         if file_extension == 'csv':
             if 'fname' in save_kwargs:
                 save_kwargs['path_or_buf'] = save_kwargs.pop('fname')
-            self.data_for_plotting.sort_values(by=['gene', 'mutation'], inplace=True)
-            self.data_for_plotting.reset_index(drop=True, inplace=True)
             self.data_for_plotting.to_csv(**save_kwargs)
             if self.verbose:
                 print('** Saved data **')

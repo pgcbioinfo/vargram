@@ -158,7 +158,6 @@ class vargram:
                 if method == '_bar':
                     self._plot_data = getattr(self, method)(**latest_method_kwargs[i])
                 else:
-                    print('Current method:', method)
                     getattr(self, method)(**latest_method_kwargs[i])
             else:
                 continue
