@@ -49,7 +49,7 @@ class vargram:
             if isinstance(vargram_kwargs['data'], str): # data is a path
 
                 ext = os.path.splitext(vargram_kwargs['data'])[1]
-                if vargram_kwargs['nextclade'] == True:
+                if 'nextclade' in vargram_kwargs.keys() and vargram_kwargs['nextclade'] == True:
                     delimiter = ';'
                 elif ext == '.csv':
                     delimiter = ','
@@ -61,7 +61,7 @@ class vargram:
                 read_data = vargram_kwargs['data'] # data is a dataframe
             
             # Processing if provided CSV is Nextclade output
-            if vargram_kwargs['nextclade'] == True:
+            if 'nextclade' in vargram_kwargs.keys() and vargram_kwargs['nextclade'] == True:
                 if 'batch' not in read_data.columns:
                     read_data.insert(0, 'batch', 'my_batch')
                 read_data.sort_values(by=['batch', 'seqName'], inplace=True)
@@ -158,6 +158,7 @@ class vargram:
                 if method == '_bar':
                     self._plot_data = getattr(self, method)(**latest_method_kwargs[i])
                 else:
+                    print('Current method:', method)
                     getattr(self, method)(**latest_method_kwargs[i])
             else:
                 continue
@@ -207,9 +208,6 @@ class vargram:
         self._methods_kwargs.append({'empty_string':''}) # The unused empty string argument is so as to be able to maintain length of methods and methods_kwargs the same
 
         self._generate()
-
-        self._plot_data.sort_values(by=['gene', 'mutation'], inplace=True)
-        self._plot_data.reset_index(drop=True, inplace=True)
 
         return self._plot_data
         
