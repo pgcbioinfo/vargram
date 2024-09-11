@@ -111,35 +111,32 @@ class Bar():
         data_filtered['sum'] = data_filtered[self.stack_names].sum(axis=1)
         data_filtered = data_filtered[data_filtered['sum'] > 0]
 
+        # Adding keys if provided
+        if self.key_called:
+
+            data_with_keys = pd.merge(data_filtered, self.key_data, on=[self.group, self.x], how='outer')
+            data_with_keys.fillna(0, inplace=True)
+            data_with_keys.reset_index(drop=True, inplace=True)
+            self.data_for_plotting = data_with_keys
+        else:
+            self.data_for_plotting = data_filtered
+
+        if self.verbose:
+            print('** Processed data for plotting. **')
+
+        data_for_plotting = self.data_for_plotting.copy()
         # Getting data for calculating structure
-        self.group_names = data_filtered[self.group].unique().tolist()
+        self.group_names = data_for_plotting[self.group].unique().tolist()
         if len(self.group_label) == 0: # Assigning group_names as labels
             self.group_label = self.group_names 
         unique_counts = []
         for group in self.group_names:
-            groups_df = data_filtered[data_filtered[self.group] == group]
+            groups_df = data_for_plotting[data_for_plotting[self.group] == group]
             unique_counts.append(len(groups_df[self.x].unique()))
 
         self.data_for_struct = pd.DataFrame({self.group: self.group_names, 'count': unique_counts})
         self.data_for_struct.sort_values(by='count', ascending=False, inplace=True)
         self.data_for_struct.reset_index(drop=True, inplace=True)
-
-        # Adding keys if provided
-        if not self.key_called:
-            self.data_for_plotting = data_filtered
-            if self.verbose:
-                print('** Processed data for plotting. **')
-            return self.data_for_plotting
-        
-        data_with_keys = pd.merge(data_filtered, self.key_data, on=[self.group, self.x], how='outer')
-        data_with_keys.fillna(0, inplace=True)
-        data_with_keys.reset_index(drop=True, inplace=True)
-        self.data_for_plotting = data_with_keys
-
-        if self.verbose:
-            print('** Processed data for plotting. **')
-
-        return self.data_for_plotting
         
     def key(self, **key_kwargs):
         self.key_called = True        

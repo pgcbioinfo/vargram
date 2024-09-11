@@ -40,7 +40,6 @@ def build_bar_grid(struct, grid_width_counts, group_attr, key_called):
         if sum(width_ratios) > width_max:
             width_max = sum(width_ratios)
 
-
     # Creating grids for each row of the profile
     modified_group_rows = copy.deepcopy(struct)
     group_row_grids = []

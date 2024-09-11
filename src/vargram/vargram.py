@@ -64,6 +64,8 @@ class vargram:
             if vargram_kwargs['nextclade'] == True:
                 if 'batch' not in read_data.columns:
                     read_data.insert(0, 'batch', 'my_batch')
+                read_data.sort_values(by=['batch', 'seqName'], inplace=True)
+                read_data.reset_index(drop=True, inplace=True)
                 self._data = nextread_utils.process_nextread(read_data)
             else:
                 self._data = read_data
