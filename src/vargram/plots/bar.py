@@ -26,6 +26,7 @@ class Bar():
         # Plot attributes
         self.fig = plt.figure(figsize=[8, 4.8])
         self.closed = False
+        self.shown = False
 
         # Data attributes
         self.x = 'mutation'
@@ -217,12 +218,13 @@ class Bar():
             self.plotted_already = True
         
         if self.closed:
-            new_fig = plt.figure()
-            new_manager = new_fig.canvas.manager
-            new_manager.canvas.figure = self.fig
-            self.fig.set_canvas(new_manager.canvas)
+            show_fig = plt.figure()
+            show_manager = show_fig.canvas.manager
+            show_manager.canvas.figure = self.fig
+            self.fig.set_canvas(show_manager.canvas)
             
         plt.show()
+        self.shown = True
         if self.verbose:
             print('** Showed figure. **')
 
@@ -245,6 +247,12 @@ class Bar():
             if self.verbose:
                 print('** Saved data **')
         else:
+            if self.shown:
+                save_fig = plt.figure()
+                save_manager = save_fig.canvas.manager
+                save_manager.canvas.figure = self.fig
+                self.fig.set_canvas(save_manager.canvas)
+
             plt.savefig(**save_kwargs, bbox_inches='tight')
             plt.close()
             self.closed = True
