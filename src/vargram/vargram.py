@@ -47,9 +47,26 @@ class vargram:
             raise ValueError("Missing data. Either provide the FASTA files with the 'seq' and 'ref' arguments or provide a dataframe/path with 'data'.")
         else:
             if isinstance(vargram_kwargs['data'], str): # data is a path
-                self._data = pd.read_csv(vargram_kwargs['data'])
+
+                ext = os.path.splitext(vargram_kwargs['data'])[1]
+                if vargram_kwargs['nextclade'] == True:
+                    delimiter = ';'
+                elif ext == '.csv':
+                    delimiter = ','
+                elif ext == '.tsv':
+                    delimiter = '\t'
+
+                read_data = pd.read_csv(vargram_kwargs['data'], delimiter=delimiter)
             else:
-                self._data = vargram_kwargs['data'] # data is a dataframe
+                read_data = vargram_kwargs['data'] # data is a dataframe
+            
+            # Processing if provided CSV is Nextclade output
+            if vargram_kwargs['nextclade'] == True:
+                if 'batch' not in read_data.columns:
+                    read_data.insert(0, 'batch', 'my_batch')
+                self._data = nextread_utils.process_nextread(read_data)
+            else:
+                self._data = read_data
         
         # Getting metadata and joining it with data
         if 'meta' in vargram_kwargs.keys():
