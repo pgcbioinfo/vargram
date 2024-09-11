@@ -131,11 +131,8 @@ class vargram:
 
         # Determining whether to generate plots or not
         if not self._generate_plot:
-            if latest_method_calls[-1] == '_stat':
-                return
-            else:
-                getattr(self, latest_method_calls[-1])(**self._methods_kwargs[-1])
-                return
+            getattr(self, latest_method_calls[-1])(**self._methods_kwargs[-1])
+            return
         
         # Creating plot object instance
         plot_class = latest_method_calls[0][1:].title() # This removes the initial underscore and capitalizes the first letter

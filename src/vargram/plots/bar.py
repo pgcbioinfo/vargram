@@ -137,6 +137,9 @@ class Bar():
         self.data_for_struct = pd.DataFrame({self.group: self.group_names, 'count': unique_counts})
         self.data_for_struct.sort_values(by='count', ascending=False, inplace=True)
         self.data_for_struct.reset_index(drop=True, inplace=True)
+
+        # Returning for vg.stat()
+        return self.data_for_plotting
         
     def key(self, **key_kwargs):
         self.key_called = True        
