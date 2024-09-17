@@ -177,6 +177,8 @@ def bar_data(request):
 class TestBarData:
 
     def test_returned_bar_data(self, bar_data):
+        """Returned bar data should be equal to saved data. 
+        """
         
         vg = bar_data["vg"]
         result = vg.stat()
@@ -190,7 +192,20 @@ class TestBarData:
         finally:
             shutil.rmtree(vargram_test_dir)
 
+    def test_batch_key_sums(self, bar_data):
+        """The total sum of all batch and key columns should not be zero.
+        """
+        vg = bar_data["vg"]
+        column_sums = vg.stat().sum(numeric_only=True, axis=1)
+        zero_column_sums = column_sums.abs() < 1e-10
+        result = zero_column_sums.any()
+        expected = False
+
+        assert result == expected
+
     def test_bar_data(self, bar_data):
+        """The returned bar data should be equal to expected bar data.
+        """
         vg = bar_data["vg"]
         expected = bar_data["output"]
         result = vg.stat()
