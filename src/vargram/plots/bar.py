@@ -115,6 +115,10 @@ class Bar():
         if self.key_called:
             data_with_keys = pd.merge(data_filtered, self.key_data, on=[self.group, self.x], how='outer')
             data_with_keys.fillna(0, inplace=True)
+            if data_filtered['sum'].dtype == np.int64:
+                numerical_columns = list(data_with_keys.columns)[2:]
+                for col in numerical_columns:
+                    data_with_keys[col] = data_with_keys[col].astype(np.int64)
             data_with_keys.reset_index(drop=True, inplace=True)
             self.data_for_plotting = data_with_keys
         else:
