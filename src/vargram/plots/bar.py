@@ -3,6 +3,7 @@ import matplotlib.colors as mc
 import numpy as np
 from ..utils import bar_wrap, bar_module
 import pandas as pd
+from decimal import Decimal
 
 def create_default_colors(num_color, color = '#5E5E5E', single = False):
 
@@ -103,12 +104,19 @@ class Bar():
             self.ylabel = self.ytype.title()
         
         if self.ytype == 'weights':
-            for stack in self.stack_names:
+            for stack in self.stack_names: # Using Decimal for precision
+                data_filtered[stack] = data_filtered[stack].apply(lambda x: Decimal(str(x)))
                 stack_sum = data_filtered[stack].sum()
-                data_filtered[stack] = data_filtered[stack] * 100 / stack_sum
+                data_filtered[stack] = data_filtered[stack] * Decimal('100') / Decimal(str(stack_sum))
+                data_filtered[stack] = data_filtered[stack].apply(lambda x: x.quantize(Decimal('0.01'))) 
         
         # Summing x counts across all stacks
         data_filtered['sum'] = data_filtered[self.stack_names].sum(axis=1)
+        if self.ytype == 'weights': # Converting Decimal objects back to float
+            for col in data_filtered.columns:
+                if col == 'gene' or col == 'mutation':
+                    continue
+                data_filtered[col] = data_filtered[col].apply(float)
         data_filtered = data_filtered[data_filtered['sum'] > 0]
 
         # Adding keys if provided
@@ -137,6 +145,7 @@ class Bar():
             groups_df = data_for_plotting[data_for_plotting[self.group] == group]
             unique_counts.append(len(groups_df[self.x].unique()))
 
+        # Getting data for struct
         self.data_for_struct = pd.DataFrame({self.group: self.group_names, 'count': unique_counts})
         self.data_for_struct.sort_values(by='count', ascending=False, inplace=True)
         self.data_for_struct.reset_index(drop=True, inplace=True)
