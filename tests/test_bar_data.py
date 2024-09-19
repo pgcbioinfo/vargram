@@ -64,7 +64,6 @@ class MyBarData:
 
             # Removing sampled pure key indices
             self.key_only_ind = self.key_only_ind[num_pure_key_mutations[i]:]
-            print(self.key_only_ind)
 
     def create_input(self):
 
@@ -113,6 +112,8 @@ class MyBarData:
     
     def generate_mutations(self, num_mutations, amino_acids='ACDEFGHIKLMNPQRSTVWY', max_position=10000):
         unique_positions = random.sample(range(1, max_position + 1), num_mutations)
+        sorted_positions = sorted(unique_positions.copy())
+        # All mutations are guaranteed to be unique
 
         mutations = []
         for pos in unique_positions:
@@ -120,10 +121,12 @@ class MyBarData:
             if mutation_type <= 1: # substitution
                 mutations.append(f'{random.choice(amino_acids)}{pos}{random.choice(amino_acids)}')
             elif mutation_type == 2: # deletion
-                deletion_length = random.randint(1,10)
-                end_position = pos+deletion_length
-                while end_position in unique_positions:
-                    end_position = pos + random.randint(1,10)
+                pos_ind = sorted_positions.index(pos)
+                if pos == max(sorted_positions): 
+                    end_position = random.randint(1,10)
+                else: # ensuring end_position does not include any unique_position
+                    end_positions = [epos for epos in range(sorted_positions[pos_ind+1] - pos + 1) if not any(pos < other_pos < pos + epos for other_pos in sorted_positions)]
+                    end_position = pos+random.sample(end_positions, 1)[0]
                 mutations.append(f'{pos}-{end_position}')
             elif mutation_type == 3: # insertion
                 insertion_length = random.randint(1, 10)
@@ -200,6 +203,17 @@ class TestBarData:
         zero_column_sums = column_sums.abs() < 1e-10
         result = zero_column_sums.any()
         expected = False
+
+        assert result == expected
+    
+    def test_number_mutations(self, bar_data):
+        """The length of the dataframe should be equal to the number of unique mutations.
+        This is true for the test input created.
+        """
+        vg = bar_data["vg"]
+        output = vg.stat()
+        result = len(output['mutation'])
+        expected = len(output['mutation'].unique())
 
         assert result == expected
 
