@@ -1,9 +1,9 @@
 # """Main module for generating VARGRAM figures and summary statistics."""
 
-from .utils import methods_utils
-from .nextread.nextread import nextread
-from .nextread import nextread_utils
-from .plots.bar import Bar
+from .wranglers import _other_utils
+from .wranglers._nextclade import nextclade
+from .wranglers import _nextclade_utils
+from .plots._bar import Bar
 
 import pandas as pd
 import os
@@ -38,10 +38,10 @@ class vargram:
             self._aains = 'aaInsertions'
             self._nextclade_seqname = 'seqName'
 
-            nextread_kwargs = {key: vargram_kwargs[key] for key in ['seq', 'ref', 'gene'] if key in vargram_kwargs.keys()}
-            self._data = nextread(**nextread_kwargs)
-            self._data = nextread_utils.process_nextread(self._data)
-            self._nextread_called = True
+            nextclade_kwargs = {key: vargram_kwargs[key] for key in ['seq', 'ref', 'gene'] if key in vargram_kwargs.keys()}
+            self._data = nextclade(**nextclade_kwargs)
+            self._data = _nextclade_utils.process_nextclade(self._data)
+            self._nextclade_called = True
             
         elif 'data' not in vargram_kwargs.keys():
             raise ValueError("Missing data. Either provide the FASTA files with the 'seq' and 'ref' arguments or provide a dataframe/path with 'data'.")
@@ -66,7 +66,7 @@ class vargram:
                     read_data.insert(0, 'batch', 'my_batch')
                 read_data.sort_values(by=['batch', 'seqName'], inplace=True)
                 read_data.reset_index(drop=True, inplace=True)
-                self._data = nextread_utils.process_nextread(read_data)
+                self._data = _nextclade_utils.process_nextclade(read_data)
             else:
                 self._data = read_data
         
@@ -119,8 +119,6 @@ class vargram:
         self._nkeys = 0
         self._key_labels = []
         self._key_colors = []
-
-
     
     def _generate(self):
         """Runs all called methods in correct order"""
@@ -247,7 +245,7 @@ class vargram:
 
         # Reading data
         if isinstance(key_data, str):
-            key_read = methods_utils.read_comma_or_tab(key_data)
+            key_read = _other_utils.read_comma_or_tab(key_data)
 
         # Getting x to read
         if 'x' in key_kwargs.keys():

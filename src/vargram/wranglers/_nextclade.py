@@ -7,15 +7,15 @@
 # Example usage
 # nr = nextread(seq = "data/sequences.fasta", ref = "sars-cov-2")
 
-from .nextread_utils import input_checker
-from .cli import create_command, capture_output
+from ._nextclade_utils import input_checker
+from ._nextclade_cli import create_command, capture_output
 import os
 import pandas as pd
 import tempfile
 import shutil
 import warnings
 
-def nextread(**kwargs):
+def nextclade(**kwargs):
     """Takes input sequence FASTA files and
     transforms it into a DataFrame to be plotted by VARGRAM.
 

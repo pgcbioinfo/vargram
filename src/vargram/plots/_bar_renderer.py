@@ -1,9 +1,67 @@
+"""Module that generates the bar structure, grid and plots its elements."""
+
+from . import _bar_elements
+
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as mg
 import matplotlib.patches as mp
 import matplotlib.text as mt
-from . import bar_module 
 import copy
+
+def build_struct(group_counts, group_attr, max_per_row = 40):
+    """Determines the optimum structure of the groups in the bar plot.
+
+    Args:
+        group_counts (pandas.DataFrame): The DataFrame containing groups and their unique no. of x data.
+        group_attr (str): The group data attribute.
+        max_per_row (int): Initial maximum number of x data per row.
+    
+    Returns:
+        struct (list): The structure of the plot where each row gives the list of groups for that row.
+    """
+
+    gg = group_counts[group_attr].tolist()
+    cc = group_counts['count'].tolist()
+
+
+    struct = [] # list of groups per row
+    struct_len = [] # list of total mutation counts per row
+    while len(gg) > 0:
+        # Each iteration determines the groups for a row
+
+        # Setting length of largest group as max_per_row
+        # Since it is larger, it takes its own row
+        largest_count = max(cc)
+        if largest_count >= max_per_row: 
+            max_per_row = largest_count
+
+            largest_index = cc.index(largest_count)
+            largest_group = gg[largest_index]
+            struct.append([largest_group])
+
+            cc.remove(largest_count)
+            gg.remove(largest_group)
+
+            continue
+
+        # Of the remaining groups, find all that sum to less than or equal to max_per_row
+        group_row = [gg[0]]
+        current_sum = cc[0]
+        for (i, group) in enumerate(gg):
+            if i == 0:
+                continue
+            if current_sum + cc[i] <= max_per_row:
+                group_row += [group]
+                current_sum += cc[i]
+        struct.append(group_row)
+
+        # Remove these groups
+        indices_to_remove = [i for i, group in enumerate(gg) if group in group_row]
+        gg = [group for i, group in enumerate(gg) if i not in indices_to_remove]
+        cc = [count for i, count in enumerate(cc) if i not in indices_to_remove]
+
+    
+    return struct
 
 def build_bar_grid(struct, grid_width_counts, group_attr, key_called):
     """Creates the whole GridSpec objects on which to place the plots.
@@ -134,7 +192,7 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes, barplot_data
     # Generating colormaps for each key lineage
     heat_cmaps = [] 
     for key_color in key_colors:
-        heat_cmap = bar_module.create_colormap(color=key_color)
+        heat_cmap = _bar_elements.create_colormap(color=key_color)
         heat_cmaps.append(heat_cmap)
 
     # Getting maximum stacked bar height across each group
@@ -166,18 +224,18 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes, barplot_data
         # Adding key x data for group
         if key_called:
             ax_heat = group_key_axes[i]
-            heat_cmap = bar_module.create_colormap()
-            bar_module.build_gene_heatmap(ax_heat, group_barplot_data, key_labels, heat_cmaps, suppress_label)
+            heat_cmap = _bar_elements.create_colormap()
+            _bar_elements.build_gene_heatmap(ax_heat, group_barplot_data, key_labels, heat_cmaps, suppress_label)
         
         # Adding text for group
         ax_text = group_title_axes[i]
-        bar_module.build_group_text(ax_text, group, fig, group_labels)
+        _bar_elements.build_group_text(ax_text, group, fig, group_labels)
 
         # Creating unit barplot for group
         ax_bar = group_bar_axes[i]
         floor = [0]*len(group_barplot_data)
         for (batch, color) in zip(stacks, stack_colors):
-            bar_module.build_group_barplot(ax_bar, group_barplot_data[x_attr], group_barplot_data[batch], floor,
+            _bar_elements.build_group_barplot(ax_bar, group_barplot_data[x_attr], group_barplot_data[batch], floor,
                                           color, suppress_spline, key_called, max_bar_heights[i],
                                           x_aes, y_aes)
             floor += group_barplot_data[batch]            
@@ -252,7 +310,7 @@ def build_legend(legend_grid, stack_aes, group_aes, group_labels):
     ax_batch_legend.legend(handles=batch_legend_handles, title=stack_title, fontsize=stack_fontsize, frameon=frameon, alignment=alignment, loc=stack_loc, bbox_to_anchor=bbox_anchor, borderaxespad=0)
 
     # Removing batch ax spines and ticks
-    bar_module.spine_remover(ax_batch_legend)
+    _bar_elements.spine_remover(ax_batch_legend)
 
     if len(group_labels) != 0:
 
@@ -266,7 +324,7 @@ def build_legend(legend_grid, stack_aes, group_aes, group_labels):
            labelspacing=1.3)
         
         # Removing gene ax spines and ticks
-        bar_module.spine_remover(ax_group_legend)
+        _bar_elements.spine_remover(ax_group_legend)
 
 class Text(object):
     def __init__(self, text):

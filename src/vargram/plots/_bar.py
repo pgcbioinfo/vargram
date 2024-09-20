@@ -1,7 +1,10 @@
+"""Module for generating the unit plots, other plot elements like legends, and auxiliary functions."""
+
+from . import _bar_renderer
+
 import matplotlib.pyplot as plt
 import matplotlib.colors as mc
 import numpy as np
-from ..utils import bar_wrap, bar_module
 import pandas as pd
 from decimal import Decimal
 
@@ -188,10 +191,10 @@ class Bar():
 
         # Getting structure of the mutation profile grid
         if len(self.struct) == 0:
-            self.struct = bar_module.build_struct(self.data_for_struct, self.group)  
+            self.struct = _bar_renderer.build_struct(self.data_for_struct, self.group)  
 
         # Creating bar grids
-        label_grid, legend_grid, group_title_axes, barplot_axes, heatmap_axes  = bar_wrap.build_bar_grid(self.struct, self.data_for_struct, self.group, self.key_called)
+        label_grid, legend_grid, group_title_axes, barplot_axes, heatmap_axes  = _bar_renderer.build_bar_grid(self.struct, self.data_for_struct, self.group, self.key_called)
         
         # Gathering aesthetic attributes
         if self.stack_color == '':
@@ -207,7 +210,7 @@ class Bar():
 
         # Building barplots
         group_labels = []
-        bar_wrap.build_profile(group_title_axes, barplot_axes, heatmap_axes,
+        _bar_renderer.build_profile(group_title_axes, barplot_axes, heatmap_axes,
                                 self.data_for_plotting, 
                                 self.struct,
                                 self.group, self.x,
@@ -219,10 +222,10 @@ class Bar():
                                 x_aes, y_aes)
         
         # Creating figure y-axis label
-        bar_wrap.build_yaxis_label(self.ylabel, label_grid)
+        _bar_renderer.build_yaxis_label(self.ylabel, label_grid)
 
         # Creating figure legend
-        bar_wrap.build_legend(legend_grid, stack_aes, group_aes, group_labels)
+        _bar_renderer.build_legend(legend_grid, stack_aes, group_aes, group_labels)
 
         plt.tight_layout()
 

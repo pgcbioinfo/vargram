@@ -5,61 +5,6 @@ import matplotlib.colors as mc
 import pandas as pd
 import numpy as np
 
-def build_struct(group_counts, group_attr, max_per_row = 40):
-    """Determines the optimum structure of the groups in the bar plot.
-
-    Args:
-        group_counts (pandas.DataFrame): The DataFrame containing groups and their unique no. of x data.
-        group_attr (str): The group data attribute.
-        max_per_row (int): Initial maximum number of x data per row.
-    
-    Returns:
-        struct (list): The structure of the plot where each row gives the list of groups for that row.
-    """
-
-    gg = group_counts[group_attr].tolist()
-    cc = group_counts['count'].tolist()
-
-
-    struct = [] # list of groups per row
-    struct_len = [] # list of total mutation counts per row
-    while len(gg) > 0:
-        # Each iteration determines the groups for a row
-
-        # Setting length of largest group as max_per_row
-        # Since it is larger, it takes its own row
-        largest_count = max(cc)
-        if largest_count >= max_per_row: 
-            max_per_row = largest_count
-
-            largest_index = cc.index(largest_count)
-            largest_group = gg[largest_index]
-            struct.append([largest_group])
-
-            cc.remove(largest_count)
-            gg.remove(largest_group)
-
-            continue
-
-        # Of the remaining groups, find all that sum to less than or equal to max_per_row
-        group_row = [gg[0]]
-        current_sum = cc[0]
-        for (i, group) in enumerate(gg):
-            if i == 0:
-                continue
-            if current_sum + cc[i] <= max_per_row:
-                group_row += [group]
-                current_sum += cc[i]
-        struct.append(group_row)
-
-        # Remove these groups
-        indices_to_remove = [i for i, group in enumerate(gg) if group in group_row]
-        gg = [group for i, group in enumerate(gg) if i not in indices_to_remove]
-        cc = [count for i, count in enumerate(cc) if i not in indices_to_remove]
-
-    
-    return struct
-
 def check_xticks_overlap(xticks):
     """Checks whether there is an overlap between the x-axis tick labels.
 
