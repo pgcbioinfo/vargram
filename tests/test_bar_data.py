@@ -1,6 +1,7 @@
 """Tests whether processed data provided for plotting is correct."""
 
 from vargram import vargram
+import matplotlib.pyplot as plt
 import random
 import pandas as pd
 import re
@@ -8,13 +9,15 @@ import tempfile
 import os
 import shutil
 import pytest
+from decimal import Decimal
 
 class MyBarData:
 
-    def __init__(self, key_called, num):
+    def __init__(self, key_called, num, ytype):
 
         self.key_called = key_called
         self.num = num
+        self.ytype = ytype
 
     def create_output(self):
         self.output = pd.DataFrame(
@@ -25,9 +28,9 @@ class MyBarData:
         )
 
         # Adding batch counts
-        num_batches = 2
+        self.num_batches = 2
         self.key_only_ind = random.sample(range(0,  self.num), round(self.num/3))
-        for i in range(num_batches):
+        for i in range(self.num_batches):
             batch_counts = self.generate_batch_counts(self.num, threshold=50,max_counts=100)
             if self.key_called: # Zero counts in all batches for certain mutations that are only present for the key lineages
                 batch_counts = [count if ind not in self.key_only_ind else 0 for ind, count in enumerate(batch_counts)]                
@@ -35,6 +38,8 @@ class MyBarData:
 
         # Adding total counts per gene-mutation pair
         self.output['sum'] = self.output.iloc[:, 2:].sum(axis=1)
+
+        # Adding keys
         if  self.key_called:
             self._add_keys_to_output()
         else:
@@ -44,7 +49,10 @@ class MyBarData:
         self.output.sort_values(by=['gene', 'mutation'], inplace=True)
         self.output.reset_index(drop=True, inplace=True)
 
-        return self.output
+        if self.ytype == 'weights':
+            return self.normalized_output()
+        else:
+            return self.output
     
     def _add_keys_to_output(self):
 
@@ -64,6 +72,25 @@ class MyBarData:
 
             # Removing sampled pure key indices
             self.key_only_ind = self.key_only_ind[num_pure_key_mutations[i]:]
+    
+    def normalized_output(self):
+
+        self.normalized = self.output.copy()
+
+        numerical_columns = self.normalized.columns.tolist()[2:]
+        batches = numerical_columns[:self.num_batches]
+
+        for batch in batches: # Using Decimal for precision
+            self.normalized[batch] = self.normalized[batch].apply(lambda x: Decimal(str(x)))
+            batch_sum = self.normalized[batch].sum()
+            self.normalized[batch] = self.normalized[batch] * Decimal('100') / Decimal(str(batch_sum))
+            self.normalized[batch] = self.normalized[batch].apply(lambda x: x.quantize(Decimal('0.01')))
+        
+        self.normalized['sum'] = self.normalized[batches].sum(axis=1)
+        for col in numerical_columns:
+            self.normalized[col] = self.normalized[col].apply(float)
+
+        return self.normalized
 
     def create_input(self):
 
@@ -151,17 +178,20 @@ class MyBarData:
         match = re.search(r'\d+\.?\d*', mutation)
         return float(match.group())
         
-@pytest.fixture(params=[(False, 0), (False, 10),(True, 0), (True, 10)])
+@pytest.fixture(params=[(False, 0, 'counts'), (False, 10, 'counts'),
+                        (False, 0, 'weights'), (False, 10, 'weights'),
+                        (True, 0, 'counts'), (True, 10, 'counts'),
+                        (True, 0, 'weights'), (True, 10, 'weights')])
 def bar_data(request):
-    key_called, threshold = request.param
+    key_called, threshold, ytype = request.param
 
     num = random.randint(30,100)
-    mbd = MyBarData(key_called=key_called, num=num)
+    mbd = MyBarData(key_called=key_called, num=num, ytype=ytype)
     output = mbd.create_output()
     input = mbd.create_input()
 
     vg = vargram(data=input)
-    vg.bar(threshold=threshold,ytype='counts')
+    vg.bar(threshold=threshold,ytype=ytype)
 
     if key_called == True:
         keys = mbd.create_keys()
@@ -175,7 +205,9 @@ def bar_data(request):
         finally:
             shutil.rmtree(vargram_test_dir)
 
-    return {"vg":vg, "output":output}
+    yield {"vg":vg, "output":output}
+
+    plt.close()
 
 class TestBarData:
 
