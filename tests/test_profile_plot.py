@@ -1,10 +1,11 @@
-"""Tests whether bar plot is correct."""
+"""Tests whether profile plot is correct."""
 
-from vargram.plots._bar_renderer import build_struct, build_bar_grid
+from vargram.plots._profile_renderer import build_struct, build_profile_grid
 import random
 import pandas as pd
 
-class TestBarRenderer:
+
+class TestProfileRenderer:
 
     def setup_method(self):
         # Creating group_counts dataframe
@@ -20,7 +21,7 @@ class TestBarRenderer:
         })
 
         self.struct = [['GENE_1'], ['GENE_2', 'GENE_5'], ['GENE_3','GENE_4','GENE_7'], ['GENE_6']]
-        self.axes = build_bar_grid(self.struct, self.gene_counts, 'my_genes', 'False')
+        self.axes = build_profile_grid(self.struct, self.gene_counts, 'my_genes', 'False')
 
         data_max = max(counts)
         self.predefined_max = 40

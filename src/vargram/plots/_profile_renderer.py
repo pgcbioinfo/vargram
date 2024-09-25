@@ -1,47 +1,46 @@
 """Module that generates the bar structure, grid and plots its elements."""
 
-from . import _bar_elements
-
+from . import _profile_elements
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as mg
 import matplotlib.patches as mp
 import matplotlib.text as mt
 import copy
 
+
 def build_struct(group_counts, group_attr, max_per_row = 40):
     """Determines the optimum structure of the groups in the bar plot.
 
-    Args:
-        group_counts (pandas.DataFrame): The DataFrame containing groups and their unique no. of x data.
-        group_attr (str): The group data attribute.
-        max_per_row (int): Initial maximum number of x data per row.
+    Parameters
+    ----------
+    group_counts : pandas.DataFrame
+        The DataFrame containing groups and their unique no. of x data.
+    group_attr : str
+        The group data attribute.
+    max_per_row : int, default 40
+        Initial maximum number of x data per row.
     
-    Returns:
-        struct (list): The structure of the plot where each row gives the list of groups for that row.
-    """
+    Returns
+    -------
+    list
+        The structure of the plot where each row gives the list of groups for that row.
 
+    """
     gg = group_counts[group_attr].tolist()
     cc = group_counts['count'].tolist()
-
-
     struct = [] # list of groups per row
     struct_len = [] # list of total mutation counts per row
-    while len(gg) > 0:
-        # Each iteration determines the groups for a row
-
+    while len(gg) > 0: # Each iteration determines the groups for a row
         # Setting length of largest group as max_per_row
         # Since it is larger, it takes its own row
         largest_count = max(cc)
         if largest_count >= max_per_row: 
             max_per_row = largest_count
-
             largest_index = cc.index(largest_count)
             largest_group = gg[largest_index]
             struct.append([largest_group])
-
             cc.remove(largest_count)
             gg.remove(largest_group)
-
             continue
 
         # Of the remaining groups, find all that sum to less than or equal to max_per_row
@@ -60,28 +59,39 @@ def build_struct(group_counts, group_attr, max_per_row = 40):
         gg = [group for i, group in enumerate(gg) if i not in indices_to_remove]
         cc = [count for i, count in enumerate(cc) if i not in indices_to_remove]
 
-    
     return struct
 
-def build_bar_grid(struct, grid_width_counts, group_attr, key_called):
+
+def build_profile_grid(struct, grid_width_counts, group_attr, key_called):
     """Creates the whole GridSpec objects on which to place the plots.
 
-    Args:
-        struct (list): Contains the structure of the profile, i.e. group rows.
-        grid_width_counts (pandas.Dataframe): Contains x counts per group to be used for width ratios of grids
-        group_attr (str): The group attribute of the data
-        key_called (bool): Determines whether a key lineage was called or not.
+    Parameters
+    ----------
+    struct : list
+        Contains the structure of the profile, i.e. group rows.
+    grid_width_counts : pandas.Dataframe
+        Contains x counts per group to be used for width ratios of grids
+    group_attr : str
+        The group attribute of the data
+    key_called : bool
+        Determines whether a key lineage was called or not.
     
-    Returns:
-        label_grid (mg.GridSpecFromSubplotSpec): Grid for the figure y-axis label.
-        legend_grid (mg.GridSpecFromSubplotSpec): Grid for the batch (and group) legend.
-        group_title_axes (list): List of Axes objects on which to plot the group title.
-        group_x_axes (list): List of Axes objects on which to plot the bars.
-        group_key_axes (list): List of Axes objects on which to plot the heatmap for key data.
-    """
-    nrow = len(struct)
+    Returns
+    -------
+    mg.GridSpecFromSubplotSpec
+        Grid for the figure y-axis label.
+    mg.GridSpecFromSubplotSpec
+        Grid for the stack (and group) legend.
+    list
+        List of Axes objects on which to plot the group title.
+    list
+        List of Axes objects on which to plot the bars.
+    list
+        List of Axes objects on which to plot the heatmap for key data.
 
+    """
     # Main, outermost grid: 1 col for bar ylabel, 1 col for profile, 1 col for legend
+    nrow = len(struct)
     bar_grid = mg.GridSpec(nrow, 3, width_ratios = [0.5, 21, 1])
 
     # Creating grid for the label and legend columns
@@ -102,14 +112,16 @@ def build_bar_grid(struct, grid_width_counts, group_attr, key_called):
     modified_group_rows = copy.deepcopy(struct)
     group_row_grids = []
     for (i, group_row) in enumerate(modified_group_rows):
-
+        # Determining if row is not full
+        # Then, add a filler group
         row_length = len(group_row)
         if sum(all_width_ratios[i]) < width_max:
             row_length += 1
             filler_length = width_max-sum(all_width_ratios[i])
             all_width_ratios[i].append(filler_length)
             modified_group_rows[i].append('filler')
-
+        
+        # Creating row grids
         if key_called:
             height_ratios=[1,7,1.5]
             group_row_grid = mg.GridSpecFromSubplotSpec(3, row_length, bar_grid[i, 1], 
@@ -124,13 +136,12 @@ def build_bar_grid(struct, grid_width_counts, group_attr, key_called):
                                                        height_ratios=height_ratios, 
                                                        wspace=0.1,
                                                        hspace=0.1)
-
         group_row_grids.append(group_row_grid)
 
+    # Creating the axes
     group_title_axes = []
     group_x_axes = []
     group_key_axes = []
-
     for (i, group_row) in enumerate(modified_group_rows):
         group_row_grid = group_row_grids[i]
         for (j, group) in enumerate(group_row):
@@ -160,31 +171,55 @@ def build_bar_grid(struct, grid_width_counts, group_attr, key_called):
     
     return label_grid, legend_grid, group_title_axes, group_x_axes, group_key_axes
 
-def build_profile(group_title_axes, group_bar_axes, group_key_axes, barplot_data, struct, group_attr, x_attr, fig, key_called, key_aes, stack_names, stack_aes, group_labels, x_aes, y_aes):
+
+def build_profile(group_title_axes, group_bar_axes, group_key_axes, 
+                  barplot_data, struct, group_attr, x_attr, fig, 
+                  key_called, key_aes, stack_names, stack_aes, 
+                  group_labels, x_aes, y_aes):
     """Generates the full profile including labels on the defined grids.
 
-    Args:
-        group_title_axes (list): List of Axes objects on which to plot the group title
-        group_bar_axes (list): List of Axes objects on which to plot the bars
-        group_key_axes (list): List of Axes objects on which to plot the heatmap for key data
-        barplot_data (pandas.Dataframe): The DataFrame containing summary mutation counts per batch including key mutations.
-        struct (list): The structure of the mutation profile
-        fig (matplotlib.figure.Figure): The Figure object of the entire VARGRAM bar plot.
-        key_called (bool): Determines whether a key lineage was called or not.
-        key_labels (list): Names of the key lineages provided.
-        batches (list): Names of the batches.
-        bar_colors (list): Colors of the batches.
-        group_labels (list): List of group labels that exceed the subplot box.
+    Parameters
+    ----------
+    group_title_axes : list
+        List of Axes objects on which to plot the group title.
+    group_bar_axes : list
+        List of Axes objects on which to plot the bars.
+    group_key_axes : list
+        List of Axes objects on which to plot the heatmap for key data.
+    barplot_data : pandas.Dataframe
+        The DataFrame containing summary x counts per stack including key values.
+    struct : list
+        The structure of the barplot/mutation profile.
+    group_attr : str
+        The column of the groups.
+    x_attr : str
+        The column of the x values.
+    fig : matplotlib.figure.Figure
+        The Figure object of the entire VARGRAM bar plot.
+    key_called : bool
+        Determines whether a key was called or not.
+    key_aes : list
+        Aesthetic attributes of the key heatmap.
+    stack_names : list
+        The names of the stacks (from the data provided).
+    stack_aes : list
+        Aesthetic attributes of the stacks including 
+        stack labels (may be user-provided) to put on the legend.
+    group_labels : list
+        List of group labels (may be user-provided) that exceed the subplot box.
+    x_aes : list
+        Aesthetic attributes of the x ticks and labels
+    y_aes : list
+        Aesthetic attributes of the y label and the y label itself
     
-    Returns:
-        texts (list): The List of Axes text objects.
-        bounds (list): The Axes bounding box object of the texts.
-    """
+    Returns
+    -------
+    None
 
+    """
     # Defining aesthetic attributes
     stacks = stack_names
     stack_colors = stack_aes[2]
-
     key_fontsize = key_aes[0]
     key_labels = key_aes[1]
     key_colors = key_aes[2]
@@ -192,7 +227,7 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes, barplot_data
     # Generating colormaps for each key lineage
     heat_cmaps = [] 
     for key_color in key_colors:
-        heat_cmap = _bar_elements.create_colormap(color=key_color)
+        heat_cmap = _profile_elements.create_colormap(color=key_color)
         heat_cmaps.append(heat_cmap)
 
     # Getting maximum stacked bar height across each group
@@ -210,10 +245,11 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes, barplot_data
     flattened_groups = [item for group_row in struct for item in group_row]
     first_groups = [group_row[0] for group_row in struct]
 
-    # Going over each gene and building the barplot, heatmap and gene title
+    # Going over each group and building the barplot, heatmap and group title
     for (i, group) in enumerate(flattened_groups):
         group_barplot_data = barplot_data[barplot_data[group_attr] == group]
 
+        # Determining whether to suppress splines
         if group in first_groups:
             suppress_spline = False
             suppress_label = False
@@ -224,31 +260,37 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes, barplot_data
         # Adding key x data for group
         if key_called:
             ax_heat = group_key_axes[i]
-            heat_cmap = _bar_elements.create_colormap()
-            _bar_elements.build_gene_heatmap(ax_heat, group_barplot_data, key_labels, heat_cmaps, suppress_label)
+            heat_cmap = _profile_elements.create_colormap()
+            _profile_elements.build_group_heatmap(ax_heat, group_barplot_data, key_labels, key_fontsize, heat_cmaps, suppress_label)
         
         # Adding text for group
         ax_text = group_title_axes[i]
-        _bar_elements.build_group_text(ax_text, group, fig, group_labels)
+        _profile_elements.build_group_text(ax_text, group, fig, group_labels)
 
         # Creating unit barplot for group
         ax_bar = group_bar_axes[i]
         floor = [0]*len(group_barplot_data)
         for (batch, color) in zip(stacks, stack_colors):
-            _bar_elements.build_group_barplot(ax_bar, group_barplot_data[x_attr], group_barplot_data[batch], floor,
+            _profile_elements.build_group_barplot(ax_bar, group_barplot_data[x_attr], group_barplot_data[batch], floor,
                                           color, suppress_spline, key_called, max_bar_heights[i],
                                           x_aes, y_aes)
             floor += group_barplot_data[batch]            
 
+
 def build_yaxis_label(label, label_grid):
     """Generates the label of the figure y-axis.
     
-    Args:
-        label (string): The y-axis label.
-        label_grid (mg.GridSpecFromSubplotSpec): Grid for the figure y-axis label.
+    Parameters
+    ----------
+    label : str
+        The y-axis label.
+    label_grid : mg.GridSpecFromSubplotSpec
+        Grid for the figure y-axis label.
+    
+    Returns
+    -------
+    None
 
-    Returns:
-        None.
     """
     # text() settings
     fontsize='medium'
@@ -267,19 +309,26 @@ def build_yaxis_label(label, label_grid):
     ax_label.spines["left"].set_visible(False)
     ax_label.spines["right"].set_visible(False)
 
+
 def build_legend(legend_grid, stack_aes, group_aes, group_labels):
     """Generates the label of the figure y-axis.
     
-    Args:
-        legend_grid (mg.GridSpecFromSubplotSpec): Grid for the batch (and gene) legend.
-        stack_aes (list): Aesthetic attributes of the stack legend.
-        group_aes (str): Aesthetic attributes of the group legend.
-        group_labels (list): List of group labels.
+    Parameters
+    ----------
+    legend_grid : mg.GridSpecFromSubplotSpec
+        Grid for the stack (and group) legend.
+    stack_aes : list
+        Aesthetic attributes of the stack legend.
+    group_aes : str
+        Aesthetic attributes of the group legend.
+    group_labels : list
+        List of group labels.
 
-    Returns:
-        None.
+    Returns
+    -------
+    None
+
     """
-
     # legend() settings
     if len(group_labels) == 0:
         ax_batch_legend = plt.subplot(legend_grid[:, 0])
@@ -301,7 +350,6 @@ def build_legend(legend_grid, stack_aes, group_aes, group_labels):
         stack_loc='lower left'
         bbox_anchor = (-0.5, 0)
     group_loc='upper left'
-    
 
     # Setting batch legend handles
     batch_legend_handles = [mp.Patch(color=color, label=label) for color, label in zip(stack_color, stack_label)]
@@ -310,10 +358,9 @@ def build_legend(legend_grid, stack_aes, group_aes, group_labels):
     ax_batch_legend.legend(handles=batch_legend_handles, title=stack_title, fontsize=stack_fontsize, frameon=frameon, alignment=alignment, loc=stack_loc, bbox_to_anchor=bbox_anchor, borderaxespad=0)
 
     # Removing batch ax spines and ticks
-    _bar_elements.spine_remover(ax_batch_legend)
+    _profile_elements.spine_remover(ax_batch_legend)
 
     if len(group_labels) != 0:
-
         # Creating handles
         legend_handles = [Text(str(i+1)) for i in range(len(group_labels))]
 
@@ -323,14 +370,19 @@ def build_legend(legend_grid, stack_aes, group_aes, group_labels):
            handletextpad=0.5,
            labelspacing=1.3)
         
-        # Removing gene ax spines and ticks
-        _bar_elements.spine_remover(ax_group_legend)
+        # Removing group ax spines and ticks
+        _profile_elements.spine_remover(ax_group_legend)
+
 
 class Text(object):
+
     def __init__(self, text):
         self.text = text
 
+
 class TextHandler(object):
+    """Creates the text patch for the group legend."""
+
     def legend_artist(self, legend, text_handle, fontsize, handlebox):
         x0, y0 = handlebox.xdescent, handlebox.ydescent
         width, height = handlebox.width, handlebox.height
