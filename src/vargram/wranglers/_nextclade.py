@@ -91,5 +91,5 @@ def nextclade(**kwargs):
     nextclade_output.drop(nextclade_output.dropna(subset=['warnings']).index)
     nextclade_output.drop(nextclade_output.dropna(subset=['errors']).index)
     if nextclade_output.empty:
-        raise ValueError("Analysis DataFrame is empty.")
+        raise ValueError("Nextclade analysis DataFrame is empty.")
     return nextclade_output

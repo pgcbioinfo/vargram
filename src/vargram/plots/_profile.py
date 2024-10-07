@@ -1,5 +1,4 @@
-"""Module for generating the unit plots, other plot elements like legends, 
-and auxiliary functions."""
+"""Main module to generate the mutation profile."""
 
 from . import _profile_renderer
 import matplotlib.pyplot as plt

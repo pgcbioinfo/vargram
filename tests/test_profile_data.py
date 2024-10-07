@@ -162,7 +162,7 @@ def profile_data(request):
     output = mbd.create_output()
     input = mbd.create_input()
     # Getting vargram output
-    vg = vargram(data=input)
+    vg = vargram(data=input, format='vargram_delimited')
     vg.profile(threshold=threshold,ytype=ytype)
     if key_called == True:
         keys = mbd.create_keys()

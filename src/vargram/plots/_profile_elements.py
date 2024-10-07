@@ -1,4 +1,5 @@
-"""Module to generate a bar plot of unique x values and their counts, i.e. the VARGRAM."""
+"""Module for generating the unit plots, other plot elements like legends, 
+and auxiliary functions."""
 
 import matplotlib.colors as mc
 import numpy as np

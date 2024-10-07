@@ -1,7 +1,6 @@
-"""Main module for generating VARGRAM figures and summary statistics."""
+"""Main module for generating VARGRAM figures and data."""
 
-from .wranglers._nextclade import nextclade
-from .wranglers import _nextclade_utils
+from .wranglers._wrangler import Wrangler
 from .plots._profile import Profile
 import pandas as pd
 import os
@@ -44,68 +43,7 @@ class vargram:
         """
         # Defining initial values
         self._initialize_variables()
-
-        # Getting data
-        if 'seq' in vargram_kwargs.keys(): # Get Nextclade output
-            self._nextclade_seqname = 'seqName'
-            self._aasub = 'aaSubstitutions'
-            self._aadel = 'aaDeletions'
-            self._aains = 'aaInsertions'
-            self._nextclade_seqname = 'seqName'
-            nextclade_kwargs = {key: vargram_kwargs[key] for key in ['seq', 'ref', 'gene'] if key in vargram_kwargs.keys()}
-            self._data = nextclade(**nextclade_kwargs)
-            self._data = _nextclade_utils.process_nextclade(self._data)
-            self._nextclade_called = True
-        elif 'data' not in vargram_kwargs.keys():
-            missing_data_error=("Missing data. Either provide the FASTA files with the 'seq' "
-                                "and 'ref' arguments or provide a dataframe/path with 'data'.")
-            raise ValueError(missing_data_error)
-        else:
-            if isinstance(vargram_kwargs['data'], str): # Data is a path
-                ext = os.path.splitext(vargram_kwargs['data'])[1]
-                if 'nextclade' in vargram_kwargs.keys() and vargram_kwargs['nextclade'] == True:
-                    delimiter = ';'
-                elif ext == '.csv':
-                    delimiter = ','
-                elif ext == '.tsv':
-                    delimiter = '\t'
-                read_data = pd.read_csv(vargram_kwargs['data'], delimiter=delimiter)
-            else:
-                read_data = vargram_kwargs['data'] # Data is a dataframe
-            # Processing if provided CSV is Nextclade output
-            if 'nextclade' in vargram_kwargs.keys() and vargram_kwargs['nextclade'] == True:
-                if 'batch' not in read_data.columns:
-                    read_data.insert(0, 'batch', 'my_batch')
-                read_data.sort_values(by=['batch', 'seqName'], inplace=True)
-                read_data.reset_index(drop=True, inplace=True)
-                self._data = _nextclade_utils.process_nextclade(read_data)
-            else:
-                self._data = read_data
-
-        # Getting metadata and joining it with data
-        if 'meta' in vargram_kwargs.keys():
-            # Getting columns to merge on 
-            if 'join' not in vargram_kwargs.keys():
-                missing_join_error=("Missing 'join' argument. Provide column name(s) " 
-                                    "to (outer) merge data and metadata on.")
-                raise ValueError(missing_join_error)
-            elif isinstance(vargram_kwargs['join'], str): 
-                join = [vargram_kwargs['join']]
-            else:
-                join = vargram_kwargs['join']
-            metadata = vargram_kwargs['meta']
-            if len(join) != 1:
-                metadata.rename(columns={join[1]: join[0]}, inplace=True)
-                self._data = pd.merge(self._data, metadata, how='outer', on=join[0])
-            elif 'seq' in vargram_kwargs.keys(): 
-                # If 'seq' is provided, automatically join on nextclade_sequence_name
-                metadata.rename(columns={join[0]: self._nextclade_seqname}, inplace=True)
-                self._data = pd.merge(self._data, metadata, 
-                                      how='outer', on=self._nextclade_seqname)
-            else: 
-                self._data = pd.merge(self._data, metadata, how='outer', on=join)                
-        if self._data.empty:
-            raise ValueError("Data is empty.")
+        self._vargram_kwargs = vargram_kwargs
     
     def _initialize_variables(self):
         """Sets initial values of attributes."""
@@ -140,6 +78,8 @@ class vargram:
         # Creating plot object instance
         plot_class = latest_method_calls[0][1:].title() 
         plot_object = globals()[plot_class]
+        self._vargram_kwargs['plot'] = plot_class
+        self._data = Wrangler(self._vargram_kwargs).get_wrangled_data()
         self._plot_instance = plot_object(self._data)
 
         # Rearranging so that auxiliary methods are run before plot and save/show methods
