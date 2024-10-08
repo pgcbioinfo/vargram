@@ -26,24 +26,37 @@ class MyProfileData:
                 "mutation":self.generate_mutations(self.num)
             }
         )
+
         # Adding batch counts
         self.num_batches = 2
         self.key_only_ind = random.sample(range(0,  self.num), round(self.num/3))
         for i in range(self.num_batches):
             batch_counts = self.generate_batch_counts(self.num, threshold=50,max_counts=100)
-            if self.key_called: # Zero counts in all batches for certain mutations that are only present for the key lineages
+            if self.key_called: 
+                # Zero counts in all batches for certain mutations that are only present for the key lineages
                 batch_counts = [count if ind not in self.key_only_ind else 0 for ind, count in enumerate(batch_counts)]                
             self.output[f'batch_{i+1}'] = batch_counts.copy()
+
         # Adding total counts per gene-mutation pair
         self.output['sum'] = self.output.iloc[:, 2:].sum(axis=1)
+
         # Adding keys
         if  self.key_called:
             self._add_keys_to_output()
         else:
             self.output = self.output[self.output['sum'] != 0]
+        
+        # Adding position and type
+        pos_index = self.output.columns.get_loc('mutation') + 1
+        mutation_positions = self.output['mutation'].apply(self.get_position)
+        self.output.insert(pos_index, 'position', mutation_positions)
+        mutation_types = self.output['mutation'].apply(self.get_type)
+        self.output.insert(pos_index+1, 'type', mutation_types)
+
         # Reordering
-        self.output.sort_values(by=['gene', 'mutation'], inplace=True)
+        self.output.sort_values(by=['gene', 'position'], inplace=True)
         self.output.reset_index(drop=True, inplace=True)
+    
         if self.ytype == 'weights':
             return self.normalized_output()
         else:
@@ -52,6 +65,7 @@ class MyProfileData:
     def _add_keys_to_output(self):
         # Adding keys
         num_keys = 2
+
         # Dividing the pure key mutations among the keys
         floor = len(self.key_only_ind) // num_keys
         remainder = len(self.key_only_ind) % num_keys
@@ -66,7 +80,7 @@ class MyProfileData:
     
     def normalized_output(self):
         self.normalized = self.output.copy()
-        numerical_columns = self.normalized.columns.tolist()[2:]
+        numerical_columns = self.normalized.columns.tolist()[4:]
         batches = numerical_columns[:self.num_batches]
         for batch in batches: # Using Decimal for precision
             self.normalized[batch] = self.normalized[batch].apply(lambda x: Decimal(str(x)))
@@ -82,22 +96,22 @@ class MyProfileData:
         # Getting batch names
         column_names = list(self.output.columns)
         sum_index = column_names.index("sum")
-        batch_names = column_names[2:sum_index]            
+        type_index = column_names.index("type")
+        batch_names = column_names[type_index+1:sum_index]         
         rows = []
         for _, row in self.output.iterrows():
             gene = row['gene']
-            mutation = row['mutation']            
+            mutation = row['mutation'] 
+            position = row['position']
+            type = row['type']
             # Iterating through batch columns
             for batch in batch_names:
-                count = row[batch]                
+                count = row[batch] 
                 # Appending the gene and mutation pair to the rows list 'count' times
                 for _ in range(count):
-                    rows.append([batch, gene, mutation])
+                    rows.append([batch, gene, mutation, position, type])
         # Creating new DataFrame from the rows
-        self.input = pd.DataFrame(rows, columns=['batch', 'gene', 'mutation'])
-        mutation_positions = self.input['mutation'].apply(self.extract_position)
-        self.input.insert(loc=2, column='position', value=mutation_positions)
-        self.input.sort_values(by='position', inplace=True)
+        self.input = pd.DataFrame(rows, columns=['batch', 'gene', 'mutation', 'position', 'type'])
         return self.input
     
     def create_keys(self):
@@ -116,7 +130,6 @@ class MyProfileData:
                            amino_acids='ACDEFGHIKLMNPQRSTVWY', 
                            max_position=10000):
         unique_positions = random.sample(range(1, max_position + 1), num_mutations)
-        sorted_positions = sorted(unique_positions.copy()) 
         # All mutations are guaranteed to be unique
         mutations = []
         for pos in unique_positions:
@@ -124,13 +137,7 @@ class MyProfileData:
             if mutation_type <= 1: # substitution
                 mutations.append(f'{random.choice(amino_acids)}{pos}{random.choice(amino_acids)}')
             elif mutation_type == 2: # deletion
-                pos_ind = sorted_positions.index(pos)
-                if pos == max(sorted_positions): 
-                    end_position = random.randint(1,10)
-                else: # ensuring end_position does not include any unique_position
-                    end_positions = [epos for epos in range(sorted_positions[pos_ind+1] - pos + 1) if not any(pos < other_pos < pos + epos for other_pos in sorted_positions)]
-                    end_position = pos+random.sample(end_positions, 1)[0]
-                mutations.append(f'{pos}-{end_position}')
+                mutations.append(f'{random.choice(amino_acids)}{pos}-')
             elif mutation_type == 3: # insertion
                 insertion_length = random.randint(1, 10)
                 mutations.append(f"{pos}:{''.join(random.choices(amino_acids, k = insertion_length))}") 
@@ -145,9 +152,17 @@ class MyProfileData:
         counts = [count if random.randint(0,1) == 1 else 0 for count in counts]
         return counts
 
-    def extract_position(self, mutation):
-        match = re.search(r'\d+\.?\d*', mutation)
-        return float(match.group())
+    def get_position(self, mutation):
+        match = re.search(r'(\d+)', mutation)
+        return int(match.group())
+    
+    def get_type(self, mutation):
+        if '-' in mutation:
+            return 'del'
+        elif ':' in mutation:
+            return 'in'
+        else:
+            return 'sub'
 
 
 @pytest.fixture(params=[(False, 0, 'counts'), (False, 10, 'counts'),
@@ -157,12 +172,14 @@ class MyProfileData:
 def profile_data(request):
     key_called, threshold, ytype = request.param
     num = random.randint(30,100)
+
     # Creating test outputs and inputs
     mbd = MyProfileData(key_called=key_called, num=num, ytype=ytype)
     output = mbd.create_output()
     input = mbd.create_input()
+
     # Getting vargram output
-    vg = vargram(data=input, format='vargram_delimited')
+    vg = vargram(data=input, format='_test')
     vg.profile(threshold=threshold,ytype=ytype)
     if key_called == True:
         keys = mbd.create_keys()
@@ -181,9 +198,8 @@ def profile_data(request):
 
 class TestProfileData:
 
-    def test_returned_profile_data(self, profile_data):
-        """Returned profile data should be equal to saved data. 
-        """ 
+    def test_returned_data(self, profile_data):
+        """Returned profile data should be equal to saved data. """ 
         vg = profile_data["vg"]
         result = vg.stat()
         try:
@@ -196,8 +212,7 @@ class TestProfileData:
             shutil.rmtree(vargram_test_dir)
 
     def test_batch_key_sums(self, profile_data):
-        """The total sum of all batch and key columns should not be zero.
-        """
+        """The total sum of all batch and key columns should not be zero."""
         vg = profile_data["vg"]
         column_sums = vg.stat().sum(numeric_only=True, axis=1)
         zero_column_sums = column_sums.abs() < 1e-10
@@ -214,10 +229,26 @@ class TestProfileData:
         result = len(output['mutation'])
         expected = len(output['mutation'].unique())
         assert result == expected
+    
+    def test_order_mutations(self, profile_data):
+        """Per gene, the positions should only increase as you go down the rows."""
+        vg = profile_data["vg"]
+        output = vg.stat()
+        genes = output['gene'].unique().tolist()
 
-    def test_profile_data(self, profile_data):
-        """The returned profile data should be equal to expected profile data.
-        """
+        orders = []
+        for gene in genes:
+            gene_output = output[output['gene'] == gene]
+            positions = list(gene_output['position'])
+            position_increasing = all(positions[i] < positions[i + 1] for i in range(len(positions) - 1))
+            orders.append(position_increasing)
+        
+        result = all(orders)
+        expected = True
+        assert result == expected
+
+    def test_whole_data(self, profile_data):
+        """The returned profile data should be equal to expected profile data."""
         vg = profile_data["vg"]
         expected = profile_data["output"]
         result = vg.stat()

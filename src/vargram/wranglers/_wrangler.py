@@ -5,15 +5,6 @@ from . import _nextclade_utils
 import pandas as pd
 import os
 
-"""Supported formats
-
-"profile":{
-            "nextclade_fasta":["fa", "fasta", "gff"],
-            "nextclade_delimited":["csv", "tsv", "pandas.DataFrame"],
-            "vargram_delimited":["csv","tsv", "pandas.DataFrame"]
-          }
-"""
-
 def read_table(table_object, nextclade_file=False):
     if isinstance(table_object, pd.DataFrame):
         table = table_object
@@ -55,16 +46,20 @@ class Wrangler():
             raise ValueError("Wrangled data is empty.")
     
     def get_wrangled_data(self):
-        return self.data
+        return self.data, self.format
             
     def _profile(self):
         """Choosing appropriate data wrangling method for Profile()."""
+        profile_formats = ['nextclade_fasta', 'nextclade_delimited', 'vargram', 'delimited', '_test']
+
         # Assigning default format values
         if self.format is None:
             if 'seq' in self.user_input.keys():
                 self.format = 'nextclade_fasta'
             elif 'data' in self.user_input.keys():
                 self.format = 'nextclade_delimited'
+        elif self.format not in profile_formats:
+            raise ValueError(f"Unrecognized format: {self.format}.")
 
         # Wrangling data
         match self.format:
@@ -80,7 +75,7 @@ class Wrangler():
                 read_data.sort_values(by=['batch', 'seqName'], inplace=True)
                 read_data.reset_index(drop=True, inplace=True)
                 self.data = _nextclade_utils.process_nextclade(read_data)
-            case 'vargram_delimited':
+            case _:
                 tabular_data = self.user_input['data']
                 read_data = read_table(tabular_data)
                 self.data = read_table(tabular_data, nextclade_file=False)

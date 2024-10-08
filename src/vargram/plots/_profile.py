@@ -1,6 +1,7 @@
 """Main module to generate the mutation profile."""
 
 from . import _profile_renderer
+from ..wranglers._nextclade_utils import parse_mutation, get_mutation_type
 import matplotlib.pyplot as plt
 import matplotlib.colors as mc
 import numpy as np
@@ -20,10 +21,11 @@ def create_default_colors(num_color, color = '#5E5E5E', single = False):
 
 class Profile():
 
-    def __init__(self, data):
+    def __init__(self, data, format):
         """Initializes Profile attributes."""
         # Class attributes
-        self.data = data
+        self.data = data.copy()
+        self.format = format
         self.plotted_already = False
         self.verbose = False
 
@@ -66,6 +68,13 @@ class Profile():
             The processed DataFrame for plotting.
 
         """
+        # vargram output is user-input
+        if self.format == 'vargram':
+            self.data_for_plotting = self.data
+            if self.verbose:
+                print('** Processed data for plotting. **')
+            return self.data_for_plotting
+
         # Checking if the default columns are present or if not, required arguments are provided
         required_data_attributes = ['x', 'group', 'stack']
         default_data_attributes = [self.x, self.group, self.stack]
@@ -78,17 +87,21 @@ class Profile():
             setattr(self, process_key, process_kwargs[process_key])
 
         # Pivoting dataframe to get x counts
+        # self.data -> data_pivoted
         data_pivoted = self.data.copy()
         if self.y == '': # Choosing what to base counts on
             values_for_counting = 'values_for_counting'
             data_pivoted[values_for_counting] = 1
         elif self.y != '':
             values_for_counting = self.y
-        data_pivoted = pd.pivot_table(data_pivoted, index=[self.group, self.x], columns=self.stack, values=values_for_counting, aggfunc="sum", fill_value=0).reset_index() 
+        # Defining index columns
+        index_columns = [self.group, self.x]
+        data_pivoted = pd.pivot_table(data_pivoted, index=index_columns, columns=self.stack, values=values_for_counting, aggfunc="sum", fill_value=0).reset_index() 
         data_pivoted.rename_axis(None, axis=1, inplace = True)
 
         # Applying threshold, keeping only x
-        self.stack_names = [stack for stack in data_pivoted.columns if stack not in [self.group, self.x]]
+        # data_pivoted -> data_filtered
+        self.stack_names = [stack for stack in data_pivoted.columns if stack not in index_columns]
         if len(self.stack_label) == 0: # Assigning stack_names as labels
             self.stack_label = self.stack_names
         data_filtered = data_pivoted.copy()
@@ -96,6 +109,7 @@ class Profile():
             data_filtered[stack] = data_pivoted[stack].apply(lambda x: 0 if x < self.threshold else x)
         
         # Determining whether to normalize or not
+        # weights vs. counts
         if self.ytype == '':
             if len(self.stack_names) > 1:
                 self.ytype = 'weights'
@@ -118,6 +132,8 @@ class Profile():
         data_filtered = data_filtered[data_filtered['sum'] > 0]
         
         # Adding keys if provided
+        # data_filtered -> self.data_for_plotting
+        # data_filtered -> data_with_keys -> self.data_for_plotting
         if self.key_called:
             data_with_keys = pd.merge(data_filtered, self.key_data, on=[self.group, self.x], how='outer')
             data_with_keys.fillna(0, inplace=True)
@@ -129,12 +145,26 @@ class Profile():
             self.data_for_plotting = data_with_keys
         else:
             self.data_for_plotting = data_filtered
-        data_for_plotting = self.data_for_plotting.copy()
+
+        # Sorting data based on mutation position
+        if self.data_for_plotting.columns.size > 0 and self.data_for_plotting.shape[0] == 0:
+            raise ValueError("Plot DataFrame has no rows. Lowering threshold might help.")
+        formats_with_positions = ['nextclade_fasta', 'nextclade_delimited', '_test']
+        if self.format in formats_with_positions:
+            pos_index = self.data_for_plotting.columns.get_loc('mutation') + 1
+            mutation_positions = self.data_for_plotting['mutation'].apply(lambda x: parse_mutation(x, 'position'))
+            mutation_types = self.data_for_plotting['mutation'].apply(lambda x: get_mutation_type(x))
+            self.data_for_plotting.insert(pos_index, 'position', mutation_positions)
+            self.data_for_plotting.insert(pos_index+1, 'type', mutation_types)
+            self.data_for_plotting['position'] = self.data_for_plotting['position'].astype(int)
+            self.data_for_plotting.sort_values(by=[self.group, 'position'], inplace=True)
+        else:
+            self.data_for_plotting.sort_values(by=[self.group, self.x], inplace=True)
+        self.data_for_plotting.reset_index(drop=True, inplace=True)
         
         # Getting data for calculating structure
+        data_for_plotting = self.data_for_plotting.copy()
         self.group_names = data_for_plotting[self.group].unique().tolist()
-        #if len(self.group_label) == 0: # Assigning group_names as labels
-        #    self.group_label = self.group_names 
         unique_counts = []
         for group in self.group_names:
             groups_df = data_for_plotting[data_for_plotting[self.group] == group]
@@ -146,10 +176,6 @@ class Profile():
         self.data_for_struct.reset_index(drop=True, inplace=True)
         
         # Returning for vg.stat()
-        if self.data_for_plotting.columns.size > 0 and self.data_for_plotting.shape[0] == 0:
-            raise ValueError("Plot DataFrame has no rows. Lowering threshold might help.")
-        self.data_for_plotting.sort_values(by=[self.group, self.x], inplace=True)
-        self.data_for_plotting.reset_index(drop=True, inplace=True)
         if self.verbose:
             print('** Processed data for plotting. **')
         return self.data_for_plotting

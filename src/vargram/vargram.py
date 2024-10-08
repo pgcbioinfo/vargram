@@ -79,8 +79,8 @@ class vargram:
         plot_class = latest_method_calls[0][1:].title() 
         plot_object = globals()[plot_class]
         self._vargram_kwargs['plot'] = plot_class
-        self._data = Wrangler(self._vargram_kwargs).get_wrangled_data()
-        self._plot_instance = plot_object(self._data)
+        data, format = Wrangler(self._vargram_kwargs).get_wrangled_data()
+        self._plot_instance = plot_object(data, format)
 
         # Rearranging so that auxiliary methods are run before plot and save/show methods
         latest_method_calls.append(latest_method_calls[-1])

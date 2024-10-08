@@ -161,14 +161,13 @@ def parse_mutation(aa_mutation, part):
     if part == 'gene':
         pattern = r'^([^:]+):'
     if part == 'position':
-        pattern = r':.*?([0-9]+)'
+        pattern = r'(\d+)'
 
     # Obtaining the match
-    match = re.search(pattern, aa_mutation)
+    match = re.findall(pattern, aa_mutation)
     if not match:
-        print(part, aa_mutation)
-        raise ValueError("Failed to parse mutation for gene or position.")
-    retrieved  = match.group(1)
+        raise ValueError(f"Failed to parse mutation for gene or position: {aa_mutation}.")
+    retrieved  = match[-1]
     return retrieved
 
 
@@ -225,18 +224,11 @@ def process_nextclade(nextclade_output):
     # Each row therefore may not be unique
     exploded = single_column.explode('mutation')
 
-    # Creating new column for gene and position
+    # Creating gene column and removing gene prefix of mutations
     exploded['gene'] = exploded['mutation'].apply(lambda x: parse_mutation(x, 'gene'))
-    exploded['position'] = exploded['mutation'].apply(lambda x: int(parse_mutation(x, 'position')))
-
-    # Removing gene prefix of mutations
     exploded['mutation'] = exploded['mutation'].apply(lambda x: parse_mutation(x, 'gene_removal'))
 
-    # Adding mutation type
-    exploded['type'] = exploded['mutation'].apply(lambda x: get_mutation_type(x))
-
     # Rearranging
-    exploded.sort_values(by='position', inplace=True)
     exploded.reset_index(drop=True, inplace=True)
-    processed_nextclade = exploded[['batch', 'gene', 'position', 'mutation', 'type']]
+    processed_nextclade = exploded[['batch', 'gene', 'mutation']]
     return processed_nextclade
