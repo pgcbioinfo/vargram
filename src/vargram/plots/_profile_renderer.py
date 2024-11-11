@@ -8,7 +8,66 @@ import matplotlib.text as mt
 import copy
 
 
-def build_struct(group_counts, group_attr, max_per_row = 40):
+def build_ordered_struct(group_counts, group_attr, ordered_genes, flat=False, max_per_row=40):
+    """Builds the structure based on the genes' start positions
+
+    Parameters
+    ----------
+    group_counts : pandas.DataFrame
+        The DataFrame containing groups and their unique no. of x data.
+    group_attr : str
+        The group data attribute.
+    ordered_genes: list
+        A list of ordered genes based on CDS start position.
+    flat : bool, default : False
+        Determines if groups should be plotted on only one row ("flat") or not ("compact").
+    
+    Returns
+    -------
+    list
+        The structure of the plot where each row gives the list of groups for that row.
+    """
+    if flat is True:
+        struct = [[gene for gene in ordered_genes]]
+        return struct
+    
+    gg = group_counts[group_attr].tolist() # Gene names
+    cc = group_counts['count'].tolist() # Gene counts
+    ref_row_length = max(max_per_row, max(cc))
+    struct = []
+    row = []
+    num_row = 0
+    row_sum = 0
+    for (i, gene) in enumerate(ordered_genes):
+        gene_index = gg.index(gene)
+        gene_count = cc[gene_index]
+
+        if i == 0: # First gene is the first value in struct, no computation needed
+            row.append(gene)
+            row_sum += gene_count
+            continue
+
+        if row_sum < ref_row_length and num_row == 0:
+            row.append(gene)
+            row_sum += gene_count
+        elif row_sum + gene_count <= ref_row_length:
+            row.append(gene)
+            row_sum += gene_count
+        else:
+            num_row += 1
+            print("row_sum:", row_sum)
+            if row_sum > ref_row_length:
+                ref_row_length = row_sum
+            struct.append(row)
+            row_sum = gene_count
+            row = []
+            row.append(gene)
+    struct.append(row)
+
+    return struct
+
+
+def build_struct(group_counts, group_attr, flat=False, max_per_row=40):
     """Determines the optimum structure of the groups in the bar plot.
 
     Parameters
@@ -17,6 +76,8 @@ def build_struct(group_counts, group_attr, max_per_row = 40):
         The DataFrame containing groups and their unique no. of x data.
     group_attr : str
         The group data attribute.
+    flat : bool, default False
+        Determines if groups should be plotted on only one row (if True).
     max_per_row : int, default 40
         Initial maximum number of x data per row.
     
@@ -29,7 +90,13 @@ def build_struct(group_counts, group_attr, max_per_row = 40):
     gg = group_counts[group_attr].tolist()
     cc = group_counts['count'].tolist()
     struct = [] # list of groups per row
-    struct_len = [] # list of total mutation counts per row
+
+    if flat:
+        paired_counts = list(zip(gg, cc))
+        descending_paired = sorted(paired_counts, key=lambda x: x[1], reverse=True)
+        struct = [[group for group, _ in descending_paired]]
+        return struct
+
     while len(gg) > 0: # Each iteration determines the groups for a row
         # Setting length of largest group as max_per_row
         # Since it is larger, it takes its own row
@@ -92,7 +159,7 @@ def build_profile_grid(struct, grid_width_counts, group_attr, key_called):
     """
     # Main, outermost grid: 1 col for bar ylabel, 1 col for profile, 1 col for legend
     nrow = len(struct)
-    bar_grid = mg.GridSpec(nrow, 3, width_ratios = [0.5, 21, 1])
+    bar_grid = mg.GridSpec(nrow, 3, width_ratios=[0.5, 21, 1])
 
     # Creating grid for the label and legend columns
     label_grid = mg.GridSpecFromSubplotSpec(1, 1, bar_grid[:, 0])
@@ -102,8 +169,9 @@ def build_profile_grid(struct, grid_width_counts, group_attr, key_called):
     width_max = 0
     all_width_ratios = []
     for (i, group_row) in enumerate(struct):
-        width_ratios = grid_width_counts[grid_width_counts[group_attr].isin(group_row)]
-        width_ratios = width_ratios['count'].tolist()
+        group_row_counts = grid_width_counts[grid_width_counts[group_attr].isin(group_row)]
+        ordered_group_row_counts = group_row_counts.set_index(group_attr).reindex(group_row).reset_index()
+        width_ratios = ordered_group_row_counts['count'].tolist()
         all_width_ratios.append(width_ratios)
         if sum(width_ratios) > width_max:
             width_max = sum(width_ratios)
@@ -123,14 +191,14 @@ def build_profile_grid(struct, grid_width_counts, group_attr, key_called):
         
         # Creating row grids
         if key_called:
-            height_ratios=[1,7,1.5]
+            height_ratios = [1,7,1.5]
             group_row_grid = mg.GridSpecFromSubplotSpec(3, row_length, bar_grid[i, 1], 
                                                        width_ratios=all_width_ratios[i], 
                                                        height_ratios=height_ratios,
                                                        wspace=0.1,
                                                        hspace=0.1)
         else:
-            height_ratios=[1,8.5]
+            height_ratios = [1,8.5]
             group_row_grid = mg.GridSpecFromSubplotSpec(2, row_length, bar_grid[i, 1], 
                                                        width_ratios=all_width_ratios[i],
                                                        height_ratios=height_ratios, 

@@ -59,7 +59,7 @@ def nextclade(**kwargs):
             for batch in batches:
                 # Getting Nexctlade output
                 kwargs_mod["seq"] = os.path.join(seq_dir,batch)
-                nextclade_command = create_command(input = kwargs_mod, secure_analysis_dir = secure_analysis_dir, secure_ref_dir = secure_ref_dir) 
+                nextclade_command, gene_path = create_command(input = kwargs_mod, secure_analysis_dir = secure_analysis_dir, secure_ref_dir = secure_ref_dir) 
                 out = capture_output(nextclade_command)
 
                 # Appending output
@@ -68,7 +68,7 @@ def nextclade(**kwargs):
                 outputs.append(out)
             nextclade_output = pd.concat(outputs, ignore_index=True)   
         else: # Case 2: One FASTA file provided
-            nextclade_command = create_command(input = kwargs, secure_analysis_dir = secure_analysis_dir, secure_ref_dir = secure_ref_dir) 
+            nextclade_command, gene_path = create_command(input = kwargs, secure_analysis_dir = secure_analysis_dir, secure_ref_dir = secure_ref_dir) 
             nextclade_output = capture_output(nextclade_command)
 
             # Add batch name
@@ -79,6 +79,12 @@ def nextclade(**kwargs):
         # Sorting by batch name and seq name:
         nextclade_output.sort_values(by=['batch', 'seqName'], inplace=True)
         nextclade_output.reset_index(drop=True, inplace=True)
+
+        # Getting annotation
+        gff_columns = ["seqname", "source", "feature", "start", "end", "score",
+                       "strand", "frame", "attribute"]
+        annotation = pd.read_csv(gene_path, sep="\t", comment="#", 
+                                 header=None, names=gff_columns)
 
     # Remove created directories
     finally:
@@ -92,4 +98,4 @@ def nextclade(**kwargs):
     nextclade_output.drop(nextclade_output.dropna(subset=['errors']).index)
     if nextclade_output.empty:
         raise ValueError("Nextclade analysis DataFrame is empty.")
-    return nextclade_output
+    return nextclade_output, annotation

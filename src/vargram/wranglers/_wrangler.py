@@ -6,9 +6,10 @@ import pandas as pd
 import os
 
 def read_table(table_object, nextclade_file=False):
+    """Read tabular data (CSV, TSV or pandas.DataFrame)."""
     if isinstance(table_object, pd.DataFrame):
         table = table_object
-    else:
+    elif isinstance(table_object, str):
         ext = os.path.splitext(table_object)[1]
         if nextclade_file:
             csv_delim = ';'
@@ -21,9 +22,12 @@ def read_table(table_object, nextclade_file=False):
             case '.tsv':
                 delimiter = '\t'
             case _:
-                raise ValueError(f"Unrecognized file path. Expecting .csv or .tsv file but got {ext}")
+                raise ValueError(f"Unrecognized file extension. Expecting .csv or .tsv file but got {ext}")
         
         table = pd.read_csv(table_object, delimiter=delimiter) 
+    else:
+        raise ValueError("Unrecognized object. Expecting pandas.DataFrame object or delimited text file (CSV or TSV).")
+    
     return table
 
 class Wrangler():
@@ -33,6 +37,7 @@ class Wrangler():
         self.wrangler_kwargs = wrangler_kwargs
         self.plot = wrangler_kwargs['plot']
         self.format = wrangler_kwargs.get('format')
+        self.wrangled_data = dict()
         del wrangler_kwargs['plot']
         if self.format is not None:
             del wrangler_kwargs['format']
@@ -41,15 +46,19 @@ class Wrangler():
         match self.plot:
             case 'Profile':
                 self._profile()
-        
-        if self.data.empty:
-            raise ValueError("Wrangled data is empty.")
     
     def get_wrangled_data(self):
-        return self.data, self.format
+        """Combine and return wrangled data and other attributes."""
+        if self.data.empty:
+            raise ValueError("Wrangled data is empty.")
+        
+        self.wrangled_data["data"] = self.data
+        self.wrangled_data["format"] =  self.format
+
+        return self.wrangled_data
             
     def _profile(self):
-        """Choosing appropriate data wrangling method for Profile()."""
+        """Perform appropriate data wrangling method for Profile()."""
         profile_formats = ['nextclade_fasta', 'nextclade_delimited', 'vargram', 'delimited', '_test']
 
         # Assigning default format values
@@ -65,8 +74,9 @@ class Wrangler():
         match self.format:
             case 'nextclade_fasta':
                 nextclade_kwargs = {key: self.user_input[key] for key in ['seq', 'ref', 'gene'] if key in self.user_input.keys()}
-                read_data = nextclade(**nextclade_kwargs)
+                read_data, annotation = nextclade(**nextclade_kwargs)
                 self.data = _nextclade_utils.process_nextclade(read_data)
+                self.wrangled_data["annotation"] = annotation
             case 'nextclade_delimited':
                 tabular_data = self.user_input['data']
                 read_data = read_table(tabular_data, nextclade_file=True)

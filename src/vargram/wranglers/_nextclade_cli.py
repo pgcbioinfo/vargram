@@ -47,9 +47,11 @@ def create_command(**kwargs):
             gene = input["gene"]
             nextclade_command = nextclade_command + ["-m", gene]
         nextclade_command = nextclade_command + [seq]
+        gene_path = gene
     else: # Name of Nextclade reference is provided
         secure_ref_dir = kwargs["secure_analysis_dir"]
         # Get dataset first and then run the command
+        gene_path = os.path.join(secure_ref_dir, 'genome_annotation.gff3')
         nextclade_command = [
             [
                 "nextclade",
@@ -65,13 +67,13 @@ def create_command(**kwargs):
                 "-r",
                 os.path.join(secure_ref_dir, 'reference.fasta'),
                 "-m",
-                os.path.join(secure_ref_dir, 'genome_annotation.gff3'),
+                gene_path,
                 "-t", 
                 os.path.join(secure_analysis_dir, 'analysis.tsv'),
                 seq
             ]
         ]
-    return nextclade_command
+    return nextclade_command, gene_path
 
 
 def capture_output(command):

@@ -40,8 +40,7 @@ class TestProfileRenderer:
         assert result == expected
 
     def test_num_axes(self):
-        """Number of axes must be equal to number of genes.
-        """
+        """Number of axes must be equal to number of genes."""
 
         num_group_title_axes = len(self.axes[2])
         num_barplot_axes = len(self.axes[3])
@@ -53,8 +52,7 @@ class TestProfileRenderer:
         assert equal_to_num_genes == True
 
     def test_bar_width_ratios(self):
-        """The width ratios of each bar ax must sum to the maximum row length (in terms of number of mutations).
-        """
+        """The width ratios of each bar ax must sum to the maximum row length (in terms of number of mutations)."""
         sum_width_ratios = []
         for bar_ax in self.axes[3]:
             bar_grid = bar_ax.get_gridspec()

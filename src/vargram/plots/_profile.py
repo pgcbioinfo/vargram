@@ -1,5 +1,8 @@
 """Main module to generate the mutation profile."""
 
+# Some term clarifications
+# "group" -> gene, "stack" -> batch, "x" -> mutations
+
 from . import _profile_renderer
 from ..wranglers._nextclade_utils import parse_mutation, get_mutation_type
 import matplotlib.pyplot as plt
@@ -7,6 +10,7 @@ import matplotlib.colors as mc
 import numpy as np
 import pandas as pd
 from decimal import Decimal
+from tabulate import tabulate
 
 
 def create_default_colors(num_color, color = '#5E5E5E', single = False):
@@ -18,14 +22,31 @@ def create_default_colors(num_color, color = '#5E5E5E', single = False):
     listed_cmap = cmap(np.linspace(0, 1, num_color))
     return [mc.to_hex(color) for color in listed_cmap]
 
+def match_attributes(cds_name, cds_attribute_string):
+    """Search attributes for a matching CDS name"""
+    nextclade_cds_keys = ["Gene", "gene", "gene_name", "locus_tag",
+                                "Name", "name", "Alias", "alias", 
+                                "standard_name", "old-name", "product",
+                                "gene_synonym", "gb-synonym", "acronym",
+                                "gb-acronym", "protein_id", "ID"]
+    attributes = cds_attribute_string.split(';')
+    attributes_dict = {attribute.split('=')[0].strip(): attribute.split('=')[1].strip() for attribute in attributes}
+    matched = False
+    for key in nextclade_cds_keys:
+        if key in attributes_dict.keys():
+            if attributes_dict[key] == cds_name:
+                matched = True
+
+    return matched
 
 class Profile():
 
-    def __init__(self, data, format):
+    def __init__(self, wrangled_data):
         """Initializes Profile attributes."""
         # Class attributes
-        self.data = data.copy()
-        self.format = format
+        self.data = wrangled_data["data"].copy()
+        self.format = wrangled_data["format"]
+        self.annotation = wrangled_data.get("annotation")
         self.plotted_already = False
         self.verbose = False
 
@@ -43,6 +64,8 @@ class Profile():
         self.key_called = False
         self.threshold = 50
         self.struct = []
+        self.order = False
+        self.flat = False
 
         # Aesthetic attributes
         self.xticks_fontsize = 6
@@ -117,6 +140,7 @@ class Profile():
                 self.ytype = 'counts'
         if self.ylabel == '':
             self.ylabel = self.ytype.title()
+        
         if self.ytype == 'weights':
             for stack in self.stack_names: # Using Decimal for precision
                 data_filtered[stack] = data_filtered[stack].apply(lambda x: Decimal(str(x)))
@@ -190,15 +214,52 @@ class Profile():
             print('** Processed key for profile. **')
 
     def aes(self, **aes_kwargs):
+        """Set aesthetic attributes."""
         for aes_key in aes_kwargs.keys():
             setattr(self, aes_key, aes_kwargs[aes_key])
         if self.verbose:
             print('** Processed aesthetics for profile. **')
     
+    def _get_gene_orders(self):
+        """Obtain the orders of the genes based on start position from GFF file."""
+        # Nextclade prioritizes the CDS over genes. See Nextclade documentation.
+        # Obtaining CDS rows corresponding to CDS names from data
+        data_cds_names = self.data_for_struct['gene'].tolist()
+        gene_and_cds = self.annotation[(self.annotation['feature'] == 'gene') | (self.annotation['feature'] == 'CDS')]
+        cds_attributes = gene_and_cds['attribute'].tolist()
+        cds_groups = dict()
+        for cds_name in data_cds_names:
+            matched_rows = []
+            for row, cds_attribute in enumerate(cds_attributes):
+                if match_attributes(cds_name, cds_attribute):
+                    matched_rows.append(row)
+            cds_groups[cds_name] = matched_rows.copy()
+
+        # Getting minimum start positions of each CDS group
+        start_minimum = []
+        for cds_name in data_cds_names:
+            start_positions = []
+            for row in cds_groups[cds_name]:
+                start = gene_and_cds.iloc[row]['start']
+                start_positions.append(start)
+            start_minimum.append(int(min(start_positions)))
+
+        # Ordering the CDS
+        names_start = list(zip(data_cds_names, start_minimum))
+        sorted_names_start = sorted(names_start, key=lambda x: x[1])
+        ordered_cds_names =  [name for name,_  in sorted_names_start]  
+        ordered_cds_start = [start for _,start in sorted_names_start] 
+        self.ordered_genes = ordered_cds_names
+    
     def struct_method(self, **struct_kwargs):
         """Obtain the structure for the profile (i.e. the groups to include)."""
-        row_groups = struct_kwargs['struct_key'].split('/')
-        self.struct = [''.join(col.split()).split(',') for col in row_groups]
+        if isinstance(struct_kwargs['struct_key'], list):
+            self.struct = struct_kwargs['struct_key']
+        elif isinstance(struct_kwargs['struct_key'], str):
+            row_groups = struct_kwargs['struct_key'].split('/')
+            self.struct = [''.join(col.split()).split(',') for col in row_groups]
+        else:
+            raise ValueError("Unrecognized struct input. Expected list or string.")
         if self.verbose:
             print('** Processed struct. **')
 
@@ -208,12 +269,24 @@ class Profile():
             print('** Plotting **')
         
         # Getting structure of the mutation profile grid
-        if len(self.struct) == 0:
-            self.struct = _profile_renderer.build_struct(self.data_for_struct, self.group)  
-        
+        if len(self.struct) != 0:
+            pass # self.struct will be as specified by user 
+        elif self.annotation is not None and self.order:
+            self._get_gene_orders()
+            self.struct = _profile_renderer.build_ordered_struct(self.data_for_struct,
+                                                                 self.group,
+                                                                 self.ordered_genes,
+                                                                 self.flat)
+        elif len(self.struct) == 0:
+            self.struct = _profile_renderer.build_struct(self.data_for_struct, 
+                                                         self.group, 
+                                                         self.flat)  
+                    
         # Creating profile grids
-        grids_and_axes = _profile_renderer.build_profile_grid(self.struct, self.data_for_struct, 
-                                                      self.group, self.key_called)
+        grids_and_axes = _profile_renderer.build_profile_grid(self.struct, 
+                                                              self.data_for_struct,
+                                                              self.group,
+                                                              self.key_called)
         label_grid =  grids_and_axes[0]
         legend_grid =  grids_and_axes[1]
         group_title_axes = grids_and_axes[2]
@@ -234,11 +307,21 @@ class Profile():
         
         # Building barplots
         group_labels = []
-        _profile_renderer.build_profile(group_title_axes, barplot_axes, heatmap_axes,
-                                self.data_for_plotting, self.struct, self.group,
-                                self.x, self.fig, self.key_called, 
-                                key_aes, self.stack_names, stack_aes,
-                                group_labels, x_aes, y_aes)
+        _profile_renderer.build_profile(group_title_axes, 
+                                        barplot_axes, 
+                                        heatmap_axes,
+                                        self.data_for_plotting,
+                                        self.struct,
+                                        self.group,
+                                        self.x,
+                                        self.fig,
+                                        self.key_called,
+                                        key_aes,
+                                        self.stack_names,
+                                        stack_aes,
+                                        group_labels,
+                                        x_aes,
+                                        y_aes)
         # Creating figure y-axis label
         _profile_renderer.build_yaxis_label(self.ylabel, label_grid)
         # Creating figure legend

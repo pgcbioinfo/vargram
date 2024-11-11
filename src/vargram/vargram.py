@@ -49,7 +49,7 @@ class vargram:
         """Sets initial values of attributes."""
         self._methods_called = []
         self._methods_kwargs = []
-        self._plots = ['profile'] # These are 'plot methods'
+        self._plots = ['profile'] # These are the 'plot methods'
         self._terminals = ['show', 'save', 'stat'] # These are the 'terminal methods'
         self._generate_plot = False
         self._plots_indices = []
@@ -79,8 +79,8 @@ class vargram:
         plot_class = latest_method_calls[0][1:].title() 
         plot_object = globals()[plot_class]
         self._vargram_kwargs['plot'] = plot_class
-        data, format = Wrangler(self._vargram_kwargs).get_wrangled_data()
-        self._plot_instance = plot_object(data, format)
+        wrangled_data = Wrangler(self._vargram_kwargs).get_wrangled_data()
+        self._plot_instance = plot_object(wrangled_data)
 
         # Rearranging so that auxiliary methods are run before plot and save/show methods
         latest_method_calls.append(latest_method_calls[-1])

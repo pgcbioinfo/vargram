@@ -20,6 +20,7 @@ class MyProfileData:
         self.ytype = ytype
 
     def create_output(self):
+        """Create expected data output."""
         self.output = pd.DataFrame(
             {
                 "gene":self.generate_genes(self.num),
@@ -63,6 +64,7 @@ class MyProfileData:
             return self.output
     
     def _add_keys_to_output(self):
+        """Add key lineages to expected output."""
         # Adding keys
         num_keys = 2
 
@@ -79,6 +81,7 @@ class MyProfileData:
             self.key_only_ind = self.key_only_ind[num_pure_key_mutations[i]:]
     
     def normalized_output(self):
+        """Normalize the mutation counts."""
         self.normalized = self.output.copy()
         numerical_columns = self.normalized.columns.tolist()[4:]
         batches = numerical_columns[:self.num_batches]
@@ -93,6 +96,7 @@ class MyProfileData:
         return self.normalized
 
     def create_input(self):
+        """Create input that will produce expected output."""
         # Getting batch names
         column_names = list(self.output.columns)
         sum_index = column_names.index("sum")
@@ -115,6 +119,7 @@ class MyProfileData:
         return self.input
     
     def create_keys(self):
+        """Create input key lineages."""
         if not self.key_called:
             raise NotImplementedError("Keys cannot be created if key_called is false.")        
         # Getting key names
@@ -129,6 +134,7 @@ class MyProfileData:
     def generate_mutations(self, num_mutations, 
                            amino_acids='ACDEFGHIKLMNPQRSTVWY', 
                            max_position=10000):
+        """Generate unique mutations."""
         unique_positions = random.sample(range(1, max_position + 1), num_mutations)
         # All mutations are guaranteed to be unique
         mutations = []
@@ -143,20 +149,24 @@ class MyProfileData:
                 mutations.append(f"{pos}:{''.join(random.choices(amino_acids, k = insertion_length))}") 
         return mutations
 
-    def generate_genes(self, num_genes, num_unique_genes = 10):        
+    def generate_genes(self, num_genes, num_unique_genes = 10):      
+        """Generate genes."""  
         unique_genes = [f'GENE_{i:02}' for i in range(1, num_unique_genes + 1)]
         return [random.choice(unique_genes) for _ in range(num_genes)]
 
     def generate_batch_counts(self, num_counts, max_counts = 100, threshold = 50):
+        """Generate batch counts."""
         counts = [random.randint(threshold, max_counts) for _ in range(num_counts)]
         counts = [count if random.randint(0,1) == 1 else 0 for count in counts]
         return counts
 
     def get_position(self, mutation):
+        """Get position from mutation string."""
         match = re.search(r'(\d+)', mutation)
         return int(match.group())
     
     def get_type(self, mutation):
+        """Get type of mutation."""
         if '-' in mutation:
             return 'del'
         elif ':' in mutation:
@@ -170,6 +180,7 @@ class MyProfileData:
                         (True, 0, 'counts'), (True, 10, 'counts'),
                         (True, 0, 'weights'), (True, 10, 'weights')])
 def profile_data(request):
+    """Feed input to VARGRAM based on different parameters and get output."""
     key_called, threshold, ytype = request.param
     num = random.randint(30,100)
 
