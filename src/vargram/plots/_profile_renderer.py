@@ -55,7 +55,6 @@ def build_ordered_struct(group_counts, group_attr, ordered_genes, flat=False, ma
             row_sum += gene_count
         else:
             num_row += 1
-            print("row_sum:", row_sum)
             if row_sum > ref_row_length:
                 ref_row_length = row_sum
             struct.append(row)
