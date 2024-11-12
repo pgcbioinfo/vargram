@@ -51,7 +51,8 @@ class Profile():
         self.verbose = False
 
         # Plot attributes
-        self.fig = plt.figure(figsize=[8, 4.8])
+        self.fig = plt.figure()
+        self.aspect = None
         self.closed = False
         self.shown = False
 
@@ -70,15 +71,15 @@ class Profile():
         # Aesthetic attributes
         self.xticks_fontsize = 6
         self.xticks_rotation = 90
-        self.yticks_fontsize = 7
+        self.yticks_fontsize = 10
         self.ylabel = ''
-        self.ylabel_fontsize = 'medium'
-        self.key_fontsize = 8
+        self.ylabel_fontsize = 'large'
+        self.key_fontsize = 'medium'
         #self.group_label = []
-        self.group_fontsize = 'small'
+        self.group_fontsize = 'large'
         self.group_title = 'Gene'
         self.stack_label = []
-        self.stack_fontsize = 'medium'
+        self.stack_fontsize = 'large'
         self.stack_color =  ''
         self.stack_title = 'Batch'
 
@@ -315,6 +316,7 @@ class Profile():
                                         self.group,
                                         self.x,
                                         self.fig,
+                                        self.aspect,
                                         self.key_called,
                                         key_aes,
                                         self.stack_names,
@@ -326,6 +328,12 @@ class Profile():
         _profile_renderer.build_yaxis_label(self.ylabel, label_grid)
         # Creating figure legend
         _profile_renderer.build_legend(legend_grid, stack_aes, group_aes, group_labels)
+        
+        if self.aspect is not None: 
+            if self.aspect <= 0:
+                raise ValueError(f"Aspect ratio must be positive but got {self.aspect}.")
+            fig_width, fig_height = self.fig.get_size_inches()
+            self.fig.set_size_inches(fig_width, (1/self.aspect)*fig_width, forward=True)
         plt.tight_layout()
 
     def show(self):

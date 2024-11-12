@@ -21,12 +21,14 @@ def read_table(table_object, nextclade_file=False):
                 delimiter = csv_delim
             case '.tsv':
                 delimiter = '\t'
+            case '.gff':
+                delimiter = '\t'
             case _:
                 raise ValueError(f"Unrecognized file extension. Expecting .csv or .tsv file but got {ext}")
         
-        table = pd.read_csv(table_object, delimiter=delimiter) 
+        table = pd.read_csv(table_object, delimiter=delimiter, comment="#") 
     else:
-        raise ValueError("Unrecognized object. Expecting pandas.DataFrame object or delimited text file (CSV or TSV).")
+        raise ValueError("Unrecognized object. Expecting pandas.DataFrame object or delimited text file (CSV, TSV, or GFF).")
     
     return table
 
@@ -89,6 +91,16 @@ class Wrangler():
                 tabular_data = self.user_input['data']
                 read_data = read_table(tabular_data)
                 self.data = read_table(tabular_data, nextclade_file=False)
+
+        # Getting annotation data if provided
+        annotation_provided = 'gene' in self.user_input.keys()
+        annotation_not_yet_read = self.wrangled_data.get('annotation') is not None
+        if annotation_provided and annotation_not_yet_read:
+            gff_columns = ["seqname", "source", "feature", "start", "end", "score",
+                       "strand", "frame", "attribute"]
+            annotation = read_table(self.user_input['annotation'])
+            annotation.columns = gff_columns
+            self.wrangled_data["annotation"] = annotation
 
         # Adding metadata if available
         if 'meta' in self.user_input.keys():

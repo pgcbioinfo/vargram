@@ -158,7 +158,7 @@ def build_profile_grid(struct, grid_width_counts, group_attr, key_called):
     """
     # Main, outermost grid: 1 col for bar ylabel, 1 col for profile, 1 col for legend
     nrow = len(struct)
-    bar_grid = mg.GridSpec(nrow, 3, width_ratios=[0.5, 21, 1])
+    bar_grid = mg.GridSpec(nrow, 3, width_ratios=[0.15, 21, 0.5])
 
     # Creating grid for the label and legend columns
     label_grid = mg.GridSpecFromSubplotSpec(1, 1, bar_grid[:, 0])
@@ -240,7 +240,7 @@ def build_profile_grid(struct, grid_width_counts, group_attr, key_called):
 
 
 def build_profile(group_title_axes, group_bar_axes, group_key_axes, 
-                  barplot_data, struct, group_attr, x_attr, fig, 
+                  barplot_data, struct, group_attr, x_attr, fig, aspect, 
                   key_called, key_aes, stack_names, stack_aes, 
                   group_labels, x_aes, y_aes):
     """Generates the full profile including labels on the defined grids.
@@ -263,6 +263,8 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes,
         The column of the x values.
     fig : matplotlib.figure.Figure
         The Figure object of the entire VARGRAM bar plot.
+    aspect : float
+        The aspect ratio (width / height) of the Figure.
     key_called : bool
         Determines whether a key was called or not.
     key_aes : list
@@ -332,7 +334,7 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes,
         
         # Adding text for group
         ax_text = group_title_axes[i]
-        _profile_elements.build_group_text(ax_text, group, fig, group_labels)
+        _profile_elements.build_group_text(ax_text, group, fig, aspect, group_labels)
 
         # Creating unit barplot for group
         ax_bar = group_bar_axes[i]
@@ -360,7 +362,7 @@ def build_yaxis_label(label, label_grid):
 
     """
     # text() settings
-    fontsize='medium'
+    fontsize='large'
     ax_label = plt.subplot(label_grid[:, 0])
 
     # Creating label
@@ -415,14 +417,22 @@ def build_legend(legend_grid, stack_aes, group_aes, group_labels):
         bbox_anchor = (0.5, 0.5)
     else:
         stack_loc='lower left'
-        bbox_anchor = (-0.5, 0)
+        bbox_anchor = (-0.25,0)#(-0.5, 0)
     group_loc='upper left'
 
     # Setting batch legend handles
     batch_legend_handles = [mp.Patch(color=color, label=label) for color, label in zip(stack_color, stack_label)]
 
     # Creating batch legend
-    ax_batch_legend.legend(handles=batch_legend_handles, title=stack_title, fontsize=stack_fontsize, frameon=frameon, alignment=alignment, loc=stack_loc, bbox_to_anchor=bbox_anchor, borderaxespad=0)
+    ax_batch_legend.legend(handles=batch_legend_handles, 
+                           title=stack_title, 
+                           title_fontsize=stack_fontsize,
+                           fontsize=stack_fontsize, 
+                           frameon=frameon, 
+                           alignment=alignment, 
+                           loc=stack_loc, 
+                           bbox_to_anchor=bbox_anchor, 
+                           borderaxespad=0)
 
     # Removing batch ax spines and ticks
     _profile_elements.spine_remover(ax_batch_legend)
@@ -432,10 +442,19 @@ def build_legend(legend_grid, stack_aes, group_aes, group_labels):
         legend_handles = [Text(str(i+1)) for i in range(len(group_labels))]
 
         # Creating group legend
-        ax_group_legend.legend(legend_handles, group_labels, title=group_title, fontsize=group_fontsize, frameon=frameon, alignment=alignment, loc=group_loc, bbox_to_anchor=(-0.5, 1), borderaxespad=0,
-           handler_map={handle: TextHandler() for handle in legend_handles},
-           handletextpad=0.5,
-           labelspacing=1.3)
+        ax_group_legend.legend(legend_handles, 
+                               group_labels, 
+                               title=group_title,
+                               title_fontsize=stack_fontsize, 
+                               fontsize=group_fontsize, 
+                               frameon=frameon, 
+                               alignment=alignment, 
+                               loc=group_loc, 
+                               bbox_to_anchor=(-0.25,1),#(-0.5, 1), 
+                               borderaxespad=0,
+                               handler_map={handle: TextHandler() for handle in legend_handles},
+                               handletextpad=0.5,
+                               labelspacing=0.9)
         
         # Removing group ax spines and ticks
         _profile_elements.spine_remover(ax_group_legend)

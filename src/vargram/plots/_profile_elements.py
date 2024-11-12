@@ -203,7 +203,7 @@ def build_group_heatmap(ax_heat, group_xvalues, key_labels, key_fontsize, cmaps,
     ax_heat.hlines(y=np.linspace(-0.5, len(key_labels)-0.5, len(key_labels)+1), xmin= -0.5, xmax=len(mutation_names)-0.5, color = heatmap_border_color, linewidth = heatmap_border_linewidth)
 
 
-def build_group_text(ax_text, group_name, fig_text, group_labels):
+def build_group_text(ax_text, group_name, fig_text, aspect, group_labels):
     """Generates the group label above the barplot.
 
     Parameters
@@ -214,6 +214,8 @@ def build_group_text(ax_text, group_name, fig_text, group_labels):
         The text.
     fig_text : matplotlib.figure.Figure
         The Figure object of the entire VARGRAM bar plot.
+    aspect : float
+        The aspect ratio (width / height) of the Figure.
     group_labels : list
         List of group names that exceed the subplot box.
 
@@ -223,13 +225,20 @@ def build_group_text(ax_text, group_name, fig_text, group_labels):
 
     """
     # text() settings
-    fontsize = 'small'
+    fontsize = 'large'
     weight = 'bold'
 
     # Creating text
     xlims = ax_text.get_xlim()
     ylims = ax_text.get_ylim()
-    t = ax_text.text(xlims[1]/2, ylims[1]/2, group_name, ha='center', va='center', transform=ax_text.transAxes, fontsize=fontsize, weight=weight)
+    t = ax_text.text(xlims[1]/2, 
+                     ylims[1]/2, 
+                     group_name, 
+                     ha='center', 
+                     va='center', 
+                     transform=ax_text.transAxes, 
+                     fontsize=fontsize, 
+                     weight=weight)
 
     # Removing spines and ticks
     ax_text.set_yticks([])
@@ -241,25 +250,37 @@ def build_group_text(ax_text, group_name, fig_text, group_labels):
 
     # Determining if text exceeds its subplot
     b = t.get_window_extent(renderer=ax_text.figure.canvas.get_renderer()).transformed(ax_text.transData.inverted())
-    if b.height > 0.8: # Height exceeds limit
-        margin = 0.5
-        # Get the current figsize
+    text_width = b.width
+    text_height = b.height
+
+    while text_height < 0.45: # Height is too small
+        b = t.get_window_extent(renderer=ax_text.figure.canvas.get_renderer()).transformed(ax_text.transData.inverted())
+        text_height = b.height
         fig_width, fig_height = ax_text.figure.get_size_inches()
-        # Update the figsize to accommodate the required margin
-        new_fig_height = fig_height + margin
-        ax_text.figure.set_size_inches(((4/3)*new_fig_height, new_fig_height), forward=False)
-    if b.width > 1.2: # Width exceeds limit
-        margin = 0.75
+        new_fig_height = 0.9*fig_height
+        ax_text.figure.set_size_inches(fig_width, new_fig_height, forward=True)
+    
+    fig_width, fig_height = ax_text.figure.get_size_inches()
+    while text_height > 0.8: # Height exceeds limit
+        b = t.get_window_extent(renderer=ax_text.figure.canvas.get_renderer()).transformed(ax_text.transData.inverted())
+        text_height = b.height
+        fig_width, fig_height = ax_text.figure.get_size_inches()
+        new_fig_height = 1.1*fig_height
+        ax_text.figure.set_size_inches(fig_width, new_fig_height, forward=True)
+    
+    if text_width > 1: # Width exceeds limit
+        margin = 1 # Increase only by small amount, otherwise use legend
         width_margin = margin
         # Get the current figsize
         fig_width, fig_height = ax_text.figure.get_size_inches()
         # Update the figsize to accommodate the required margin
         new_fig_width = fig_width + width_margin
-        ax_text.figure.set_size_inches((new_fig_width, (3/4)*new_fig_width), forward=False)
-    
+        ax_text.figure.set_size_inches(new_fig_width, fig_height, forward=True)
+
     # Rechecking
     b = t.get_window_extent(renderer=fig_text.canvas.get_renderer()).transformed(ax_text.transData.inverted())
-    if b.width > 1.2:
+    text_width = b.width
+    if text_width > 1.2:
         no_group_labels = len(group_labels)
         group_labels.append(group_name)
         t.set_text('{}'.format(no_group_labels+1))
