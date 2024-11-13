@@ -22,11 +22,15 @@ def read_table(table_object, nextclade_file=False):
             case '.tsv':
                 delimiter = '\t'
             case '.gff':
-                delimiter = '\t'
+                gff_columns = ["seqname", "source", "feature", "start", "end", "score",
+                       "strand", "frame", "attribute"]
+                table = pd.read_csv(table_object, sep="\t", comment="#", 
+                                 header=None, names=gff_columns)
+                return table
             case _:
                 raise ValueError(f"Unrecognized file extension. Expecting .csv or .tsv file but got {ext}")
         
-        table = pd.read_csv(table_object, delimiter=delimiter, comment="#") 
+        table = pd.read_csv(table_object, delimiter=delimiter) 
     else:
         raise ValueError("Unrecognized object. Expecting pandas.DataFrame object or delimited text file (CSV, TSV, or GFF).")
     
@@ -94,12 +98,9 @@ class Wrangler():
 
         # Getting annotation data if provided
         annotation_provided = 'gene' in self.user_input.keys()
-        annotation_not_yet_read = self.wrangled_data.get('annotation') is not None
+        annotation_not_yet_read = self.wrangled_data.get('annotation') is None
         if annotation_provided and annotation_not_yet_read:
-            gff_columns = ["seqname", "source", "feature", "start", "end", "score",
-                       "strand", "frame", "attribute"]
-            annotation = read_table(self.user_input['annotation'])
-            annotation.columns = gff_columns
+            annotation = read_table(self.user_input['gene'])
             self.wrangled_data["annotation"] = annotation
 
         # Adding metadata if available

@@ -12,7 +12,7 @@ authors = [
 maintainers = [
     {name = "Philippine Genome Center - Core Facility for Bioinformatics", email = "bioinformatics@pgc.up.edu.ph"}
 ]
-version = "0.1.0b1"
+version = "0.2.0b1"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
