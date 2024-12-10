@@ -361,6 +361,8 @@ class Profile():
         if file_extension == 'csv':
             if 'fname' in save_kwargs:
                 save_kwargs['path_or_buf'] = save_kwargs.pop('fname')
+            if 'index' not in save_kwargs.keys():
+                save_kwargs['index'] = False
             self.data_for_plotting.to_csv(**save_kwargs)
             if self.verbose:
                 print('** Saved data **')
