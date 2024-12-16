@@ -45,11 +45,10 @@ def nextclade(**kwargs):
         secure_ref_dir = tempfile.mkdtemp(prefix="secure_ref_dir")
 
         if os.path.isdir(kwargs["seq"]): # Case 1: A directory of FASTA files is provided
-            batches = os.listdir(kwargs["seq"])
-            try: # Removing nuissance folder attribute file created in macOS folders 
-                batches.remove('.DS_Store')  
-            except ValueError:
-                pass
+            files = os.listdir(kwargs["seq"])
+            batches = [file for file in files if file.endswith(('.fasta', '.fa'))]
+            if len(batches) == 0:
+                raise ValueError("Directory contains no FASTA file. Ensure FASTA has extension '.fasta' or '.fa'.")
 
             # Getting Nextclade analysis output per FASTA batch and concatenating 
             # the dataframes
