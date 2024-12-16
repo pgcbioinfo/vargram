@@ -357,12 +357,20 @@ class Profile():
             self.plot()
             self.plotted_already = True
         file_extension = save_kwargs['fname'].lower().split('.')[-1]
+        fig_extensions = ['png', 'pdf', 'jpg']
         # Saving CSV
-        if file_extension == 'csv':
+        if file_extension not in fig_extensions:
             if 'fname' in save_kwargs:
                 save_kwargs['path_or_buf'] = save_kwargs.pop('fname')
             if 'index' not in save_kwargs.keys():
                 save_kwargs['index'] = False
+            match file_extension:
+                case 'csv':
+                    save_kwargs['sep'] = ','
+                case 'tsv':
+                    save_kwargs['sep'] = '\t'
+                case 'txt':
+                    save_kwargs['sep'] = ' '
             self.data_for_plotting.to_csv(**save_kwargs)
             if self.verbose:
                 print('** Saved data **')
@@ -373,7 +381,9 @@ class Profile():
                 save_manager = save_fig.canvas.manager
                 save_manager.canvas.figure = self.fig
                 self.fig.set_canvas(save_manager.canvas)
-            plt.savefig(**save_kwargs, bbox_inches='tight')
+            if 'bbox_inches' not in save_kwargs.keys():
+                save_kwargs['bbox_inches'] = 'tight'
+            plt.savefig(**save_kwargs)
             plt.close()
             self.closed = True
             if self.verbose:
