@@ -76,12 +76,16 @@ class Profile():
         self.ylabel_fontsize = 'large'
         self.key_fontsize = 'medium'
         #self.group_label = []
-        self.group_fontsize = 'large'
-        self.group_title = 'Gene'
         self.stack_label = []
-        self.stack_fontsize = 'large'
         self.stack_color =  ''
-        self.stack_title = 'Batch'
+        self.group_title = self.group
+        self.stack_title = self.stack
+        default_titles = (self.group == 'gene') and (self.stack == 'batch')
+        if default_titles:
+            self.group_title = self.group.capitalize()
+            self.stack_title = self.stack.capitalize()
+        self.legtitle_fontsize = 'large'
+        self.legentry_fontsize = 'large'
 
     def process(self, **process_kwargs):
         """Creates data for plotting and structure.
@@ -218,6 +222,13 @@ class Profile():
         """Set aesthetic attributes."""
         for aes_key in aes_kwargs.keys():
             setattr(self, aes_key, aes_kwargs[aes_key])
+
+        # Turning single-string label and color to lists
+        if isinstance(self.stack_label , str):
+            self.stack_label = [self.stack_label]
+        if isinstance(self.stack_color, str) and bool(self.stack_color):
+            self.stack_color = [self.stack_color]
+        
         if self.verbose:
             print('** Processed aesthetics for profile. **')
     
@@ -298,9 +309,9 @@ class Profile():
         if self.stack_color == '':
             self.stack_color = create_default_colors(len(self.stack_label))
         x_aes = [self.xticks_fontsize, self.xticks_rotation]
-        y_aes = [self.yticks_fontsize, self.ylabel, self.ylabel_fontsize]
-        group_aes = [self.group_fontsize, self.group_title]
-        stack_aes = [self.stack_fontsize, self.stack_label, self.stack_color, self.stack_title]
+        y_aes = [self.yticks_fontsize, self.ylabel]
+        group_aes = [self.group_title]
+        stack_aes = [self.stack_label, self.stack_color, self.stack_title]
         if self.key_called:
             key_aes = [self.key_fontsize, self.key_label, self.key_color]
         else:
@@ -325,9 +336,17 @@ class Profile():
                                         x_aes,
                                         y_aes)
         # Creating figure y-axis label
-        _profile_renderer.build_yaxis_label(self.ylabel, label_grid)
+        _profile_renderer.build_yaxis_label(self.ylabel, 
+                                            label_grid, 
+                                            self.ylabel_fontsize)
         # Creating figure legend
-        _profile_renderer.build_legend(legend_grid, stack_aes, group_aes, group_labels)
+        _profile_renderer.build_legend(legend_grid, 
+                                       stack_aes, 
+                                       group_aes, 
+                                       group_labels,
+                                       self.legtitle_fontsize,
+                                       self.legentry_fontsize
+                                       )
         
         if self.aspect is not None: 
             if self.aspect <= 0:

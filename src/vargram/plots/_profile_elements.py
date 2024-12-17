@@ -46,7 +46,9 @@ def build_group_barplot(ax_bar, categories, heights,
     max_height : int
         Maximum height of a stacked bar.
     x_aes : list
+        Aesthetic attributes of the x-axis ticks and labels.
     y_aes : list
+        Aesthetic attributes of the y-axis label and the y label itself.
 
     Returns
     -------
@@ -58,6 +60,7 @@ def build_group_barplot(ax_bar, categories, heights,
     edgecolor = 'black'
     linewidth = 1
     x_fontsize = x_aes[0]
+    rotation = x_aes[1]
     y_fontsize = y_aes[0]
 
     # Creating barplot
@@ -86,7 +89,7 @@ def build_group_barplot(ax_bar, categories, heights,
     if key_called:
         ax_bar.xaxis.set_visible(False)
     else:
-        ax_bar.tick_params(axis='x', rotation=90, labelsize=x_fontsize)
+        ax_bar.tick_params(axis='x', rotation=rotation, labelsize=x_fontsize)
         # Checking for x-axis overlap
         xticks = ax_bar.get_xticklabels()
         if len(xticks) > 1:
@@ -133,7 +136,7 @@ def create_colormap(cmap_name = "key", color = "#5E5E5E"):
     return mc.LinearSegmentedColormap.from_list(cmap_name, cmap_colors)
 
 
-def build_group_heatmap(ax_heat, group_xvalues, key_labels, key_fontsize, cmaps, suppress_label):
+def build_group_heatmap(ax_heat, group_xvalues, key_labels, key_fontsize, cmaps, suppress_label,x_aes):
     """Generates the individual heatmap of a reference key.
 
     Parameters
@@ -150,6 +153,8 @@ def build_group_heatmap(ax_heat, group_xvalues, key_labels, key_fontsize, cmaps,
         List of colormaps to use.
     suppress_label : bool
         Determines whether key label should be shown.
+    x_aes : list
+        Aesthetic attributes of the x-axis ticks and labels.
 
     Returns
     -------
@@ -167,13 +172,15 @@ def build_group_heatmap(ax_heat, group_xvalues, key_labels, key_fontsize, cmaps,
     heatmap_border_linewidth = 3
     heatmap_partition_color = 'white'
     heatmap_partition_linewidth = 1.5
+    x_fontsize = x_aes[0]
+    rotation = x_aes[1]
 
     # Creating heatmap
     reversed_cmaps=cmaps[::-1]
     mutation_names = group_xvalues['mutation']
     for i, row in enumerate(reversed(xvalues_matrix)):
         ax_heat.imshow([row], cmap=reversed_cmaps[i], vmin=0, vmax=1, extent=(-0.5, len(mutation_names)-0.5, i-0.5, i+0.5), aspect='auto')
-    ax_heat.tick_params(axis='x', rotation=90, labelsize=6)
+    ax_heat.tick_params(axis='x', rotation=rotation, labelsize=x_fontsize)
     ax_heat.set_xticks(np.arange(len(mutation_names)))
     ax_heat.set_xticklabels(mutation_names)
     ax_heat.vlines(x=np.arange(0, len(mutation_names)-1)+0.5, ymin = -0.5, ymax = len(key_labels)-0.5, color = heatmap_partition_color, linewidth = heatmap_partition_linewidth)

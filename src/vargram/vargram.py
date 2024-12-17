@@ -260,7 +260,7 @@ class vargram:
         else:
             color = '#5E5E5E'
         self._key_colors.append(color)
-        
+
         # Gathering in one master dataframe
         if self._nkeys > 1:
             key_df[key_label] = 1

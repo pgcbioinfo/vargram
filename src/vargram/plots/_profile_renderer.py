@@ -8,7 +8,8 @@ import matplotlib.text as mt
 import copy
 
 
-def build_ordered_struct(group_counts, group_attr, ordered_genes, flat=False, max_per_row=40):
+def build_ordered_struct(group_counts, group_attr, ordered_genes, 
+                         flat=False, max_per_row=40):
     """Builds the structure based on the genes' start positions
 
     Parameters
@@ -66,7 +67,8 @@ def build_ordered_struct(group_counts, group_attr, ordered_genes, flat=False, ma
     return struct
 
 
-def build_struct(group_counts, group_attr, flat=False, max_per_row=40):
+def build_struct(group_counts, group_attr, flat=False, 
+                 max_per_row=40):
     """Determines the optimum structure of the groups in the bar plot.
 
     Parameters
@@ -128,7 +130,8 @@ def build_struct(group_counts, group_attr, flat=False, max_per_row=40):
     return struct
 
 
-def build_profile_grid(struct, grid_width_counts, group_attr, key_called):
+def build_profile_grid(struct, grid_width_counts, group_attr, 
+                       key_called):
     """Creates the whole GridSpec objects on which to place the plots.
 
     Parameters
@@ -240,9 +243,11 @@ def build_profile_grid(struct, grid_width_counts, group_attr, key_called):
 
 
 def build_profile(group_title_axes, group_bar_axes, group_key_axes, 
-                  barplot_data, struct, group_attr, x_attr, fig, aspect, 
-                  key_called, key_aes, stack_names, stack_aes, 
-                  group_labels, x_aes, y_aes):
+                  barplot_data, struct, group_attr, 
+                  x_attr, fig, aspect, 
+                  key_called, key_aes, stack_names, 
+                  stack_aes, group_labels, x_aes, 
+                  y_aes):
     """Generates the full profile including labels on the defined grids.
 
     Parameters
@@ -277,9 +282,9 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes,
     group_labels : list
         List of group labels (may be user-provided) that exceed the subplot box.
     x_aes : list
-        Aesthetic attributes of the x ticks and labels
+        Aesthetic attributes of the x-axis ticks and labels.
     y_aes : list
-        Aesthetic attributes of the y label and the y label itself
+        Aesthetic attributes of the y-axis label and the y label itself.
     
     Returns
     -------
@@ -288,7 +293,7 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes,
     """
     # Defining aesthetic attributes
     stacks = stack_names
-    stack_colors = stack_aes[2]
+    stack_colors = stack_aes[1]
     key_fontsize = key_aes[0]
     key_labels = key_aes[1]
     key_colors = key_aes[2]
@@ -330,23 +335,40 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes,
         if key_called:
             ax_heat = group_key_axes[i]
             heat_cmap = _profile_elements.create_colormap()
-            _profile_elements.build_group_heatmap(ax_heat, group_barplot_data, key_labels, key_fontsize, heat_cmaps, suppress_label)
+            _profile_elements.build_group_heatmap(ax_heat, 
+                                                  group_barplot_data, 
+                                                  key_labels, 
+                                                  key_fontsize, 
+                                                  heat_cmaps, 
+                                                  suppress_label,
+                                                  x_aes)
         
         # Adding text for group
         ax_text = group_title_axes[i]
-        _profile_elements.build_group_text(ax_text, group, fig, aspect, group_labels)
+        _profile_elements.build_group_text(ax_text, 
+                                           group, 
+                                           fig, 
+                                           aspect, 
+                                           group_labels)
 
         # Creating unit barplot for group
         ax_bar = group_bar_axes[i]
         floor = [0]*len(group_barplot_data)
         for (batch, color) in zip(stacks, stack_colors):
-            _profile_elements.build_group_barplot(ax_bar, group_barplot_data[x_attr], group_barplot_data[batch], floor,
-                                          color, suppress_spline, key_called, max_bar_heights[i],
-                                          x_aes, y_aes)
+            _profile_elements.build_group_barplot(ax_bar, 
+                                                  group_barplot_data[x_attr], 
+                                                  group_barplot_data[batch], 
+                                                  floor,
+                                                  color, 
+                                                  suppress_spline, 
+                                                  key_called, 
+                                                  max_bar_heights[i],
+                                                  x_aes, 
+                                                  y_aes)
             floor += group_barplot_data[batch]            
 
 
-def build_yaxis_label(label, label_grid):
+def build_yaxis_label(label, label_grid, label_fontsize):
     """Generates the label of the figure y-axis.
     
     Parameters
@@ -355,6 +377,8 @@ def build_yaxis_label(label, label_grid):
         The y-axis label.
     label_grid : mg.GridSpecFromSubplotSpec
         Grid for the figure y-axis label.
+    label_fontsize : str or float
+        The font size of the y-axis label.
     
     Returns
     -------
@@ -362,13 +386,19 @@ def build_yaxis_label(label, label_grid):
 
     """
     # text() settings
-    fontsize='large'
     ax_label = plt.subplot(label_grid[:, 0])
 
     # Creating label
     xlims = ax_label.get_xlim()
     ylims = ax_label.get_ylim()
-    ax_label.text(xlims[1]/2, ylims[1]/2, label, ha='center', va='center', transform=ax_label.transAxes, fontsize=fontsize,rotation=90)
+    ax_label.text(xlims[1]/2, 
+                  ylims[1]/2, 
+                  label, 
+                  ha='center', 
+                  va='center', 
+                  transform=ax_label.transAxes, 
+                  fontsize=label_fontsize,
+                  rotation=90)
 
     # Removing spines and ticks
     ax_label.set_yticks([])
@@ -379,7 +409,8 @@ def build_yaxis_label(label, label_grid):
     ax_label.spines["right"].set_visible(False)
 
 
-def build_legend(legend_grid, stack_aes, group_aes, group_labels):
+def build_legend(legend_grid, stack_aes, group_aes, 
+                 group_labels, title_fontsize, entry_fontsize):
     """Generates the label of the figure y-axis.
     
     Parameters
@@ -392,6 +423,10 @@ def build_legend(legend_grid, stack_aes, group_aes, group_labels):
         Aesthetic attributes of the group legend.
     group_labels : list
         List of group labels.
+    title_fontsize : str or float
+        Font size of the legend titles.
+    entry_fontsize : str or float
+        Font size of the legend entries.
 
     Returns
     -------
@@ -404,12 +439,10 @@ def build_legend(legend_grid, stack_aes, group_aes, group_labels):
     else:
         ax_batch_legend = plt.subplot(legend_grid[0, 0])
         ax_group_legend = plt.subplot(legend_grid[1, 0])
-    stack_fontsize = stack_aes[0]
-    stack_label = stack_aes[1]
-    stack_color = stack_aes[2]
-    stack_title = stack_aes[3]
-    group_fontsize = group_aes[0]
-    group_title = group_aes[1]
+    stack_label = stack_aes[0]
+    stack_color = stack_aes[1]
+    stack_title = stack_aes[2]
+    group_title = group_aes[0]
     frameon=False
     alignment='left'
     if len(group_labels) == 0:
@@ -426,8 +459,8 @@ def build_legend(legend_grid, stack_aes, group_aes, group_labels):
     # Creating batch legend
     ax_batch_legend.legend(handles=batch_legend_handles, 
                            title=stack_title, 
-                           title_fontsize=stack_fontsize,
-                           fontsize=stack_fontsize, 
+                           title_fontsize=title_fontsize,
+                           fontsize=entry_fontsize, 
                            frameon=frameon, 
                            alignment=alignment, 
                            loc=stack_loc, 
@@ -445,8 +478,8 @@ def build_legend(legend_grid, stack_aes, group_aes, group_labels):
         ax_group_legend.legend(legend_handles, 
                                group_labels, 
                                title=group_title,
-                               title_fontsize=stack_fontsize, 
-                               fontsize=group_fontsize, 
+                               title_fontsize=title_fontsize, 
+                               fontsize=entry_fontsize, 
                                frameon=frameon, 
                                alignment=alignment, 
                                loc=group_loc, 
@@ -472,7 +505,10 @@ class TextHandler(object):
     def legend_artist(self, legend, text_handle, fontsize, handlebox):
         x0, y0 = handlebox.xdescent, handlebox.ydescent
         width, height = handlebox.width, handlebox.height
-        patch = mt.Text(x=width/4, y=0, text=text_handle.text, bbox=dict(facecolor='none', boxstyle='Square'),
+        patch = mt.Text(x=width/4, 
+                        y=0, 
+                        text=text_handle.text, 
+                        bbox=dict(facecolor='none', boxstyle='Square'),
                         weight='bold',
                         verticalalignment=u'baseline', 
                         horizontalalignment=u'left', multialignment=None, 
