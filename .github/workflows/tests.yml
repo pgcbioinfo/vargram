@@ -1,0 +1,50 @@
+name: tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build-test:
+    name: Test Run (${{ matrix.python-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest"]
+        python-version: ["3.11", "3.12"]
+    defaults:
+      run:
+        working-directory: .
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+          python -m pip install -e .
+      - name: Installing Nextclade
+        run: |
+          mkdir -p nextfolder
+          curl -fsSL "https://github.com/nextstrain/nextclade/releases/download/3.9.1/nextclade-x86_64-unknown-linux-gnu" -o "nextfolder/nextclade" && chmod +x nextfolder/nextclade
+          echo "$(pwd)/nextfolder" >> "$GITHUB_PATH"
+      - name: List installed packages
+        run: pip list
+      - name: Verify nextclade
+        run: |
+          echo "Path: $PATH"
+          echo "Nextclade path: $(which nextclade)"
+          nextclade --version
+      - name: Run tests with pytest
+        run: pytest

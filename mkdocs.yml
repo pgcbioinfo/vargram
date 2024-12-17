@@ -1,0 +1,82 @@
+site_name: VARGRAM
+site_url: https://pgcbioinfo.github.io/vargram/
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.footer
+    - content.code.copy
+    - content.code.annotate
+  palette:
+    # Dark Mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Dark mode
+      primary: black 
+      accent: custom
+
+    # Light Mode
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Light mode
+      primary: black
+      accent: custom
+  logo: assets/images/transparent_colored.png
+  favicon: assets/images/transparent_colored.png
+  
+extra_css:
+  - assets/stylesheets/extra.css
+
+nav:
+  - About:
+    - 'index.md'
+  - Tutorial:
+    - 'basics.md'
+    - 'mutation_profile.md'
+  - Installation:
+    - 'install_vargram.md'
+    - 'install_nextclade.md'
+  - Code Reference: reference/
+
+markdown_extensions:
+  - admonition
+  - tables
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.highlight:
+      use_pygments: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+repo_url: https://github.com/pgcbioinfo/vargram
+
+copyright: |
+  &copy; 2024 <a href="https://pgc.up.edu.ph"  target="_blank" rel="noopener">Philippine Genome Center</a>
+
+plugins:
+- search
+- table-reader
+- gen-files:
+    scripts:
+    - scripts/gen_ref_pages.py
+- literate-nav:
+    nav_file: SUMMARY.md
+#- section-index
+- mkdocstrings:
+    default_handler: python
+    handlers:
+      python:
+        paths: [src]
+        options:
+          docstring_style: numpy
+          docstring_section_style: list
+          show_symbol_type_heading: true
+          show_symbol_type_toc: true
