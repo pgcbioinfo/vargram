@@ -11,27 +11,26 @@ class TestFileInput():
         """Obtain output data for equivalent inputs."""
 
         # Using local data
-        vg = vargram(seq='tests/test_data/batches', 
+        vg = vargram(seq='tests/test_data/sequences', 
                      ref='tests/test_data/sc2_wuhan_2019.fasta', 
                      gene='tests/test_data/sc2.gff')
         vg.profile(threshold=1, ytype='counts')
-        vg.save('tests/test_data/vargram_analysis.csv')
         self.local_ref = vg.stat()
 
         # Using VARGRAM output
-        vg = vargram(data='tests/test_data/vargram_analysis.csv',
+        vg = vargram(data='tests/test_data/summary/omicron_summary_data_t1.csv',
                      format='vargram')
         vg.profile()
         self.stat = vg.stat()
 
         # Using Nextclade reference
-        vg = vargram(seq='tests/test_data/batches', 
+        vg = vargram(seq='tests/test_data/sequences', 
                      ref='sars-cov-2', ytype='counts')
         vg.profile(threshold=1, ytype='counts')
         self.online_ref = vg.stat()
 
         # Using Nextclade CLI analysis output
-        vg = vargram(data='tests/test_data/batches_analysis_cli.tsv')
+        vg = vargram(data='tests/test_data/analysis/omicron_analysis_cli.tsv')
         vg.profile(threshold=1, ytype='counts')
         self.analysis_file = vg.stat()
 
