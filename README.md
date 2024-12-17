@@ -1,5 +1,5 @@
-![Docs Build Status](https://github.com/cjpalpallatoc/test-repo/actions/workflows/docs.yml/badge.svg?)
-![Tests Status](https://github.com/cjpalpallatoc/test-repo/actions/workflows/tests.yml/badge.svg?)
+![Docs Build Status](https://github.com/pgcbioinfo/vargram/actions/workflows/docs.yml/badge.svg?)
+![Tests Status](https://github.com/pgcbioinfo/vargram/actions/workflows/tests.yml/badge.svg?)
 
 <div style="text-align: center;">
     <img src="https://github.com/pgcbioinfo/vargram/blob/main/docs/assets/images/vargram_header.png?raw=True" alt="VARGRAM Header" />

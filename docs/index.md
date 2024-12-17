@@ -3,7 +3,7 @@
 ## What is VARGRAM?
 **VARGRAM** stands for **V**isual **AR**rays for **GR**aphical **A**nalysis of **M**utations. Born out of our experience during the COVID-19 Pandemic, it is envisioned to be a Python library for visualization and analysis of genomic surveillance data. 
 
-Currently, VARGRAM can generate [mutation profiles](mutation_profile.md), which visualizes the (normalized) counts of mutations detected in a single batch or multiple batches of sequences. These profiles are particularly helpful for quickly determining the diversity of sequences/batches. A profile can be generated straight from sequence files in just four lines of code. 
+Currently, VARGRAM can generate [mutation profiles](mutation_profile.md), which visualize the (normalized) counts of mutations detected in a single batch or multiple batches of sequences. These profiles are particularly helpful for quickly determining the diversity of sequences/batches. A profile can be generated straight from sequence files in just four lines of code. 
 
 In the coming months, we plan to add more plots and features. Feel free to request a feature or flag a bug by [submitting an issue](https://github.com/pgcbioinfo/vargram/issues).
 
