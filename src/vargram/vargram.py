@@ -300,25 +300,23 @@ class vargram:
             Name(s) of the stack(s).
         stack_title : str
             Legend title for the stack(s).
-        stack_fontsize : float
-            The fontsize.
         stack_color : str or list
             Color(s) of the stack(s).
-        group_label : str or list
-            Name(s) of the group(s).
         group_title : str
             Legend title for the groups.
-        group_fontsize : float
-            The fontsize.
+        legtitle_fontsize : str or float
+            The fontsize of the legend titles.
+        legentry_fontsize : str or float
+            The fontsize of the legend entries.
         xticks_fontsize : float
             The fontsize of the x-axis ticks.
         xticks_rotation : float
             The degree of rotation of the x-axis ticks.
         ylabel : str
             The y-axis label.
-        ylabel_fontsize : float
+        ylabel_fontsize : str or float
             The fontsize of the y-axis label.
-        key_fontsize : float
+        key_fontsize : str or float
             The fontsize of the heatmap (key) row labels.
 
         Returns
