@@ -16,7 +16,26 @@ A mutation profile such as the one above is an intuitive figure that shows you w
 ## Input
 
 ### Providing sequence files 
-There are two main sets of input that you can provide. The first is the sequence files which include (1) the FASTA file of sequences or a directory of FASTA files for multiple batches, (2) the reference FASTA, and (3) a genome annotation file following [the GFF3 format](https://docs.nextstrain.org/projects/nextclade/en/stable/user/input-files/03-genome-annotation.html). 
+There are two main sets of input that you can provide. The first is the sequence files which include (1) the FASTA file of sequences or a directory of FASTA files for multiple batches, (2) the reference FASTA, and (3) a genome annotation file following [the GFF3 format](https://docs.nextstrain.org/projects/nextclade/en/stable/user/input-files/03-genome-annotation.html). An example annotation file is shown below:
+```
+# Gene map (genome annotation) of SARS-CoV-2 in GFF format.
+# For gene map purpses we only need some of the columns. We substitute unused values with "." as per GFF spec.
+# See GFF format reference at https://www.ensembl.org/info/website/upload/gff.html
+# seqname	source	feature	start	end	score	strand	frame	attribute
+.	.	gene	26245	26472	.	+	.	 gene_name=E
+.	.	gene	26523	27191	.	+	.	 gene_name=M
+.	.	gene	28274	29533	.	+	.	 gene_name=N
+.	.	gene	266	13468	.	+	.	 gene_name=ORF1a
+.	.	gene	13468	21555	.	+	.	 gene_name=ORF1b
+.	.	gene	25393	26220	.	+	.	 gene_name=ORF3a
+.	.	gene	27202	27387	.	+	.	 gene_name=ORF6
+.	.	gene	27394	27759	.	+	.	 gene_name=ORF7a
+.	.	gene	27756	27887	.	+	.	 gene_name=ORF7b
+.	.	gene	27894	28259	.	+	.	 gene_name=ORF8
+.	.	gene	28284	28577	.	+	.	 gene_name=ORF9b
+.	.	gene	21563	25384	.	+	.	 gene_name=S
+```
+
 
 !!! question "Is VARGRAM only applicable to viral data?"
 
@@ -220,8 +239,7 @@ vg.show()
 
 It is often helpful not just to compare batches with each other but also against reference lineages. 
 This can be done by adding a key, which is a CSV or TSV file with`gene` and `mutation` columns.
-The mutations can be representative ("key") mutations of a lineage or they could just be mutations of interest.
-VARGRAM will mark these mutations in the profile through a heatmap below the barplots. 
+The mutations can be representative ("key") mutations of a lineage or they could just be mutations of interest for whatever reason. VARGRAM will mark these mutations in the profile through a heatmap below the barplots. 
 The keys can be added with the `key()` method. Each key is added individually:
 ```py hl_lines="3-5"
 vg = vargram(data='path/to/nextclade_analysis.csv')
@@ -231,6 +249,8 @@ vg.key('path/to/my_key2.csv',
         label='Key 2') # Add an optional label
 vg.show()
 ```
+
+Key mutations will always be shown on the x-axis even if they are not found in any of the batches. Note however that if those key mutations do not meet the threshold, there will be an empty column for it in the barplot but no bar will be shown. On the other hand, any mutation that meets the threshold in any of the batches will always be shown even if it is not a key mutation.
 
 You can manually create these key files yourself, but note that the format of mutation must follow Nextclade's notation. 
 See the [`aaSubstitutions`, `aaDeletions`, and `aaInsertions` definitions](https://docs.nextstrain.org/projects/nextclade/en/stable/user/output-files/04-results-tsv.html).

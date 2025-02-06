@@ -4,7 +4,7 @@
 
 If you wish to get started immediately, [install VARGRAM](install_vargram.md) (`pip install vargram`) and [download the test data from the VARGRAM repo](https://github.com/pgcbioinfo/vargram/tree/main/tests/test_data/). Then, run either of the following code snippets on a Jupyter notebook or as a Python script in the directory containing those test files (e.g. inside `test_data/` if you downloaded the entire folder):
 === "Simple script for bare figure"
-    The following is the simplest way to generate a profile with default settings:
+    The following is the simplest way to generate a mutation profile with default settings:
     ```py
     vg = vargram(data='analysis/omicron_analysis_cli.tsv') # Provide data
     vg.profile() # Tell VARGRAM you want to create a mutation profile
@@ -13,6 +13,10 @@ If you wish to get started immediately, [install VARGRAM](install_vargram.md) (`
     ```
     This will produce the following bare figure:
     ![plot](assets/images/default_profile.png)
+
+    The profile consists of several barplots stacked together; there is one barplot per mutated gene (gene name is shown in rectangular box just above the barplot). The x-axis of each barplot shows the amino acid mutations (substitution, deletion, or insertion) in the corresponding gene and the y-axis shows either the raw number ("counts") or the proportion ("weights") of sequences with those mutations. The bars are colored per sequence batch.
+
+    By default, the batch labels in the legend are the filenames of the provided FASTA files or `my_batch` if a Nextclade analysis CSV file is provided instead. If the gene name does not fit within the rectangular box, the gene name is replaced with a number and a legend is automatically created for it.
 
     ??? question "How are the weights calculated?"
 
@@ -41,6 +45,9 @@ If you wish to get started immediately, [install VARGRAM](install_vargram.md) (`
     Below is the result:
     ![plot](assets/images/modified_profile.png)
 
+    When key mutations are provided, heatmaps are created below each barplot that marks the mutations (dark gray) belonging to those keys. 
+    Each row of the heatmap corresponds to the mutations of one key file. A mutation that is present in a key file will always be included in the x-axis even if that mutation is not found in any of the batches of sequences; in that case, an empty column will be shown on the barplot.
+
     ??? question "How does the threshold work?"
 
         The threshold is applied *per batch*. It sets the minimum count of a mutation in a batch for it to be included. If a mutation meets the threshold in at least one batch, it will be included in the figure as a mutation of that batch but it won't show up in the other batches even if the count is nonzero.
@@ -49,25 +56,48 @@ If you wish to get started immediately, [install VARGRAM](install_vargram.md) (`
 
         In VARGRAM, key mutations are mutations that will be marked in the mutation profile through a heatmap below the barplots. These key mutations may be co-occuring mutations of a variant or lineage, or just mutations of interest for whatever reason. These are helpful for comparing the batches against a reference set of mutations.
 
-    You can also order the genes by providing an annotation file. Additionally, you can force the mutation profile to have a horizontal layout:
-    ```py hl_lines="2 5-6"
-    vg = vargram(data='analysis/omicron_analysis_cli.tsv', # Provide data
-                gene='sc2.gff') # Provide annotation file
-    vg.profile(threshold=5, # Set minimum count for a mutation to be included
-              ytype='counts', # Set y-axis to show raw count
-              order=True, # Order the genes based on the annotation file
-              flat=True) # Force a horizontal layout
-    vg.aes(stack_title='Region', # Change batch legend title
-       stack_label=['Foreign', 'Local'], # Change batch names
-       stack_color=['#E33E84', '#009193']) # Change batch bar colors
-    vg.key('test_data/keys/BA1_key.csv', label='BA.1') # Show key mutations of BA.1
-    vg.key('test_data/keys/BA2_key.csv', label='BA.2') # Show key mutations of BA.2
-    vg.show() # Show the figure
-    vg.save("ordered_flat_profile.png", dpi=300) # Save the figure
-    ```
+    In addition, you can force the mutation profile to have a horizontal layout. You can also order the genes by providing an annotation file in [GFF3 format](https://docs.nextstrain.org/projects/nextclade/en/stable/user/input-files/03-genome-annotation.html):
+    === "Sample script"
+        ```py hl_lines="2 5-6"
+        vg = vargram(data='analysis/omicron_analysis_cli.tsv', # Provide data
+                    gene='sc2.gff') # Provide annotation file
+        vg.profile(threshold=5, # Set minimum count for a mutation to be included
+                ytype='counts', # Set y-axis to show raw count
+                order=True, # Order the genes based on the annotation file
+                flat=True) # Force a horizontal layout
+        vg.aes(stack_title='Region', # Change batch legend title
+        stack_label=['Foreign', 'Local'], # Change batch names
+        stack_color=['#E33E84', '#009193']) # Change batch bar colors
+        vg.key('test_data/keys/BA1_key.csv', label='BA.1') # Show key mutations of BA.1
+        vg.key('test_data/keys/BA2_key.csv', label='BA.2') # Show key mutations of BA.2
+        vg.show() # Show the figure
+        vg.save("ordered_flat_profile.png", dpi=300) # Save the figure
+        ```
+    === "Sample annotation (`sc2.gff`)"
+        ```
+        # Gene map (genome annotation) of SARS-CoV-2 in GFF format.
+        # For gene map purpses we only need some of the columns. We substitute unused values with "." as per GFF spec.
+        # See GFF format reference at https://www.ensembl.org/info/website/upload/gff.html
+        # seqname	source	feature	start	end	score	strand	frame	attribute
+        .	.	gene	26245	26472	.	+	.	 gene_name=E
+        .	.	gene	26523	27191	.	+	.	 gene_name=M
+        .	.	gene	28274	29533	.	+	.	 gene_name=N
+        .	.	gene	266	13468	.	+	.	 gene_name=ORF1a
+        .	.	gene	13468	21555	.	+	.	 gene_name=ORF1b
+        .	.	gene	25393	26220	.	+	.	 gene_name=ORF3a
+        .	.	gene	27202	27387	.	+	.	 gene_name=ORF6
+        .	.	gene	27394	27759	.	+	.	 gene_name=ORF7a
+        .	.	gene	27756	27887	.	+	.	 gene_name=ORF7b
+        .	.	gene	27894	28259	.	+	.	 gene_name=ORF8
+        .	.	gene	28284	28577	.	+	.	 gene_name=ORF9b
+        .	.	gene	21563	25384	.	+	.	 gene_name=S
+        ```
+    
+    
     Below is the result:
     ![plot](assets/images/ordered_flat_profile.png)
 
+    The ordering of the gene barplots are based on the `start` column in the annotation file.
 
 ## Basic usage
 
