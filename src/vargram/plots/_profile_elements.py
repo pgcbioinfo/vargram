@@ -110,8 +110,6 @@ def build_group_barplot(ax_bar, categories, heights,
         ax_bar.spines['left'].set_linewidth(1.5)
         ax_bar.spines['left'].set_position(('outward', 5)) 
         ax_bar.yaxis.set_tick_params(width=1.5, labelsize=y_fontsize)
-        yticks = np.linspace(0, max_height, 5)
-        ax_bar.set_yticks(yticks[yticks != 0])    
     return None
 
 
