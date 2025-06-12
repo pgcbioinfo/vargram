@@ -35,14 +35,7 @@ def create_command(**kwargs):
 
     # Creating command based on user input
     if os.path.isfile(ref): # Reference FASTA is provided
-        nextclade_command = [
-            "nextclade",
-            "run",
-            "-r",
-            ref,
-            "-t",
-            os.path.join(secure_analysis_dir, 'analysis.tsv')
-        ]
+        nextclade_command = f"nextclade run -r {ref} -t {os.path.join(secure_analysis_dir, 'analysis.tsv')}".split()
         if "gene" in input: # Gene annotation is provided
             gene = input["gene"]
             nextclade_command = nextclade_command + ["-m", gene]
@@ -52,27 +45,9 @@ def create_command(**kwargs):
         secure_ref_dir = kwargs["secure_analysis_dir"]
         # Get dataset first and then run the command
         gene_path = os.path.join(secure_ref_dir, 'genome_annotation.gff3')
-        nextclade_command = [
-            [
-                "nextclade",
-                "dataset",
-                "get",
-                "-n",
-                ref, 
-                "-o",
-                secure_ref_dir
-            ],
-            ["nextclade",
-                "run",
-                "-r",
-                os.path.join(secure_ref_dir, 'reference.fasta'),
-                "-m",
-                gene_path,
-                "-t", 
-                os.path.join(secure_analysis_dir, 'analysis.tsv'),
-                seq
-            ]
-        ]
+        first_command = f"nextclade dataset get -n {ref} -o {secure_ref_dir}".split()
+        second_command = f"nextclade run -r {os.path.join(secure_ref_dir, 'reference.fasta')} -m {gene_path} -t {os.path.join(secure_analysis_dir, 'analysis.tsv')} {seq}".split()
+        nextclade_command = [first_command, second_command]
     return nextclade_command, gene_path
 
 
