@@ -166,7 +166,7 @@ def parse_mutation(aa_mutation, part):
     # Obtaining the match
     match = re.findall(pattern, aa_mutation)
     if not match:
-        raise ValueError(f"Failed to parse mutation for gene or position: {aa_mutation}.")
+        raise ValueError(f"Failed to parse mutation for {part}: '{aa_mutation}'.")
     retrieved  = match[-1]
     return retrieved
 
@@ -205,6 +205,11 @@ def process_nextclade(nextclade_output):
     -------
     pandas.DataFrame
         A DataFrame of unique mutations and their counts.
+    
+    Raises
+    ------
+    ValueError
+        If created mutation column of analysis DataFrame is empty.
 
     """
     # Nextclade columns
@@ -214,14 +219,23 @@ def process_nextclade(nextclade_output):
 
     # Compiling all amino acid mutations (substitution, deletion, insertion) into a single column
     single_column = nextclade_output.copy()
+    
+    # Turn all NA mutations into empty strings
     single_column[aa_sub] = single_column[aa_sub].fillna('')
     single_column[aa_del] = single_column[aa_del].fillna('')
     single_column[aa_ins] = single_column[aa_ins].fillna('')
-    single_column['mutation'] = single_column.apply(lambda row: ','.join(filter(None, [row[aa_sub], row[aa_del], row[aa_ins]])), axis=1)
-    single_column['mutation'] = single_column['mutation'].apply(lambda x: x.split(',')).copy()
 
+    # Per row, join the mutations into one (comma-separated) string in one column
+    single_column['mutation'] = single_column.apply(lambda row: ','.join(filter(None, [row[aa_sub], row[aa_del], row[aa_ins]])), axis=1)
+    
+    # Remove rows with empty strings (i.e. sequence has no mutation at all)
+    single_column = single_column[single_column['mutation'] != '']
+    if single_column.empty:
+        raise ValueError("Processed Nextclade analysis DataFrame is empty. Potentially sequences do not have any mutation.")
+    
     # Generating a row per mutation
     # Each row therefore may not be unique
+    single_column['mutation'] = single_column['mutation'].apply(lambda x: x.split(',')).copy()
     exploded = single_column.explode('mutation')
 
     # Creating gene column and removing gene prefix of mutations
