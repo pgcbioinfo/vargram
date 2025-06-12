@@ -10,17 +10,41 @@ import matplotlib.colors as mc
 import numpy as np
 import pandas as pd
 from decimal import Decimal
-from tabulate import tabulate
 
+def create_default_colors(num_color):
+    """Creates default stack colors.
 
-def create_default_colors(num_color, color = '#5E5E5E', single = False):
-    """Creates default stack colors."""
-    if single:
-        return [color]*num_color
-    cmap_name = 'viridis'  
-    cmap = plt.get_cmap(cmap_name)
-    listed_cmap = cmap(np.linspace(0, 1, num_color))
-    return [mc.to_hex(color) for color in listed_cmap]
+    Parameters
+    ----------
+    num_color : int
+        The number of stacks to generate colors for.
+
+    Returns
+    -------
+    list
+        List of colors per stack.
+    """
+    # Default VARGRAM colors
+    vggray = '#657C93'
+    vgblue = '#009193'
+    vgpink = '#E33E84'
+    vgyellow = '#F09937'
+    vgpurple = '#3A2B95'
+    vgcolors = [vggray, vgblue, vgpink, vgyellow, vgpurple]
+
+    # Use viridis cmap for large number of stacks/batches
+    if num_color > 5:
+        cmap_name = 'viridis'  
+        cmap = plt.get_cmap(cmap_name)
+        listed_cmap = cmap(np.linspace(0, 1, num_color))
+        return [mc.to_hex(color) for color in listed_cmap]
+    
+    # Otherwise use VARGRAM colors
+    match num_color:
+        case 1:
+            return [vgblue]
+        case _:
+            return vgcolors[:num_color]
 
 def match_attributes(cds_name, cds_attribute_string):
     """Search attributes for a matching CDS name"""
