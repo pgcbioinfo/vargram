@@ -246,7 +246,7 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes,
                   barplot_data, struct, group_attr, 
                   x_attr, fig, aspect, 
                   key_called, key_aes, stack_names, 
-                  stack_aes, group_labels, x_aes, 
+                  stack_aes, group_aes, group_labels, x_aes, 
                   y_aes):
     """Generates the full profile including labels on the defined grids.
 
@@ -279,8 +279,10 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes,
     stack_aes : list
         Aesthetic attributes of the stacks including 
         stack labels (may be user-provided) to put on the legend.
+    group_aes : list
+        Aesthetic attributes of the groups.
     group_labels : list
-        List of group labels (may be user-provided) that exceed the subplot box.
+        List of group labels that exceed the subplot box.
     x_aes : list
         Aesthetic attributes of the x-axis ticks and labels.
     y_aes : list
@@ -294,6 +296,7 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes,
     # Defining aesthetic attributes
     stacks = stack_names
     stack_colors = stack_aes[1]
+    group_fontsize = group_aes[1]
     key_fontsize = key_aes[0]
     key_labels = key_aes[1]
     key_colors = key_aes[2]
@@ -348,7 +351,8 @@ def build_profile(group_title_axes, group_bar_axes, group_key_axes,
         _profile_elements.build_group_text(ax_text, 
                                            group, 
                                            fig, 
-                                           aspect, 
+                                           group_fontsize, 
+                                           aspect,
                                            group_labels)
 
         # Creating unit barplot for group

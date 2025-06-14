@@ -207,7 +207,7 @@ def build_group_heatmap(ax_heat, group_xvalues, key_labels, key_fontsize, cmaps,
     ax_heat.hlines(y=np.linspace(-0.5, len(key_labels)-0.5, len(key_labels)+1), xmin= -0.5, xmax=len(mutation_names)-0.5, color = heatmap_border_color, linewidth = heatmap_border_linewidth)
 
 
-def build_group_text(ax_text, group_name, fig_text, aspect, group_labels):
+def build_group_text(ax_text, group_name, fig_text, fontsize, aspect, group_labels):
     """Generates the group label above the barplot.
 
     Parameters
@@ -220,6 +220,8 @@ def build_group_text(ax_text, group_name, fig_text, aspect, group_labels):
         The Figure object of the entire VARGRAM bar plot.
     aspect : float
         The aspect ratio (width / height) of the Figure.
+    fontsize : str or float
+        The fontsize of the group text.
     group_labels : list
         List of group names that exceed the subplot box.
 
@@ -229,7 +231,7 @@ def build_group_text(ax_text, group_name, fig_text, aspect, group_labels):
 
     """
     # text() settings
-    fontsize = 'large'
+    fontsize = fontsize
     weight = 'bold'
 
     # Creating text
