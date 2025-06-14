@@ -47,8 +47,8 @@ class vargram:
     
     def _initialize_variables(self):
         """Sets initial values of attributes."""
-        self._methods_called = []
-        self._methods_kwargs = []
+        self._methods_called = [] # List of all methods called
+        self._methods_kwargs = [] # List of the arguments of the corresponding methods called
         self._plots = ['profile'] # These are the 'plot methods'
         self._terminals = ['show', 'save', 'stat'] # These are the 'terminal methods'
         self._generate_plot = False
@@ -66,7 +66,17 @@ class vargram:
     
     def _generate(self):
         """Runs all called methods in correct order"""
-        # Getting group of methods called since last called plot
+
+        # Ensure aes method is called
+        if '_aes' not in self._methods_called[self._latest_plot_index:]:
+            self.aes() # Call aes to get default arguments
+            # Move the aes method name and arguments next to the plot method called
+            self._methods_called.insert(self._latest_plot_index + 1, '_aes')
+            self._methods_kwargs.insert(self._latest_plot_index + 1, self._methods_kwargs[-1])
+            self._methods_called.pop()
+            self._methods_kwargs.pop()
+        
+        # Getting group of methods and corresponding arguments called since last called plot
         latest_method_calls = self._methods_called[self._latest_plot_index:]
         latest_method_kwargs = self._methods_kwargs[self._latest_plot_index:]
 
@@ -167,7 +177,14 @@ class vargram:
         self._methods_kwargs.append(save_kwargs)
         self._generate()
 
-    def profile(self, **profile_kwargs):
+    def profile(self,
+                threshold=10, 
+                x='mutation', 
+                y='',
+                ytype='', 
+                group='gene', 
+                stack='batch',
+                ):
         """Captures profile method arguments
         
         Parameters
@@ -192,14 +209,16 @@ class vargram:
         None
 
         """
+        profile_kwargs = locals()
+        del profile_kwargs['self']
         self._methods_called.append('_profile')
         self._methods_kwargs.append(profile_kwargs)
         self._latest_plot_index = len(self._methods_called) - 1
         self._generate_plot = True
         self._clean_keys()
 
-    def key(self, key_data, **key_kwargs):
-        """Joins all key data
+    def key(self, key_data, x='mutation', group='gene', label='', color = '#5E5E5E'):
+        """Joins all key data.
         
         Parameters
         ----------
@@ -211,6 +230,8 @@ class vargram:
             The column name for the groups.
         label : str
             The name of the key lineage.
+        color : str
+            The color of key mutations on the generated heatmap.
         
         Returns
         -------
@@ -229,50 +250,30 @@ class vargram:
         if isinstance(key_data, pd.DataFrame):
             key_read = key_data.copy()
 
-        # Getting x to read
-        if 'x' in key_kwargs.keys():
-            key_x = key_kwargs['x']
-        else:
-            key_x = 'mutation'
-
-        # Getting group to read
-        if 'group' in key_kwargs.keys():
-            key_group = key_kwargs['group']
-        else:
-            key_group = 'gene'
-
         # Just keeping the 'x' and 'group' columns
-        key_df = key_read[[key_group, key_x]].copy()
+        key_df = key_read[[group, x]].copy()
 
         # Getting name of key
-        if 'label' in key_kwargs:
-            key_label = key_kwargs['label']
-        elif isinstance(key_data, str):
-            key_label = os.path.basename(key_data)
-            key_label = os.path.splitext(key_label)[0]
-        else:
-            key_label = f'key_{self._nkeys}'
-        self._key_labels.append(key_label)
+        if label == '' and isinstance(key_data, str):
+            label = os.path.basename(key_data)
+            label = os.path.splitext(label)[0]
+        self._key_labels.append(label)
 
         # Getting color of key
-        if 'color' in key_kwargs:
-            color = key_kwargs['color']
-        else:
-            color = '#5E5E5E'
         self._key_colors.append(color)
 
         # Gathering in one master dataframe
         if self._nkeys > 1:
-            key_df[key_label] = 1
+            key_df[label] = 1
             self._master_key_data = pd.merge(self._master_key_data, key_df, 
-                                             on=[key_group, key_x], how='outer')
+                                             on=[group, x], how='outer')
             self._master_key_data.fillna(0, inplace=True)
             self._master_key_data.reset_index(drop=True, inplace=True)
         else:
             self._master_key_data = pd.DataFrame()
-            self._master_key_data[key_group] = key_df[key_group]
-            self._master_key_data[key_x] = key_df[key_x]
-            self._master_key_data[key_label] = 1
+            self._master_key_data[group] = key_df[group]
+            self._master_key_data[x] = key_df[x]
+            self._master_key_data[label] = 1
 
     def struct(self, struct_arg):
         """Retains only groups that are provided.
@@ -291,11 +292,32 @@ class vargram:
         self._methods_called.append('_struct')
         self._methods_kwargs.append({'struct_key':struct_arg})
 
-    def aes(self, **aes_kwargs):
+    def aes(self,
+            order=False, 
+            flat=False,
+            stack_label=[], 
+            stack_title='', 
+            stack_color='', 
+            group_title='', 
+            legtitle_fontsize='large', 
+            legentry_fontsize='large',
+            xticks_fontsize=6, 
+            xticks_rotation=90,
+            yticks_fontsize=10,
+            ylabel='', 
+            ylabel_fontsize='large', 
+            group_fontsize='large',
+            key_fontsize='medium',
+            aspect=None
+            ):
         """Captures modification of aesthetic attributes.
         
         Parameters
         ----------
+        order : bool, default:False
+            Determines whether genes will be ordered according to start position.
+        flat : bool, default:False
+            Determines whether genes will be shown on a horizontal layout.
         stack_label : str
             Name(s) of the stack(s).
         stack_title : str
@@ -312,18 +334,26 @@ class vargram:
             The fontsize of the x-axis ticks.
         xticks_rotation : float
             The degree of rotation of the x-axis ticks.
+        yticks_fontsize : float
+            The fontsize of the y-axis ticks.
         ylabel : str
             The y-axis label.
         ylabel_fontsize : str or float
             The fontsize of the y-axis label.
+        group_fontsize : str or float
+            The fontsize of the group label.
         key_fontsize : str or float
             The fontsize of the heatmap (key) row labels.
+        aspect : float
+            The aspect ratio of the figure.
 
         Returns
         -------
         None
 
         """
+        aes_kwargs = locals()
+        del aes_kwargs['self']
         self._methods_called.append('_aes')
         self._methods_kwargs.append(aes_kwargs)
 

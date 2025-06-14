@@ -67,49 +67,16 @@ class Profile():
 
     def __init__(self, wrangled_data):
         """Initializes Profile attributes."""
-        # Class attributes
-        self.data = wrangled_data["data"].copy()
-        self.format = wrangled_data["format"]
-        self.annotation = wrangled_data.get("annotation")
-        self.plotted_already = False
-        self.verbose = False
-
-        # Plot attributes
-        self.fig = plt.figure()
-        self.aspect = None
-        self.closed = False
-        self.shown = False
-
-        # Data attributes
-        self.x = 'mutation'
-        self.y = '' 
-        self.ytype = ''
-        self.group = 'gene'
-        self.stack = 'batch'
-        self.key_called = False
-        self.threshold = 50
-        self.struct = []
-        self.order = False
-        self.flat = False
-
-        # Aesthetic attributes
-        self.xticks_fontsize = 6
-        self.xticks_rotation = 90
-        self.yticks_fontsize = 10
-        self.ylabel = ''
-        self.ylabel_fontsize = 'large'
-        self.key_fontsize = 'medium'
-        #self.group_label = []
-        self.stack_label = []
-        self.stack_color =  ''
-        self.group_title = self.group
-        self.stack_title = self.stack
-        default_titles = (self.group == 'gene') and (self.stack == 'batch')
-        if default_titles:
-            self.group_title = self.group.capitalize()
-            self.stack_title = self.stack.capitalize()
-        self.legtitle_fontsize = 'large'
-        self.legentry_fontsize = 'large'
+        self.data = wrangled_data["data"].copy() # User-provided data
+        self.format = wrangled_data["format"] # Format of data (e.g. Nextclade, VARGRAM)
+        self.annotation = wrangled_data.get("annotation") # Genome annotation file
+        self.plotted_already = False # Flag for whether the actual figure has been created
+        self.verbose = False # Flag for printing completion of a method call
+        self.fig = plt.figure() # The profile Figure object
+        self.closed = False # Flag for whether figure has been closed
+        self.shown = False # Flag for whether the figure is shown
+        self.key_called = False # Flag for whether key files have been provided
+        self.struct = [] # The order or the structure of the groups/genes in the figure
 
     def process(self, **process_kwargs):
         """Creates data for plotting and structure.
@@ -120,6 +87,20 @@ class Profile():
             The processed DataFrame for plotting.
 
         """
+        # Creating profile attributes
+        for process_key in process_kwargs.keys():
+            setattr(self, process_key, process_kwargs[process_key])
+        
+        # Assigning default group and stack titles
+        no_user_title = (self.group_title == '') and (self.stack_title == '')
+        default_group_stack = (self.group == 'gene') and (self.stack == 'batch')
+        if no_user_title:
+           self.group_title = self.group
+           self.stack_title = self.stack
+        if default_group_stack:
+           self.group_title = self.group.capitalize()
+           self.stack_title = self.stack.capitalize()
+
         # vargram output is user-input
         if self.format == 'vargram':
             self.data_for_plotting = self.data
@@ -334,7 +315,7 @@ class Profile():
             self.stack_color = create_default_colors(len(self.stack_label))
         x_aes = [self.xticks_fontsize, self.xticks_rotation]
         y_aes = [self.yticks_fontsize, self.ylabel]
-        group_aes = [self.group_title]
+        group_aes = [self.group_title, self.group_fontsize]
         stack_aes = [self.stack_label, self.stack_color, self.stack_title]
         if self.key_called:
             key_aes = [self.key_fontsize, self.key_label, self.key_color]
@@ -356,6 +337,7 @@ class Profile():
                                         key_aes,
                                         self.stack_names,
                                         stack_aes,
+                                        group_aes,
                                         group_labels,
                                         x_aes,
                                         y_aes)
@@ -427,7 +409,7 @@ class Profile():
             if 'bbox_inches' not in save_kwargs.keys():
                 save_kwargs['bbox_inches'] = 'tight'
             plt.savefig(**save_kwargs)
-            plt.close()
+            plt.close() # Closing to avoid figure from being shown when saving
             self.closed = True
             if self.verbose:
                 print('** Saved figure **')
