@@ -203,6 +203,14 @@ class Profile():
         for group in self.group_names:
             groups_df = data_for_plotting[data_for_plotting[self.group] == group]
             unique_counts.append(len(groups_df[self.x].unique()))
+
+        # Checking obtained groups from struct
+        if self.struct:
+            unrecognized_groups = [col for row in self.struct for col in row  
+                                   if col not in self.group_names ]
+            if unrecognized_groups:
+                raise ValueError(f"""Unrecognized genes/group names: {unrecognized_groups}.
+                                 Make sure to remove unnecessary spaces or characters.""")
         
         # Getting data for struct
         self.data_for_struct = pd.DataFrame({self.group: self.group_names, 'count': unique_counts})
@@ -270,11 +278,13 @@ class Profile():
     
     def struct_method(self, **struct_kwargs):
         """Obtain the structure for the profile (i.e. the groups to include)."""
-        if isinstance(struct_kwargs['struct_key'], list):
+        # Getting user input
+        list_of_lists = isinstance(struct_kwargs['struct_key'], list) and all(isinstance(item, list) for item in struct_kwargs['struct_key'])
+        if list_of_lists:
             self.struct = struct_kwargs['struct_key']
         elif isinstance(struct_kwargs['struct_key'], str):
             row_groups = struct_kwargs['struct_key'].split('/')
-            self.struct = [''.join(col.split()).split(',') for col in row_groups]
+            self.struct = [col.split(',') for col in row_groups]
         else:
             raise ValueError("Unrecognized struct input. Expected list or string.")
         if self.verbose:
