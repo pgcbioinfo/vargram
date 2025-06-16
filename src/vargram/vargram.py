@@ -308,6 +308,7 @@ class vargram:
             ylabel_fontsize='large', 
             group_fontsize='large',
             key_fontsize='medium',
+            figsize=None,
             aspect=None
             ):
         """Captures modification of aesthetic attributes.
@@ -344,6 +345,8 @@ class vargram:
             The fontsize of the group label.
         key_fontsize : str or float
             The fontsize of the heatmap (key) row labels.
+        figsize : tuple
+            Tuple containing the width and height of the figure in inches.
         aspect : float
             The aspect ratio of the figure.
 

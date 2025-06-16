@@ -331,6 +331,10 @@ class Profile():
             key_aes = [self.key_fontsize, self.key_label, self.key_color]
         else:
             key_aes = [[], [], []]
+
+        # Adjusting figure size or aspect ratio
+        if self.figsize is not None:
+            self.fig.set_size_inches(self.figsize[0], self.figsize[1], forward=True)
         
         # Building barplots
         group_labels = []
@@ -369,6 +373,8 @@ class Profile():
                 raise ValueError(f"Aspect ratio must be positive but got {self.aspect}.")
             fig_width, fig_height = self.fig.get_size_inches()
             self.fig.set_size_inches(fig_width, (1/self.aspect)*fig_width, forward=True)
+        
+        # Tightening layout
         plt.tight_layout()
 
     def show(self):
