@@ -2,11 +2,20 @@
 
 ## Example
 
-If you wish to get started immediately, [install VARGRAM](install_vargram.md) (`pip install vargram`) and [download the test data from the VARGRAM repo](https://github.com/pgcbioinfo/vargram/tree/main/tests/test_data/). Then, run either of the following code snippets on a Jupyter notebook or as a Python script in the directory containing those test files (e.g. inside `test_data/` if you downloaded the entire folder):
+If you wish to get started immediately, [install VARGRAM](install_vargram.md) (`pip install vargram`). Then, run either of the following code snippets on a Jupyter notebook or as a Python script. The code below downloads [test data from the VARGRAM repo](https://github.com/pgcbioinfo/vargram/tree/main/tests/test_data) and does not require [Nextclade CLI](https://pgcbioinfo.github.io/vargram/install_nextclade/).
 === "Simple script for bare figure"
     The following is the simplest way to generate a mutation profile with default settings:
     ```py
-    vg = vargram(data='analysis/omicron_analysis_cli.tsv') # Provide data
+    # Import main VARGRAM module and module to download external data
+    from vargram import vargram
+    from vargram.data import example
+
+    # Download test data into directory called test_data 
+    # Directory is created if it does not yet exist
+    example.get('test_data') 
+
+    # Generate the mutation profile
+    vg = vargram(data='test_data/analysis/omicron_analysis_cli.tsv') # Provide data
     vg.profile() # Tell VARGRAM you want to create a mutation profile
     vg.show() # Show the figure
     vg.save("default_profile.png", dpi=300) # Save the figure
@@ -14,9 +23,9 @@ If you wish to get started immediately, [install VARGRAM](install_vargram.md) (`
     This will produce the following bare figure:
     ![plot](assets/images/default_profile.png)
 
-    The profile consists of several barplots stacked together; there is one barplot per mutated gene (gene name is shown in rectangular box just above the barplot). The x-axis of each barplot shows the amino acid mutations (substitution, deletion, or insertion) in the corresponding gene and the y-axis shows either the raw number ("counts") or the proportion ("weights") of sequences with those mutations. The bars are colored per sequence batch.
+    The profile consists of several barplots stacked together; there is one barplot per mutated gene (gene name is shown in rectangular box just above the barplot). The x-axis of each barplot shows the amino acid mutations (substitutions, deletions, and insertions) in the corresponding gene and the y-axis shows either the raw number ("counts") or the proportion ("weights") of sequences with those mutations. The bars are colored per sequence batch.
 
-    By default, the batch labels in the legend are the filenames of the provided FASTA files or `my_batch` if a Nextclade analysis CSV file is provided instead. If the gene name does not fit within the rectangular box, the gene name is replaced with a number and a legend is automatically created for it.
+    By default, the batch labels in the legend are the filenames of the provided FASTA files or `my_batch` if a raw Nextclade analysis CSV file is provided instead. In the above example, the file `omicron_analysis_cli.tsv` is a concatenation of two Nextclade analysis files with an added `batch` column, which VARGRAM reads (see [tutorial for specifying batch column and other features](mutation_profile/#other-features)). Some gene names may be too long to fit within the label above its corresponding bar plot. In which case, the gene name is replaced with a number and a legend is automatically created for it.
 
     ??? question "How are the weights calculated?"
 
@@ -28,15 +37,18 @@ If you wish to get started immediately, [install VARGRAM](install_vargram.md) (`
 
         By default, the genes are shown based roughly on the no. of mutations it has and these genes are then packed to maintain a rectangular aspect ratio. To get a profile with ordered genes, a genome annotation file must be provided. A horizontal layout of the barplots can also be specified.
 
-=== "Modified script for prettier figure"
+=== "Modified script for more customized figure"
     To get a more interesting figure, run the following instead which modifies the labels and the colors, among other things, and adds key mutation heatmaps for reference:
     ```py
-    vg = vargram(data='analysis/omicron_analysis_cli.tsv') # Provide data
+    from vargram.data import example # Import module for downloading external data
+    example.get('test_data') # Download test data into directory called test_data 
+
+    vg = vargram(data='test_data/analysis/omicron_analysis_cli.tsv') # Provide data
     vg.profile(threshold=5, # Set minimum count for a mutation to be included
-              ytype='counts') # Set y-axis to show raw count
+            ytype='counts') # Set y-axis to show raw count
     vg.aes(stack_title='Region', # Change batch legend title
-       stack_label=['Foreign', 'Local'], # Change batch names
-       stack_color=['#E33E84', '#009193']) # Change batch bar colors
+    stack_label=['Foreign', 'Local'], # Change batch names
+    stack_color=['#009193', '#E33E84']) # Change batch bar colors
     vg.key('test_data/keys/BA1_key.csv', label='BA.1') # Show key mutations of BA.1
     vg.key('test_data/keys/BA2_key.csv', label='BA.2') # Show key mutations of BA.2
     vg.show() # Show the figure
@@ -58,16 +70,20 @@ If you wish to get started immediately, [install VARGRAM](install_vargram.md) (`
 
     In addition, you can force the mutation profile to have a horizontal layout. You can also order the genes by providing an annotation file in [GFF3 format](https://docs.nextstrain.org/projects/nextclade/en/stable/user/input-files/03-genome-annotation.html):
     === "Sample script"
-        ```py hl_lines="2 5-6"
-        vg = vargram(data='analysis/omicron_analysis_cli.tsv', # Provide data
-                    gene='sc2.gff') # Provide annotation file
+        ```py hl_lines="6 12-13"
+        from vargram import vargram # Import main module
+        from vargram.data import example # Import module for downloading external data
+        example.get('test_data') # Download test data into directory called test_data 
+
+        vg = vargram(data='test_data/analysis/omicron_analysis_cli.tsv', # Provide data
+                    gene='test_data/sc2.gff') # Provide annotation file
         vg.profile(threshold=5, # Set minimum count for a mutation to be included
-                ytype='counts', # Set y-axis to show raw count
-                order=True, # Order the genes based on the annotation file
-                flat=True) # Force a horizontal layout
+                ytype='counts') # Set y-axis to show raw count
         vg.aes(stack_title='Region', # Change batch legend title
-        stack_label=['Foreign', 'Local'], # Change batch names
-        stack_color=['#E33E84', '#009193']) # Change batch bar colors
+            stack_label=['Foreign', 'Local'], # Change batch names
+            stack_color=['#009193', '#E33E84'], # Change batch bar colors
+            order=True, # Order the genes based on the annotation file
+            flat=True) # Force a horizontal layout
         vg.key('test_data/keys/BA1_key.csv', label='BA.1') # Show key mutations of BA.1
         vg.key('test_data/keys/BA2_key.csv', label='BA.2') # Show key mutations of BA.2
         vg.show() # Show the figure
@@ -99,9 +115,9 @@ If you wish to get started immediately, [install VARGRAM](install_vargram.md) (`
 
     The ordering of the gene barplots are based on the `start` column in the annotation file.
 
-## Basic usage
+## Basic syntax
 
-VARGRAM has a declarative syntax that makes it is easy to declare what you want to see in the figure. Every VARGRAM script starts by importing the class `vargram` from the package of the same name:
+VARGRAM has a declarative syntax that makes it is easy to declare what you want to see in the figure. Every VARGRAM script starts by importing the class `vargram` from the package:
 ```py
 from vargram import vargram # Importing vargram class
 ```
@@ -113,15 +129,15 @@ from vargram import vargram # Importing vargram class
 
 A mutation profile can then be generated in just three lines of code:
 ```py
-vg = vargram(seq='path/to/covid_samples/', # Provide sample sequences
-            ref='path/to/covid_reference.fa', # Provide reference sequence
-            gene='path/to/covid_annotation.gff') # Provide genome annotation
+vg = vargram(seq='path/to/<samples-directory>', # Provide sample sequences
+            ref='path/to/<reference.fa>', # Provide reference sequence
+            gene='path/to/<annotation.gff>') # Provide genome annotation
 vg.profile() # Tell VARGRAM you want to create a mutation profile
 vg.show() # And show the resulting figure
 ```
 Here, the path to the sample sequences can be a folder of FASTA files or a single FASTA file. If you already have a Nextclade analysis file, you can provide the path to that file instead:
 ```py
-vg = vargram(data='path/to/analysis.csv'), # Provide Nextclade analysis file (CSV or TSV)
+vg = vargram(data='path/to/<analysis.csv>'), # Provide Nextclade analysis file (CSV or TSV)
 vg.profile() # Tell VARGRAM you want to create a mutation profile
 vg.show() # Show the resulting figure
 ```
@@ -131,11 +147,12 @@ vg.stat()
 ```
 You can also save the figure by adding:
 ```py
-vg.save('my_vargram_figure.jpg')
+vg.save('<my_vargram_figure>.jpg')
 ```
-Or save the summary data:
+You can also save the figure as a PDF or PNG file. Just replace the file extension with what you want.
+Finally, you can save the summary data:
 ```py
-vg.save('my_vargram_data.csv')
+vg.save('<my_vargram_data>.csv')
 ```
 !!! info "Switching the order of `show()`, `save()`, and `stat()`"
 
@@ -159,15 +176,15 @@ Finally, terminal methods like `show()`, `stat()`, and `save()` produce an outpu
 The methods should be called in order of their types and form a **PAT** or **PT** sandwich. ***P***lot methods go first, followed by ***A***esthetic methods, and the ***T***erminal methods are called last:
 ```py
 # An instance is defined prior
-vg = vargram(data='path/to/analysis.csv')
+vg = vargram(data='path/to/<analysis.csv>')
 
 # *** one plot method ***
 vg.profile()
 # *** aesthetic methods ***
 vg.aes(color=['red','blue']) 
-vg.key('my_key.csv')
+vg.key('<my_key>.csv')
 # *** terminal methods ***
-vg.save('my_vargram_figure.pdf')
+vg.save('<my_vargram_figure>.pdf')
 vg.show()
 ```
 Within each method type, the order doesn't matter. Thus, `vg.key()` can go first before `vg.aes()` or `vg.show()` can be called first before `vg.save()`.
@@ -175,53 +192,53 @@ Within each method type, the order doesn't matter. Thus, `vg.key()` can go first
 The following examples will *not* produce an output:
 === "A TPA sandwich"
     ```py
-    vg = vargram(data='path/to/analysis.csv')
+    vg = vargram(data='path/to/<analysis.csv>')
     vg.show()
     vg.profile()
     vg.aes(stack_title='Region')
     ```
 === "An ATP sandwich"  
     ```py
-    vg = vargram(data='path/to/analysis.csv')
-    vg.key('my_key.csv')
+    vg = vargram(data='path/to/<analysis.csv>')
+    vg.key('<my_key>.csv')
     vg.show()
     vg.profile()
     ```
 === "A TAP sandwich"  
     ```py
-    vg = vargram(data='path/to/analysis.csv')
-    vg.save('my_vargram_figure.png')
-    vg.key('my_key.csv')
+    vg = vargram(data='path/to/<analysis.csv>')
+    vg.save('<my_vargram_figure>.png')
+    vg.key('<my_key>.csv')
     vg.profile()
     ```
 
 The following examples *will* produce an output but the indicated methods will be ignored because they are not inside the PAT or PT sandwich:
 === "Before the sandwich"  
     ```py
-    vg = vargram(data='path/to/analysis.csv')
-    vg.save('my_vargram_data.csv') # Ignored
+    vg = vargram(data='path/to/<analysis.csv>')
+    vg.save('<my_vargram_data>.csv') # Ignored
     vg.profile()
     vg.show()
     ```
 === "After the sandwich"  
     ```py
-    vg = vargram(data='path/to/analysis.csv')
+    vg = vargram(data='path/to/<analysis.csv>')
     vg.profile()
     vg.show()
-    vg.key('my_key.csv') # Ignored
+    vg.key('<my_key>.csv') # Ignored
     ```
 
 You *can* make more than one PAT sandwich:
 === "Same instance"  
     ```py
-    vg = vargram(data='path/to/analysis.csv')
+    vg = vargram(data='path/to/<analysis.csv>')
 
     # PAT sandwich no. 1
     vg.profile()
     vg.aes(stack_color=['red', 'blue']) 
     vg.show()
     vg.save()
-    vg.key('my_key.csv') # Ignored, not inside a PAT sandwich
+    vg.key('<my_key>.csv') # Ignored, not inside a PAT sandwich
 
     # PAT sandwich no. 2
     vg.profile()
@@ -231,17 +248,17 @@ You *can* make more than one PAT sandwich:
     ```
 === "Different instances"  
     ```py
-    vg1 = vargram(data='path/to/first_analysis.csv')
+    vg1 = vargram(data='path/to/<first_analysis.csv>')
     # PAT sandwich no. 1
     vg1.profile()
     vg1.aes(stack_title='Collecting Institution')
     vg1.show()
 
-    vg2 = vargram(data='path/to/second_analysis.csv')
+    vg2 = vargram(data='path/to/<second_analysis.csv>')
     vg2.profile(threshold=20) # Ignored, only one plot method per sandwich--the latest plot method called before the first terminal method
     # PAT sandwich no. 2
     vg2.profile()
-    vg2.key('my_key.csv')
+    vg2.key('<my_key>.csv')
     vg2.show()
     ```
 
