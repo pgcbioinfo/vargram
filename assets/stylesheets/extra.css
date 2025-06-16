@@ -1,0 +1,27 @@
+:root {
+    --md-primary-fg-color:        #657C93;
+    --md-accent-fg-color:   #E33E84;
+}
+
+[data-md-color-scheme="slate"][data-md-color-primary="black"] {
+    --md-typeset-a-color: #E33E84; /* or any other hex value */
+}
+[data-md-color-primary="black"] {
+    --md-typeset-a-color: #E33E84; /* or any other hex value */
+}
+/*.md-nav__link .md-nav__link--passed .md-nav__link--active*/
+.md-content {
+    --md-typeset-a-color: #009193;
+}
+
+.md-typeset table {
+    width: 100%;
+    overflow-y: auto;
+    display: block;
+    max-height: 400px;  /* Adjust this value to control the visible height */
+}
+
+/* Optional: Ensure that the table header stays at the top */
+.md-typeset table thead {
+    display: table-header-group;
+}

@@ -1,0 +1,2494 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://pgcbioinfo.github.io/vargram/reference/vargram/plots/_profile_elements/">
+      
+      
+        <link rel="prev" href="../_profile/">
+      
+      
+        <link rel="next" href="../_profile_renderer/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/transparent_colored.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>_profile_elements - VARGRAM</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vargram.plots._profile_elements" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="VARGRAM" class="md-header__button md-logo" aria-label="VARGRAM" data-md-component="logo">
+      
+  <img src="../../../../assets/images/transparent_colored.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            VARGRAM
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              _profile_elements
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="custom"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="custom"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pgcbioinfo/vargram" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../.." class="md-tabs__link">
+          
+  
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../basics/" class="md-tabs__link">
+          
+  
+  
+  Tutorial
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../install_vargram/" class="md-tabs__link">
+          
+  
+  
+  Installation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../data/example/" class="md-tabs__link">
+          
+  
+  
+  Code Reference
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="VARGRAM" class="md-nav__button md-logo" aria-label="VARGRAM" data-md-component="logo">
+      
+  <img src="../../../../assets/images/transparent_colored.png" alt="logo">
+
+    </a>
+    VARGRAM
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pgcbioinfo/vargram" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    About
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VARGRAM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Tutorial
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Tutorial
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quickstart
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../mutation_profile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Generating a mutation profile
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Installation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../install_vargram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VARGRAM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../install_nextclade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Nextclade CLI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Code Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Code Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    vargram
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            vargram
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1_1" id="__nav_4_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    data
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            data
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data/example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    example
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data/nextclade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    nextclade
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_1_2" id="__nav_4_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    plots
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_1_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            plots
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../_profile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    _profile
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    _profile_elements
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    _profile_elements
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;_profile_elements
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements.build_group_barplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;build_group_barplot
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements.build_group_heatmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;build_group_heatmap
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements.build_group_text" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;build_group_text
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements.check_xticks_overlap" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;check_xticks_overlap
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements.create_colormap" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;create_colormap
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements.spine_remover" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;spine_remover
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../_profile_renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    _profile_renderer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vargram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    vargram
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1_4" id="__nav_4_1_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    wranglers
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            wranglers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wranglers/_nextclade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    _nextclade
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wranglers/_nextclade_cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    _nextclade_cli
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wranglers/_nextclade_utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    _nextclade_utils
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../wranglers/_wrangler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    _wrangler
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-module"></code>&nbsp;_profile_elements
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements.build_group_barplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;build_group_barplot
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements.build_group_heatmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;build_group_heatmap
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements.build_group_text" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;build_group_text
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements.check_xticks_overlap" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;check_xticks_overlap
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements.create_colormap" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;create_colormap
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vargram.plots._profile_elements.spine_remover" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;spine_remover
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+  <h1>_profile_elements</h1>
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="vargram.plots._profile_elements"></a>
+    <div class="doc doc-contents first">
+
+        <p>Module for generating the unit plots, other plot elements like legends, 
+and auxiliary functions.</p>
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="vargram.plots._profile_elements.build_group_barplot" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">build_group_barplot</span><span class="p">(</span><span class="n">ax_bar</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> <span class="n">floor</span><span class="p">,</span> <span class="n">batch_color</span><span class="p">,</span> <span class="n">suppress_spline</span><span class="p">,</span> <span class="n">key_called</span><span class="p">,</span> <span class="n">max_height</span><span class="p">,</span> <span class="n">x_aes</span><span class="p">,</span> <span class="n">y_aes</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generates the individual barplot of a group.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+            <b><code>ax_bar</code></b>
+              (<code><span title="matplotlib.axes.Axes">Axes</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>The subplot where to place the barplot for a particular group.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>categories</code></b>
+              (<code><span title="pandas.Series">Series</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>All x-axis values for a particular group.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>heights</code></b>
+              (<code><span title="pandas.Series">Series</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>The corresponding y-axis values for a particular group.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>floor</code></b>
+              (<code><span title="list">list</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>The bottom y-values at which to start plotting the bars.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>batch_color</code></b>
+              (<code><span title="str">str</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>The color for this particular batch.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>suppress_spline</code></b>
+              (<code><span title="bool">bool</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>Determines whether the y-axis and left spine will be shown.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>max_height</code></b>
+              (<code><span title="int">int</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>Maximum height of a stacked bar.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>x_aes</code></b>
+              (<code><span title="list">list</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>Aesthetic attributes of the x-axis ticks and labels.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>y_aes</code></b>
+              (<code><span title="list">list</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>Aesthetic attributes of the y-axis label and the y label itself.</p>
+          </div>
+        </li>
+    </ul>
+
+
+<p><span class="doc-section-title">Returns:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+              <code>None</code>
+          –
+          <div class="doc-md-description">
+            
+          </div>
+        </li>
+    </ul>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/vargram/plots/_profile_elements.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_group_barplot</span><span class="p">(</span><span class="n">ax_bar</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">heights</span><span class="p">,</span> 
+                        <span class="n">floor</span><span class="p">,</span> <span class="n">batch_color</span><span class="p">,</span> <span class="n">suppress_spline</span><span class="p">,</span> 
+                        <span class="n">key_called</span><span class="p">,</span> <span class="n">max_height</span><span class="p">,</span> <span class="n">x_aes</span><span class="p">,</span> <span class="n">y_aes</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generates the individual barplot of a group.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ax_bar : matplotlib.axes.Axes</span>
+<span class="sd">        The subplot where to place the barplot for a particular group.</span>
+<span class="sd">    categories : pd.Series</span>
+<span class="sd">        All x-axis values for a particular group.</span>
+<span class="sd">    heights : pd.Series</span>
+<span class="sd">        The corresponding y-axis values for a particular group.</span>
+<span class="sd">    floor : list</span>
+<span class="sd">        The bottom y-values at which to start plotting the bars.</span>
+<span class="sd">    batch_color : str</span>
+<span class="sd">        The color for this particular batch.</span>
+<span class="sd">    suppress_spline : bool</span>
+<span class="sd">        Determines whether the y-axis and left spine will be shown.</span>
+<span class="sd">    max_height : int</span>
+<span class="sd">        Maximum height of a stacked bar.</span>
+<span class="sd">    x_aes : list</span>
+<span class="sd">        Aesthetic attributes of the x-axis ticks and labels.</span>
+<span class="sd">    y_aes : list</span>
+<span class="sd">        Aesthetic attributes of the y-axis label and the y label itself.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># bar() settings</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="mf">0.75</span>
+    <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span>
+    <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">x_fontsize</span> <span class="o">=</span> <span class="n">x_aes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">rotation</span> <span class="o">=</span> <span class="n">x_aes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">y_fontsize</span> <span class="o">=</span> <span class="n">y_aes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Creating barplot</span>
+    <span class="n">ax_bar</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">categories</span><span class="p">,</span>
+           <span class="n">height</span> <span class="o">=</span> <span class="n">heights</span><span class="p">,</span>
+           <span class="n">bottom</span> <span class="o">=</span> <span class="n">floor</span><span class="p">,</span>
+           <span class="n">color</span> <span class="o">=</span> <span class="n">batch_color</span><span class="p">,</span>
+           <span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">,</span>
+           <span class="n">edgecolor</span> <span class="o">=</span> <span class="n">edgecolor</span><span class="p">,</span>
+           <span class="n">linewidth</span> <span class="o">=</span> <span class="n">linewidth</span>
+           <span class="p">)</span>
+
+    <span class="c1"># Removing spines</span>
+    <span class="n">ax_bar</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax_bar</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax_bar</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Adjusting limits of x-axis and y-axis</span>
+    <span class="n">is_numeric_dtype</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">is_numeric_dtype</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_numeric_dtype</span><span class="p">:</span>
+        <span class="n">ax_bar</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">categories</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">max_height</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># Avoids UserWarning</span>
+        <span class="n">ax_bar</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_height</span><span class="p">)</span> 
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax_bar</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="c1"># Removing x-axis labels if key lineage is called</span>
+    <span class="k">if</span> <span class="n">key_called</span><span class="p">:</span>
+        <span class="n">ax_bar</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax_bar</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="n">rotation</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">x_fontsize</span><span class="p">)</span>
+        <span class="c1"># Checking for x-axis overlap</span>
+        <span class="n">xticks</span> <span class="o">=</span> <span class="n">ax_bar</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xticks</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">margin</span> <span class="o">=</span> <span class="mf">0.1</span>
+            <span class="k">while</span> <span class="n">check_xticks_overlap</span><span class="p">(</span><span class="n">xticks</span><span class="p">):</span>
+                <span class="c1"># Get the current figsize</span>
+                <span class="n">fig_width</span><span class="p">,</span> <span class="n">fig_height</span> <span class="o">=</span> <span class="n">ax_bar</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
+                <span class="c1"># Update the figsize to accommodate the required margin</span>
+                <span class="n">new_fig_width</span> <span class="o">=</span> <span class="n">fig_width</span> <span class="o">+</span> <span class="n">margin</span>
+                <span class="n">ax_bar</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="n">new_fig_width</span><span class="p">,(</span><span class="mi">3</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="n">new_fig_width</span><span class="p">),</span> <span class="n">forward</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Leaving y-axis and left spine depending on whether </span>
+    <span class="c1"># this corresponds to first group on the bar row</span>
+    <span class="k">if</span> <span class="n">suppress_spline</span> <span class="ow">or</span> <span class="n">max_height</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">ax_bar</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ax_bar</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax_bar</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+        <span class="n">ax_bar</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_position</span><span class="p">((</span><span class="s1">&#39;outward&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> 
+        <span class="n">ax_bar</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_tick_params</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">y_fontsize</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="vargram.plots._profile_elements.build_group_heatmap" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">build_group_heatmap</span><span class="p">(</span><span class="n">ax_heat</span><span class="p">,</span> <span class="n">group_xvalues</span><span class="p">,</span> <span class="n">key_labels</span><span class="p">,</span> <span class="n">key_fontsize</span><span class="p">,</span> <span class="n">cmaps</span><span class="p">,</span> <span class="n">suppress_label</span><span class="p">,</span> <span class="n">x_aes</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generates the individual heatmap of a reference key.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+            <b><code>ax_heat</code></b>
+              (<code><span title="matplotlib.axes.Axes">Axes</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>The subplot where to place the heatmap for a particular group.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>group_xvalues</code></b>
+              (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>Summary counts for a particular group including key x values.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>key_labels</code></b>
+              (<code><span title="str">str</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>The name of the reference key.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>key_fontsize</code></b>
+              (<code><span title="int">int</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>The fontsize of the key labels.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>cmaps</code></b>
+              (<code><span title="matplotlib.colors.Colormap">Colormap</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>List of colormaps to use.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>suppress_label</code></b>
+              (<code><span title="bool">bool</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>Determines whether key label should be shown.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>x_aes</code></b>
+              (<code><span title="list">list</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>Aesthetic attributes of the x-axis ticks and labels.</p>
+          </div>
+        </li>
+    </ul>
+
+
+<p><span class="doc-section-title">Returns:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+              <code>None</code>
+          –
+          <div class="doc-md-description">
+            
+          </div>
+        </li>
+    </ul>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/vargram/plots/_profile_elements.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_group_heatmap</span><span class="p">(</span><span class="n">ax_heat</span><span class="p">,</span> <span class="n">group_xvalues</span><span class="p">,</span> <span class="n">key_labels</span><span class="p">,</span> <span class="n">key_fontsize</span><span class="p">,</span> <span class="n">cmaps</span><span class="p">,</span> <span class="n">suppress_label</span><span class="p">,</span><span class="n">x_aes</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generates the individual heatmap of a reference key.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ax_heat : matplotlib.axes.Axes</span>
+<span class="sd">        The subplot where to place the heatmap for a particular group.</span>
+<span class="sd">    group_xvalues : pandas.DataFrame</span>
+<span class="sd">        Summary counts for a particular group including key x values.</span>
+<span class="sd">    key_labels : str</span>
+<span class="sd">        The name of the reference key.</span>
+<span class="sd">    key_fontsize : int</span>
+<span class="sd">        The fontsize of the key labels.</span>
+<span class="sd">    cmaps : matplotlib.colors.Colormap</span>
+<span class="sd">        List of colormaps to use.</span>
+<span class="sd">    suppress_label : bool</span>
+<span class="sd">        Determines whether key label should be shown.</span>
+<span class="sd">    x_aes : list</span>
+<span class="sd">        Aesthetic attributes of the x-axis ticks and labels.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Converting mutation names into binaries for imshow()</span>
+    <span class="n">xvalues_matrix</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">key_label</span> <span class="ow">in</span> <span class="n">key_labels</span><span class="p">:</span>
+        <span class="n">xvalues_in_binary</span> <span class="o">=</span> <span class="n">group_xvalues</span><span class="p">[</span><span class="n">key_label</span><span class="p">]</span>
+        <span class="n">xvalues_matrix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xvalues_in_binary</span><span class="p">)</span>
+
+    <span class="c1"># imshow() settings</span>
+    <span class="n">heatmap_border_color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span>
+    <span class="n">heatmap_border_linewidth</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">heatmap_partition_color</span> <span class="o">=</span> <span class="s1">&#39;white&#39;</span>
+    <span class="n">heatmap_partition_linewidth</span> <span class="o">=</span> <span class="mf">1.5</span>
+    <span class="n">x_fontsize</span> <span class="o">=</span> <span class="n">x_aes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">rotation</span> <span class="o">=</span> <span class="n">x_aes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Creating heatmap</span>
+    <span class="n">reversed_cmaps</span><span class="o">=</span><span class="n">cmaps</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">mutation_names</span> <span class="o">=</span> <span class="n">group_xvalues</span><span class="p">[</span><span class="s1">&#39;mutation&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">xvalues_matrix</span><span class="p">)):</span>
+        <span class="n">ax_heat</span><span class="o">.</span><span class="n">imshow</span><span class="p">([</span><span class="n">row</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">reversed_cmaps</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mutation_names</span><span class="p">)</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+    <span class="n">ax_heat</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="n">rotation</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">x_fontsize</span><span class="p">)</span>
+    <span class="n">ax_heat</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mutation_names</span><span class="p">)))</span>
+    <span class="n">ax_heat</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">mutation_names</span><span class="p">)</span>
+    <span class="n">ax_heat</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mutation_names</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">key_labels</span><span class="p">)</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">heatmap_partition_color</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="n">heatmap_partition_linewidth</span><span class="p">)</span>
+
+    <span class="c1"># Checking for x-axis overlap</span>
+    <span class="n">xticks</span> <span class="o">=</span> <span class="n">ax_heat</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xticks</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">margin</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="k">while</span> <span class="n">check_xticks_overlap</span><span class="p">(</span><span class="n">xticks</span><span class="p">):</span>
+            <span class="c1"># Get the current figsize</span>
+            <span class="n">fig_width</span><span class="p">,</span> <span class="n">fig_height</span> <span class="o">=</span> <span class="n">ax_heat</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
+            <span class="c1"># Update the figsize to accommodate the required margin</span>
+            <span class="n">new_fig_width</span> <span class="o">=</span> <span class="n">fig_width</span> <span class="o">+</span> <span class="n">margin</span>
+            <span class="n">ax_heat</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="n">new_fig_width</span><span class="p">,(</span><span class="mi">3</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="n">new_fig_width</span><span class="p">),</span> <span class="n">forward</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Adding key lineage label</span>
+    <span class="k">if</span> <span class="n">suppress_label</span><span class="p">:</span>
+        <span class="n">ax_heat</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax_heat</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key_labels</span><span class="p">))))</span>
+        <span class="n">ax_heat</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">key_labels</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">ax_heat</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="n">key_fontsize</span><span class="p">)</span>
+
+    <span class="c1"># Creating heatmap border</span>
+    <span class="n">ax_heat</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">x</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">key_labels</span><span class="p">)</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">heatmap_border_color</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="n">heatmap_border_linewidth</span><span class="p">)</span>
+    <span class="n">ax_heat</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">mutation_names</span><span class="p">)</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">key_labels</span><span class="p">)</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">heatmap_border_color</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="n">heatmap_border_linewidth</span><span class="p">)</span>
+    <span class="n">ax_heat</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">key_labels</span><span class="p">)</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">key_labels</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">xmin</span><span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">mutation_names</span><span class="p">)</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">heatmap_border_color</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="n">heatmap_border_linewidth</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="vargram.plots._profile_elements.build_group_text" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">build_group_text</span><span class="p">(</span><span class="n">ax_text</span><span class="p">,</span> <span class="n">group_name</span><span class="p">,</span> <span class="n">fig_text</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">aspect</span><span class="p">,</span> <span class="n">group_labels</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generates the group label above the barplot.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+            <b><code>ax_text</code></b>
+              (<code><span title="matplotlib.axes.Axes">Axes</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>The subplot where to place the group name text for a particular group.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>group_name</code></b>
+              (<code><span title="str">str</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>The text.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>fig_text</code></b>
+              (<code><span title="matplotlib.figure.Figure">Figure</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>The Figure object of the entire VARGRAM bar plot.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>aspect</code></b>
+              (<code><span title="float">float</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>The aspect ratio (width / height) of the Figure.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>fontsize</code></b>
+              (<code><span title="str">str</span> or <span title="float">float</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>The fontsize of the group text.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>group_labels</code></b>
+              (<code><span title="list">list</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>List of group names that exceed the subplot box.</p>
+          </div>
+        </li>
+    </ul>
+
+
+<p><span class="doc-section-title">Returns:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+              <code>None</code>
+          –
+          <div class="doc-md-description">
+            
+          </div>
+        </li>
+    </ul>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/vargram/plots/_profile_elements.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">build_group_text</span><span class="p">(</span><span class="n">ax_text</span><span class="p">,</span> <span class="n">group_name</span><span class="p">,</span> <span class="n">fig_text</span><span class="p">,</span> <span class="n">fontsize</span><span class="p">,</span> <span class="n">aspect</span><span class="p">,</span> <span class="n">group_labels</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generates the group label above the barplot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ax_text : matplotlib.axes.Axes </span>
+<span class="sd">        The subplot where to place the group name text for a particular group.</span>
+<span class="sd">    group_name : str</span>
+<span class="sd">        The text.</span>
+<span class="sd">    fig_text : matplotlib.figure.Figure</span>
+<span class="sd">        The Figure object of the entire VARGRAM bar plot.</span>
+<span class="sd">    aspect : float</span>
+<span class="sd">        The aspect ratio (width / height) of the Figure.</span>
+<span class="sd">    fontsize : str or float</span>
+<span class="sd">        The fontsize of the group text.</span>
+<span class="sd">    group_labels : list</span>
+<span class="sd">        List of group names that exceed the subplot box.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># text() settings</span>
+    <span class="n">fontsize</span> <span class="o">=</span> <span class="n">fontsize</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="s1">&#39;bold&#39;</span>
+
+    <span class="c1"># Creating text</span>
+    <span class="n">xlims</span> <span class="o">=</span> <span class="n">ax_text</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+    <span class="n">ylims</span> <span class="o">=</span> <span class="n">ax_text</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">ax_text</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">xlims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> 
+                     <span class="n">ylims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> 
+                     <span class="n">group_name</span><span class="p">,</span> 
+                     <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> 
+                     <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> 
+                     <span class="n">transform</span><span class="o">=</span><span class="n">ax_text</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> 
+                     <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span> 
+                     <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span>
+
+    <span class="c1"># Removing spines and ticks</span>
+    <span class="n">ax_text</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">ax_text</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+    <span class="n">ax_text</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">ax_text</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">ax_text</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">ax_text</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+
+    <span class="c1"># Determining if text exceeds its subplot</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">ax_text</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">get_renderer</span><span class="p">())</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">ax_text</span><span class="o">.</span><span class="n">transData</span><span class="o">.</span><span class="n">inverted</span><span class="p">())</span>
+    <span class="n">text_width</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">width</span>
+    <span class="n">text_height</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">height</span>
+
+    <span class="k">while</span> <span class="n">text_height</span> <span class="o">&lt;</span> <span class="mf">0.45</span><span class="p">:</span> <span class="c1"># Height is too small</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">ax_text</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">get_renderer</span><span class="p">())</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">ax_text</span><span class="o">.</span><span class="n">transData</span><span class="o">.</span><span class="n">inverted</span><span class="p">())</span>
+        <span class="n">text_height</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">height</span>
+        <span class="n">fig_width</span><span class="p">,</span> <span class="n">fig_height</span> <span class="o">=</span> <span class="n">ax_text</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
+        <span class="n">new_fig_height</span> <span class="o">=</span> <span class="mf">0.9</span><span class="o">*</span><span class="n">fig_height</span>
+        <span class="n">ax_text</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="n">fig_width</span><span class="p">,</span> <span class="n">new_fig_height</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">fig_width</span><span class="p">,</span> <span class="n">fig_height</span> <span class="o">=</span> <span class="n">ax_text</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
+    <span class="k">while</span> <span class="n">text_height</span> <span class="o">&gt;</span> <span class="mf">0.8</span><span class="p">:</span> <span class="c1"># Height exceeds limit</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">ax_text</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">get_renderer</span><span class="p">())</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">ax_text</span><span class="o">.</span><span class="n">transData</span><span class="o">.</span><span class="n">inverted</span><span class="p">())</span>
+        <span class="n">text_height</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">height</span>
+        <span class="n">fig_width</span><span class="p">,</span> <span class="n">fig_height</span> <span class="o">=</span> <span class="n">ax_text</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
+        <span class="n">new_fig_height</span> <span class="o">=</span> <span class="mf">1.1</span><span class="o">*</span><span class="n">fig_height</span>
+        <span class="n">ax_text</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="n">fig_width</span><span class="p">,</span> <span class="n">new_fig_height</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">text_width</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># Width exceeds limit</span>
+        <span class="n">margin</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># Increase only by small amount, otherwise use legend</span>
+        <span class="n">width_margin</span> <span class="o">=</span> <span class="n">margin</span>
+        <span class="c1"># Get the current figsize</span>
+        <span class="n">fig_width</span><span class="p">,</span> <span class="n">fig_height</span> <span class="o">=</span> <span class="n">ax_text</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
+        <span class="c1"># Update the figsize to accommodate the required margin</span>
+        <span class="n">new_fig_width</span> <span class="o">=</span> <span class="n">fig_width</span> <span class="o">+</span> <span class="n">width_margin</span>
+        <span class="n">ax_text</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="n">new_fig_width</span><span class="p">,</span> <span class="n">fig_height</span><span class="p">,</span> <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Rechecking</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">fig_text</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">get_renderer</span><span class="p">())</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">ax_text</span><span class="o">.</span><span class="n">transData</span><span class="o">.</span><span class="n">inverted</span><span class="p">())</span>
+    <span class="n">text_width</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">width</span>
+    <span class="k">if</span> <span class="n">text_width</span> <span class="o">&gt;</span> <span class="mf">1.2</span><span class="p">:</span>
+        <span class="n">no_group_labels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_labels</span><span class="p">)</span>
+        <span class="n">group_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group_name</span><span class="p">)</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">no_group_labels</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="vargram.plots._profile_elements.check_xticks_overlap" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">check_xticks_overlap</span><span class="p">(</span><span class="n">xticks</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Checks whether there is an overlap between the x-axis tick labels.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+            <b><code>xticks</code></b>
+          –
+          <div class="doc-md-description">
+            <p>x-axis tick labels.</p>
+          </div>
+        </li>
+    </ul>
+
+
+<p><span class="doc-section-title">Returns:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+              <code><span title="bool">bool</span></code>
+          –
+          <div class="doc-md-description">
+            <p>True if there is an overlap, False otherwise.</p>
+          </div>
+        </li>
+    </ul>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/vargram/plots/_profile_elements.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_xticks_overlap</span><span class="p">(</span><span class="n">xticks</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks whether there is an overlap between the x-axis tick labels.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    xticks :matplotlib.axes.Axes.get_xticklabels</span>
+<span class="sd">        x-axis tick labels.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if there is an overlap, False otherwise.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bb1</span> <span class="o">=</span> <span class="n">xticks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">()</span>
+    <span class="n">bb2</span> <span class="o">=</span> <span class="n">xticks</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_window_extent</span><span class="p">()</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="p">(</span><span class="n">bb1</span><span class="o">.</span><span class="n">x1</span> <span class="o">&lt;</span> <span class="n">bb2</span><span class="o">.</span><span class="n">x0</span> <span class="ow">or</span> <span class="n">bb2</span><span class="o">.</span><span class="n">x1</span> <span class="o">&lt;</span> <span class="n">bb1</span><span class="o">.</span><span class="n">x0</span> <span class="ow">or</span> <span class="n">bb1</span><span class="o">.</span><span class="n">y1</span> <span class="o">&lt;</span> <span class="n">bb2</span><span class="o">.</span><span class="n">y0</span> <span class="ow">or</span> <span class="n">bb2</span><span class="o">.</span><span class="n">y1</span> <span class="o">&lt;</span> <span class="n">bb1</span><span class="o">.</span><span class="n">y0</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="vargram.plots._profile_elements.create_colormap" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">create_colormap</span><span class="p">(</span><span class="n">cmap_name</span><span class="o">=</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#5E5E5E&#39;</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Generate the colormap of a reference key.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+            <b><code>cmap_name</code></b>
+              (<code><span title="str">str</span></code>, default:
+                  <code>&#39;key&#39;</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>The name of the reference key.</p>
+          </div>
+        </li>
+        <li class="doc-section-item field-body">
+            <b><code>color</code></b>
+              (<code><span title="str">str</span></code>, default:
+                  <code>&#39;#5E5E5E&#39;</code>
+)
+          –
+          <div class="doc-md-description">
+            <p>Hex code of color to use for this key.</p>
+          </div>
+        </li>
+    </ul>
+
+
+<p><span class="doc-section-title">Returns:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+              <code><span title="matplotlib.colors.LinearSegmentedColormap">LinearSegmentedColormap</span></code>
+          –
+          <div class="doc-md-description">
+            <p>The colormap.</p>
+          </div>
+        </li>
+    </ul>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/vargram/plots/_profile_elements.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_colormap</span><span class="p">(</span><span class="n">cmap_name</span> <span class="o">=</span> <span class="s2">&quot;key&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#5E5E5E&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the colormap of a reference key.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cmap_name : str</span>
+<span class="sd">        The name of the reference key.</span>
+<span class="sd">    color : str</span>
+<span class="sd">        Hex code of color to use for this key.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    matplotlib.colors.LinearSegmentedColormap</span>
+<span class="sd">        The colormap.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cmap_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;#D5D5D5&quot;</span><span class="p">,</span> <span class="n">color</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">mc</span><span class="o">.</span><span class="n">LinearSegmentedColormap</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span><span class="n">cmap_name</span><span class="p">,</span> <span class="n">cmap_colors</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="vargram.plots._profile_elements.spine_remover" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">spine_remover</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Removes the spine of an Axes object .</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+            <b><code>ax</code></b>
+              (<code><span title="matplotlib.Axes">Axes</span></code>)
+          –
+          <div class="doc-md-description">
+            <p>The Axes.</p>
+          </div>
+        </li>
+    </ul>
+
+
+<p><span class="doc-section-title">Returns:</span></p>
+    <ul>
+        <li class="doc-section-item field-body">
+              <code>None</code>
+          –
+          <div class="doc-md-description">
+            
+          </div>
+        </li>
+    </ul>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/vargram/plots/_profile_elements.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">spine_remover</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes the spine of an Axes object .</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ax : matplotlib.Axes</span>
+<span class="sd">        The Axes.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;bottom&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../_profile/" class="md-footer__link md-footer__link--prev" aria-label="Previous: _profile">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                _profile
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../_profile_renderer/" class="md-footer__link md-footer__link--next" aria-label="Next: _profile_renderer">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                _profile_renderer
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2024-2025 <a href="https://pgc.up.edu.ph"  target="_blank" rel="noopener">Philippine Genome Center</a>
+
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.footer", "content.code.copy", "content.code.annotate"], "search": "../../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>
