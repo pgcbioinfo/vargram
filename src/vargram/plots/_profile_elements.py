@@ -81,15 +81,6 @@ def build_group_barplot(ax_bar, categories, heights,
 
     # Adjusting limits of x-axis and y-axis
     is_numeric_dtype = pd.api.types.is_numeric_dtype(categories)
-    #if is_numeric_dtype:
-    #    xticks = ax_bar.get_xticks()
-    #    xmin = min(categories)
-    #    if xmin not in xticks:
-    #        new_xticks = list(xticks) + [xmin]
-    #        new_xticks = sorted(set(new_xticks))
-    #        ax_bar.set_xticks(new_xticks)
-        #xmax = max(categories)
-        #ax_bar.set_xlim(xmin-0.5,xmax)
     if not is_numeric_dtype:
         ax_bar.set_xlim(-0.5, len(categories) - 0.5)
     if max_height != 0: # Avoids UserWarning
