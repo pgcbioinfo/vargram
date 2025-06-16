@@ -416,6 +416,8 @@ class Profile():
                 case 'txt':
                     save_kwargs['sep'] = ' '
             self.data_for_plotting.to_csv(**save_kwargs)
+            plt.close() # Closing to avoid figure from being shown when saving
+            self.closed = True
             if self.verbose:
                 print('** Saved data **')
         # Saving figure
