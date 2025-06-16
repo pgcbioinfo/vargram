@@ -155,6 +155,9 @@ class Profile():
             for stack in self.stack_names: # Using Decimal for precision
                 data_filtered[stack] = data_filtered[stack].apply(lambda x: Decimal(str(x)))
                 stack_sum = data_filtered[stack].sum()
+                if stack_sum == 0:
+                    data_filtered[stack] = data_filtered[stack] * Decimal('0')
+                    continue
                 data_filtered[stack] = data_filtered[stack] * Decimal('100') / Decimal(str(stack_sum))
                 data_filtered[stack] = data_filtered[stack].apply(lambda x: x.quantize(Decimal('0.01'))) 
         
