@@ -92,14 +92,14 @@ class Profile():
             setattr(self, process_key, process_kwargs[process_key])
         
         # Assigning default group and stack titles
-        no_user_title = (self.group_title == '') and (self.stack_title == '')
-        default_group_stack = (self.group == 'gene') and (self.stack == 'batch')
-        if no_user_title:
+        if self.group_title == '':
            self.group_title = self.group
+           if self.group == 'gene':
+                self.group_title = self.group.capitalize()
+        if self.stack_title == '':
            self.stack_title = self.stack
-        if default_group_stack:
-           self.group_title = self.group.capitalize()
-           self.stack_title = self.stack.capitalize()
+           if self.stack == 'batch':
+                self.stack_title = self.stack.capitalize()
 
         # vargram output is user-input
         if self.format == 'vargram':
